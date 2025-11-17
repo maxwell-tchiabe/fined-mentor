@@ -1,7 +1,6 @@
 package com.fined.mentor.service;
 
 import com.fined.mentor.entity.ChatMessage;
-import com.fined.mentor.exception.ChatMessageNotFoundException;
 
 import java.util.List;
 

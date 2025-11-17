@@ -177,9 +177,8 @@ public class QuizController {
             @PathVariable String quizStateId) {
         try {
             log.info("Finishing quiz state: {}", quizStateId);
-            QuizState quizState = quizService.getQuizState(quizStateId);
-            quizState.setFinished(true);
-            // Note: You might want to add a finishQuiz method in QuizService for additional logic
+            // Use service method to perform final scoring and persist changes
+            QuizState quizState = quizService.finishQuiz(quizStateId);
 
             QuizStateResponse response = QuizStateResponse.builder()
                     .id(quizState.getId())
@@ -189,7 +188,7 @@ public class QuizController {
                     .userAnswers(quizState.getUserAnswers())
                     .isSubmitted(quizState.getIsSubmitted())
                     .score(quizState.getScore())
-                    .isFinished(true)
+                    .isFinished(quizState.isFinished())
                     .build();
 
             return ResponseEntity.ok(ApiResponse.success(response));
