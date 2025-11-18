@@ -15,15 +15,15 @@ interface TopicStats {
   styleUrls: ['./dashboard-panel.component.css']
 })
 export class DashboardPanelComponent implements OnChanges {
-  @Input() sessions: ChatSession[] | null = [];
+  @Input() public sessions: ChatSession[] | null = [];
 
-  quizzesTaken = 0;
-  totalScore = 0;
-  totalQuestions = 0;
-  averageScore = 0;
-  quizzesByTopic: Record<string, TopicStats> = {};
+  public quizzesTaken = 0;
+  public totalScore = 0;
+  public totalQuestions = 0;
+  public averageScore = 0;
+  public quizzesByTopic: Record<string, TopicStats> = {};
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['sessions']) {
       this.calculateStats();
     }
@@ -48,7 +48,7 @@ export class DashboardPanelComponent implements OnChanges {
     }, {});
   }
 
-  getTopicAverage(topic: string): number {
+  public getTopicAverage(topic: string): number {
     const stats = this.quizzesByTopic[topic];
     if (!stats) return 0;
     
@@ -57,7 +57,7 @@ export class DashboardPanelComponent implements OnChanges {
     return topicTotalQuestions > 0 ? (topicTotalScore / topicTotalQuestions) * 100 : 0;
   }
 
-  getTopicScore(topic: string): { score: number; total: number } {
+  public getTopicScore(topic: string): { score: number; total: number } {
     const stats = this.quizzesByTopic[topic];
     if (!stats) return { score: 0, total: 0 };
     
@@ -66,7 +66,7 @@ export class DashboardPanelComponent implements OnChanges {
     return { score, total };
   }
 
-  objectKeys(obj: any): string[] {
+  public objectKeys(obj: any): string[] {
   return Object.keys(obj);
 }
 }

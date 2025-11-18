@@ -12,55 +12,60 @@ import { LoadingSpinnerComponent } from '../../../../shared/components/loading-s
   styleUrls: ['./quiz-panel.component.css']
 })
 export class QuizPanelComponent implements OnChanges {
-  @Input() quiz: Quiz | null = null;
-  @Input() quizState: QuizState | null = null;
-  @Input() isLoading = false;
-  @Output() answerSubmit = new EventEmitter<string>();
-  @Output() nextQuestion = new EventEmitter<void>();
-  @Output() restartQuiz = new EventEmitter<void>();
+  @Input() public quiz: Quiz | null = null;
+  @Input() public quizState: QuizState | null = null;
+  @Input() public isLoading = false;
+  @Output() public answerSubmit = new EventEmitter<string>();
+  @Output() public nextQuestion = new EventEmitter<void>();
+  @Output() public restartQuiz = new EventEmitter<void>();
+  @Output() public finishQuiz = new EventEmitter<void>();
 
-  selectedOption: string | null = null;
+  public selectedOption: string | null = null;
 
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['quizState'] || changes['quiz']) {
       this.selectedOption = null;
     }
   }
 
-  get currentQuestion(): QuizQuestion | null {
+  public get currentQuestion(): QuizQuestion | null {
     if (!this.quiz || !this.quizState) return null;
     return this.quiz.questions[this.quizState.currentQuestionIndex];
   }
 
-  get isSubmitted(): boolean {
+  public get isSubmitted(): boolean {
     return this.quizState?.isSubmitted[this.quizState.currentQuestionIndex] || false;
   }
 
-  get userAnswer(): string | null {
+  public get userAnswer(): string | null {
     return this.quizState?.userAnswers[this.quizState.currentQuestionIndex] || null;
   }
 
-  onOptionSelect(option: string): void {
+  public onOptionSelect(option: string): void {
     if (!this.isSubmitted) {
       this.selectedOption = option;
     }
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.selectedOption) {
       this.answerSubmit.emit(this.selectedOption);
     }
   }
 
-  onNext(): void {
+  public onNext(): void {
     this.nextQuestion.emit();
   }
 
-  onRestart(): void {
+  public onFinish(): void {
+    this.finishQuiz.emit();
+  }
+
+  public onRestart(): void {
     this.restartQuiz.emit();
   }
 
-  getOptionClasses(option: string): string {
+  public getOptionClasses(option: string): string {
     const baseClasses = 'flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all';
     
     if (!this.isSubmitted) {
@@ -78,7 +83,7 @@ export class QuizPanelComponent implements OnChanges {
     return `${baseClasses} border-base-300`;
   }
 
-  getProgressPercentage(): number {
+  public getProgressPercentage(): number {
     if (!this.quiz || !this.quizState) return 0;
     return ((this.quizState.currentQuestionIndex + 1) / this.quiz.questions.length) * 100;
   }

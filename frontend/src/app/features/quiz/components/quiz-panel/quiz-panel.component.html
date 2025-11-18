@@ -17,17 +17,14 @@
   </div>
 
   <!-- Quiz Completed -->
-  <div *ngIf="!isLoading && quiz && quizState?.isFinished" 
+  <div *ngIf="!isLoading && quiz && quizState?.isFinished"
        class="text-center flex flex-col items-center justify-center h-full p-6">
     <h3 class="text-2xl font-bold text-content-100 mb-2">Quiz Completed!</h3>
     <p class="text-lg text-content-200 mb-4">You scored</p>
     <div class="text-6xl font-extrabold text-brand-primary mb-6">
       {{ quizState?.score }}<span class="text-4xl text-content-200">/{{ quiz.questions.length }}</span>
     </div>
-    <button
-      (click)="onRestart()"
-      class="bg-brand-primary text-white font-bold py-2 px-6 rounded-full hover:bg-brand-secondary transition-colors"
-    >
+    <button (click)="onRestart()" class="btn btn-primary">
       Take Another Quiz
     </button>
     <p class="text-sm text-gray-500 mt-4">Return to the chat to start a new test.</p>
@@ -42,10 +39,7 @@
           Question {{ quizState.currentQuestionIndex + 1 }} of {{ quiz.questions.length }}
         </p>
         <div class="w-full bg-base-300 rounded-full h-2.5">
-          <div
-            class="bg-brand-primary h-2.5 rounded-full transition-all duration-500"
-            [style.width.%]="getProgressPercentage()"
-          ></div>
+          <div class="bg-primary h-2.5 rounded-full transition-all duration-500" [style.width.%]="getProgressPercentage()"></div>
         </div>
       </div>
     </header>
@@ -53,31 +47,18 @@
     <div class="flex-1">
       <h3 class="text-lg font-semibold text-content-100 mb-4">{{ currentQuestion?.question }}</h3>
       <div class="space-y-3">
-        <label
-          *ngFor="let option of currentQuestion?.options; let i = index"
-          [for]="'option-' + i"
-          [class]="getOptionClasses(option)"
-        >
-          <input
-            [id]="'option-' + i"
-            type="radio"
-            name="quiz-option"
-            [value]="option"
-            [checked]="selectedOption === option"
-            (change)="onOptionSelect(option)"
-            [disabled]="isSubmitted"
-            class="w-5 h-5 text-brand-primary bg-base-300 border-gray-500 focus:ring-brand-secondary"
-          />
+        <label *ngFor="let option of currentQuestion?.options; let i = index" [for]="'option-' + i" [class]="getOptionClasses(option)">
+          <input [id]="'option-' + i" type="radio" name="quiz-option" [value]="option" [checked]="selectedOption === option" (change)="onOptionSelect(option)" [disabled]="isSubmitted" class="radio radio-primary" />
           <span class="ml-4 text-content-200">{{ option }}</span>
         </label>
       </div>
     </div>
 
     <!-- Explanation -->
-    <div *ngIf="isSubmitted" 
-         [class]="userAnswer === currentQuestion?.correctAnswer ? 
-                  'mt-6 p-4 rounded-lg bg-green-500/10 text-green-300' : 
-                  'mt-6 p-4 rounded-lg bg-red-500/10 text-red-300'">
+    <div *ngIf="isSubmitted" class="mt-6 p-4 rounded-lg" [ngClass]="{
+        'bg-green-500/10 text-green-300': userAnswer === currentQuestion?.correctAnswer,
+        'bg-red-500/10 text-red-300': userAnswer !== currentQuestion?.correctAnswer
+      }">
       <h4 class="font-bold mb-1">
         {{ userAnswer === currentQuestion?.correctAnswer ? 'Correct!' : 'Incorrect' }}
       </h4>
@@ -86,22 +67,18 @@
 
     <!-- Actions -->
     <div class="mt-6">
-      <button
-        *ngIf="!isSubmitted"
-        (click)="onSubmit()"
-        [disabled]="!selectedOption"
-        class="w-full bg-brand-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-secondary disabled:bg-base-300 disabled:cursor-not-allowed transition-colors"
-      >
+      <button *ngIf="!isSubmitted" (click)="onSubmit()" [disabled]="!selectedOption" class="btn btn-primary w-full">
         Submit Answer
       </button>
-      
-      <button
-        *ngIf="isSubmitted"
-        (click)="onNext()"
-        class="w-full bg-brand-primary text-white font-bold py-3 px-4 rounded-lg hover:bg-brand-secondary transition-colors"
-      >
-        {{ quizState.currentQuestionIndex === quiz.questions.length - 1 ? 'Finish Quiz' : 'Next Question' }}
-      </button>
+
+      <ng-container *ngIf="isSubmitted">
+        <button *ngIf="quizState.currentQuestionIndex < quiz.questions.length - 1" (click)="onNext()" class="btn btn-primary w-full">
+          Next Question
+        </button>
+        <button *ngIf="quizState.currentQuestionIndex === quiz.questions.length - 1" (click)="onFinish()" class="btn btn-primary w-full">
+          Finish Quiz
+        </button>
+      </ng-container>
     </div>
   </div>
 </div>

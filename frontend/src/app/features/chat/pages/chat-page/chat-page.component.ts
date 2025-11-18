@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, combineLatest, switchMap, tap, catchError, of } from 'rxjs';
+import { Subscription, switchMap, tap, catchError, of, EMPTY } from 'rxjs';
 import { ChatPanelComponent } from '../../components/chat-panel/chat-panel.component';
 import { DashboardPanelComponent } from '../../../dashboard/components/dashboard-panel/dashboard-panel.component';
 import { QuizPanelComponent } from '../../../quiz/components/quiz-panel/quiz-panel.component';
@@ -10,7 +10,7 @@ import { NavPanelComponent } from '../../../../shared/components/nav-panel/nav-p
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
 import { ChatMessageService } from '../../../../core/services/chat-message.service';
 import { QuizService } from '../../../../core/services/quiz.service';
-import { ChatMessage, ChatSession, Quiz, QuizState } from '../../../../core/models/chat.model';
+import { ChatMessage, ChatSession } from '../../../../core/models/chat.model';
 
 @Component({
   selector: 'app-chat-page',
@@ -20,17 +20,15 @@ import { ChatMessage, ChatSession, Quiz, QuizState } from '../../../../core/mode
   styleUrls: ['./chat-page.component.css']
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
-  private subscriptions = new Subscription();
+  public isNavOpen = signal(true);
+  public currentView = signal<'chat' | 'dashboard'>('chat');
+  public isChatLoading = signal(false);
+  public isQuizLoading = signal(false);
 
-  // Signals for state management
-  isNavOpen = signal(true);
-  currentView = signal<'chat' | 'dashboard'>('chat');
-  isChatLoading = signal(false);
-  isQuizLoading = signal(false);
+  public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
+  public activeSession = toSignal(this.chatSessionService.activeSession$, { initialValue: null });
 
-  // Signals converted from observables
-  sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
-  activeSession = toSignal(this.chatSessionService.activeSession$, { initialValue: null });
+  private sessionSubscription: Subscription | undefined;
 
   constructor(
     private chatSessionService: ChatSessionService,
@@ -40,42 +38,47 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    this.subscriptions.add(
-      this.route.params.subscribe(params => {
+  public ngOnInit(): void {
+    this.sessionSubscription = this.route.params.pipe(
+      switchMap(params => {
         const sessionId = params['sessionId'];
         if (sessionId) {
-          this.chatSessionService.getSession(sessionId).subscribe();
+          return this.chatSessionService.getSession(sessionId).pipe(
+            catchError(err => {
+              console.error('Failed to get session:', err);
+              this.router.navigate(['/chat']); // Redirect on error
+              return EMPTY;
+            })
+          );
         }
+        return of(null);
       })
-    );
+    ).subscribe();
   }
 
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  public ngOnDestroy(): void {
+    this.sessionSubscription?.unsubscribe();
   }
 
-  onSendMessage(message: string): void {
+  public onSendMessage(message: string): void {
     const activeSession = this.activeSession();
     if (!activeSession) return;
-    // Optimistically add user message to the active session UI
-    const tempMessage: any = {
+
+    const tempMessage: ChatMessage = {
       id: `tmp-${Date.now()}`,
       role: 'user',
       text: message,
       timestamp: new Date()
     };
 
-    const optimisticSession: any = {
+    const optimisticSession: ChatSession = {
       ...activeSession,
       messages: [...(activeSession.messages || []), tempMessage]
-    } as typeof activeSession;
+    };
 
     this.chatSessionService.setActiveSession(optimisticSession);
-
     this.isChatLoading.set(true);
 
-    // Check if message is a quiz request
     const testMatch = message.match(/test me on\s+(.+)/i);
     if (testMatch && testMatch[1]) {
       const topic = testMatch[1].trim();
@@ -84,115 +87,109 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Regular chat message - send to backend
-    this.chatMessageService.sendMessage(activeSession.id, message).subscribe({
-      next: (response) => {
-        // Backend returned a message (could be the stored user message or a model reply)
-        // Replace temporary message if backend returned the same user message by id,
-        // otherwise append the returned message (e.g., model reply)
+    this.chatMessageService.sendMessage(activeSession.id, message).pipe(
+      tap(response => {
         const current = this.activeSession();
-        if (!current) {
-          this.isChatLoading.set(false);
-          return;
-        }
+        if (!current) return;
 
         let updatedMessages = [...(current.messages || [])];
-
         const tmpIndex = updatedMessages.findIndex(m => m.id && m.id.toString().startsWith('tmp-'));
+
         if (tmpIndex >= 0 && response.id) {
-          // replace tmp with backend message
           updatedMessages[tmpIndex] = response;
         } else {
-          updatedMessages = [...updatedMessages, response];
+          updatedMessages.push(response);
         }
 
-        const updatedSession = { ...current, messages: updatedMessages } as any;
+        const updatedSession = { ...current, messages: updatedMessages };
         this.chatSessionService.setActiveSession(updatedSession);
-        this.isChatLoading.set(false);
-      },
-      error: (error) => {
+      }),
+      catchError(error => {
         console.error('Failed to send message:', error);
-        // leave the optimistic message in place but clear loading state
-        this.isChatLoading.set(false);
-      }
-    });
+        return of(null); // Keep the optimistic message
+      })
+    ).subscribe(() => this.isChatLoading.set(false));
   }
 
-  generateQuiz(topic: string): void {
+  public generateQuiz(topic: string): void {
     const activeSession = this.activeSession();
     if (!activeSession) return;
 
     this.isQuizLoading.set(true);
-    this.quizService.generateQuiz(topic, activeSession.id).subscribe({
-      next: (quiz) => {
-        // Start the quiz automatically and update active session with quiz and quizState
-        this.quizService.startQuiz(quiz.id, activeSession.id).subscribe({
-          next: (quizState) => {
-            const current = this.activeSession();
-            if (!current) {
-              this.isQuizLoading.set(false);
-              return;
-            }
-            const updatedSession = { ...current, quiz, quizState } as any;
-            this.chatSessionService.setActiveSession(updatedSession);
-            this.isQuizLoading.set(false);
-          },
-          error: (err) => {
-            console.error('Failed to start quiz:', err);
-            this.isQuizLoading.set(false);
-          }
-        });
-      },
-      error: (error) => {
-        console.error('Failed to generate quiz:', error);
-        this.isQuizLoading.set(false);
-      }
-    });
-  }
 
-  onAnswerSubmit(answer: string): void {
-    const activeSession = this.activeSession();
-    if (!activeSession?.quizState?.id) return;
-    this.quizService.submitAnswer(activeSession.quizState.id, activeSession.quizState.currentQuestionIndex, answer)
-      .subscribe({
-        next: (updatedQuizState) => {
+    this.quizService.generateQuiz(topic, activeSession.id).pipe(
+      switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
+        tap(quizState => {
           const current = this.activeSession();
           if (!current) return;
-          const updatedSession = { ...current, quizState: updatedQuizState } as any;
+          const updatedSession = { ...current, quiz, quizState };
           this.chatSessionService.setActiveSession(updatedSession);
-        },
-        error: (err) => console.error('Failed to submit answer:', err)
-      });
+        })
+      )),
+      catchError(error => {
+        console.error('Failed to generate or start quiz:', error);
+        return of(null);
+      })
+    ).subscribe(() => this.isQuizLoading.set(false));
   }
 
-  onNextQuestion(): void {
+  public onAnswerSubmit(answer: string): void {
+    const activeSession = this.activeSession();
+    if (!activeSession?.quizState?.id) return;
+
+    this.quizService.submitAnswer(activeSession.quizState.id, activeSession.quizState.currentQuestionIndex, answer).pipe(
+      tap(updatedQuizState => {
+        const current = this.activeSession();
+        if (!current) return;
+        const updatedSession = { ...current, quizState: updatedQuizState };
+        this.chatSessionService.setActiveSession(updatedSession);
+      }),
+      catchError(err => {
+        console.error('Failed to submit answer:', err);
+        return of(null);
+      })
+    ).subscribe();
+  }
+
+  public onNextQuestion(): void {
     const activeSession = this.activeSession();
     const quizState = activeSession?.quizState;
-    const quiz = activeSession?.quiz;
-    if (!quizState || !quiz) return;
+    if (!activeSession || !quizState) return;
 
-    if (quizState.currentQuestionIndex < quiz.questions.length - 1) {
-      // Update local state for next question
-      const updatedSession = {
-        ...activeSession,
-        quizState: {
-          ...quizState,
-          currentQuestionIndex: quizState.currentQuestionIndex + 1
-        }
-      } as ChatSession;
-      this.chatSessionService.setActiveSession(updatedSession);
-    } else {
-      // Finish quiz
-      this.quizService.finishQuiz(quizState.id!).subscribe();
-    }
+    const updatedSession: ChatSession = {
+      ...activeSession,
+      quizState: {
+        ...quizState,
+        currentQuestionIndex: quizState.currentQuestionIndex + 1
+      }
+    };
+    this.chatSessionService.setActiveSession(updatedSession);
   }
 
-  onRestartQuiz(): void {
+  public onFinishQuiz(): void {
+    const activeSession = this.activeSession();
+    const quizState = activeSession?.quizState;
+    if (!quizState?.id) return;
+
+    this.quizService.finishQuiz(quizState.id).pipe(
+      tap(finishedQuizState => {
+        const current = this.activeSession();
+        if (!current) return;
+        const updatedSession = { ...current, quizState: finishedQuizState };
+        this.chatSessionService.setActiveSession(updatedSession);
+      }),
+      catchError(err => {
+        console.error('Failed to finish quiz:', err);
+        return of(null);
+      })
+    ).subscribe();
+  }
+
+  public onRestartQuiz(): void {
     const activeSession = this.activeSession();
     if (!activeSession) return;
 
-    // Clear quiz from session
-    const updatedSession = {
+    const updatedSession: any = {
       ...activeSession,
       quiz: null,
       quizState: null
@@ -200,28 +197,37 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.chatSessionService.setActiveSession(updatedSession);
   }
 
-  onNewChat(): void {
-    this.chatSessionService.createSession('New Chat').subscribe({
-      next: (session) => {
+  public onNewChat(): void {
+    this.chatSessionService.createSession('New Chat').pipe(
+      tap(session => {
         this.router.navigate(['/chat', session.id]);
-      }
-    });
+      }),
+      catchError(err => {
+        console.error('Failed to create new chat:', err);
+        return of(null);
+      })
+    ).subscribe();
   }
 
-  onSelectSession(sessionId: string): void {
+  public onSelectSession(sessionId: string): void {
     this.router.navigate(['/chat', sessionId]);
   }
 
-  onDeleteSession(sessionId: string): void {
-    this.chatSessionService.deactivateSession(sessionId).subscribe();
+  public onDeleteSession(sessionId: string): void {
+    this.chatSessionService.deactivateSession(sessionId).pipe(
+      catchError(err => {
+        console.error('Failed to delete session:', err);
+        return of(null);
+      })
+    ).subscribe();
   }
 
-  onShowDashboard(): void {
+  public onShowDashboard(): void {
     this.currentView.set('dashboard');
     this.router.navigate(['/dashboard']);
   }
 
-  toggleNav(): void {
+  public toggleNav(): void {
     this.isNavOpen.update(open => !open);
   }
 }

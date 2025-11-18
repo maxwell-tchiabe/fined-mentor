@@ -1,6 +1,8 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
-import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
+import { catchError, of, tap } from 'rxjs';
 import { DashboardPanelComponent } from '../../components/dashboard-panel/dashboard-panel.component';
 import { NavPanelComponent } from '../../../../shared/components/nav-panel/nav-panel.component';
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
@@ -12,41 +14,45 @@ import { ChatSessionService } from '../../../../core/services/chat-session.servi
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.css']
 })
-export class DashboardPageComponent implements OnInit, OnDestroy {
-  private subscriptions = new Subscription();
-  
-  isNavOpen = signal(true);
-  sessions = this.chatSessionService.sessions$;
+export class DashboardPageComponent {
+  public isNavOpen = signal(true);
+  public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
 
-  constructor(private chatSessionService: ChatSessionService) {}
+  constructor(
+    private chatSessionService: ChatSessionService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {
-    this.subscriptions.add(
-      this.chatSessionService.sessions$.subscribe()
-    );
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
-  }
-
-  toggleNav(): void {
+  public toggleNav(): void {
     this.isNavOpen.update(open => !open);
   }
 
-  onNewChat(): void {
-    // Navigate to chat page - implementation depends on your routing
+  public onNewChat(): void {
+    this.chatSessionService.createSession('New Chat').pipe(
+      tap(session => {
+        this.router.navigate(['/chat', session.id]);
+      }),
+      catchError(err => {
+        console.error('Failed to create new chat:', err);
+        return of(null);
+      })
+    ).subscribe();
   }
 
-  onSelectSession(sessionId: string): void {
-    // Navigate to chat page - implementation depends on your routing
+  public onSelectSession(sessionId: string): void {
+    this.router.navigate(['/chat', sessionId]);
   }
 
-  onDeleteSession(sessionId: string): void {
-    this.chatSessionService.deactivateSession(sessionId).subscribe();
+  public onDeleteSession(sessionId: string): void {
+    this.chatSessionService.deactivateSession(sessionId).pipe(
+      catchError(err => {
+        console.error('Failed to delete session:', err);
+        return of(null);
+      })
+    ).subscribe();
   }
 
-  onShowDashboard(): void {
+  public onShowDashboard(): void {
     // Already on dashboard
   }
 }

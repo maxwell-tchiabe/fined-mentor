@@ -75,11 +75,11 @@ public class QuizServiceImpl implements QuizService {
                 log.debug("Score updated to: {} for quiz state: {}", newScore, quizStateId);
             }
 
-            // Update current question index
-            updateCurrentQuestionIndex(quizState);
+            // Let the frontend control the question index progression
+            // updateCurrentQuestionIndex(quizState);
 
-            // Check if quiz is finished
-            checkAndMarkQuizFinished(quizState);
+            // Let the frontend control when the quiz is finished
+            // checkAndMarkQuizFinished(quizState);
 
             QuizState updatedState = quizStateRepository.save(quizState);
             log.debug("Answer submitted successfully for quiz state: {}", quizStateId);

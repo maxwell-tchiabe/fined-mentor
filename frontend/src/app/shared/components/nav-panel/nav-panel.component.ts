@@ -11,44 +11,44 @@ import { ChatSession } from '../../../core/models/chat.model';
   styleUrls: ['./nav-panel.component.css']
 })
 export class NavPanelComponent {
-  @Input() sessions: ChatSession[] | null = [];
-  @Input() activeSessionId: string | null = null;
-  @Input() currentView: 'chat' | 'dashboard' = 'chat';
-  @Output() newChat = new EventEmitter<void>();
-  @Output() selectSession = new EventEmitter<string>();
-  @Output() deleteSession = new EventEmitter<string>();
-  @Output() showDashboard = new EventEmitter<void>();
+  @Input() public sessions: ChatSession[] | null = [];
+  @Input() public activeSessionId: string | null = null;
+  @Input() public currentView: 'chat' | 'dashboard' = 'chat';
+  @Output() public newChat = new EventEmitter<void>();
+  @Output() public selectSession = new EventEmitter<string>();
+  @Output() public deleteSession = new EventEmitter<string>();
+  @Output() public showDashboard = new EventEmitter<void>();
 
   constructor(private router: Router) {}
 
-  get sortedSessions(): ChatSession[] {
+  public get sortedSessions(): ChatSession[] {
     return [...(this.sessions || [])].sort((a, b) => 
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
 
-  onNewChat(): void {
+  public onNewChat(): void {
     this.newChat.emit();
   }
 
-  onSelectSession(sessionId: string): void {
+  public onSelectSession(sessionId: string): void {
     this.selectSession.emit(sessionId);
     this.router.navigate(['/chat', sessionId]);
   }
 
-  onDeleteSession(event: Event, sessionId: string): void {
+  public onDeleteSession(event: Event, sessionId: string): void {
     event.stopPropagation();
     if (confirm('Are you sure you want to delete this chat?')) {
       this.deleteSession.emit(sessionId);
     }
   }
 
-  onShowDashboard(): void {
+  public onShowDashboard(): void {
     this.showDashboard.emit();
     this.router.navigate(['/dashboard']);
   }
 
-  isSessionActive(sessionId: string): boolean {
+  public isSessionActive(sessionId: string): boolean {
     return this.activeSessionId === sessionId && this.currentView === 'chat';
   }
 }
