@@ -58,6 +58,20 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   onSendMessage(message: string): void {
     const activeSession = this.activeSession();
     if (!activeSession) return;
+    // Optimistically add user message to the active session UI
+    const tempMessage: any = {
+      id: `tmp-${Date.now()}`,
+      role: 'user',
+      text: message,
+      timestamp: new Date()
+    };
+
+    const optimisticSession: any = {
+      ...activeSession,
+      messages: [...(activeSession.messages || []), tempMessage]
+    } as typeof activeSession;
+
+    this.chatSessionService.setActiveSession(optimisticSession);
 
     this.isChatLoading.set(true);
 
@@ -66,17 +80,39 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (testMatch && testMatch[1]) {
       const topic = testMatch[1].trim();
       this.generateQuiz(topic);
+      this.isChatLoading.set(false);
       return;
     }
 
-    // Regular chat message
+    // Regular chat message - send to backend
     this.chatMessageService.sendMessage(activeSession.id, message).subscribe({
       next: (response) => {
+        // Backend returned a message (could be the stored user message or a model reply)
+        // Replace temporary message if backend returned the same user message by id,
+        // otherwise append the returned message (e.g., model reply)
+        const current = this.activeSession();
+        if (!current) {
+          this.isChatLoading.set(false);
+          return;
+        }
+
+        let updatedMessages = [...(current.messages || [])];
+
+        const tmpIndex = updatedMessages.findIndex(m => m.id && m.id.toString().startsWith('tmp-'));
+        if (tmpIndex >= 0 && response.id) {
+          // replace tmp with backend message
+          updatedMessages[tmpIndex] = response;
+        } else {
+          updatedMessages = [...updatedMessages, response];
+        }
+
+        const updatedSession = { ...current, messages: updatedMessages } as any;
+        this.chatSessionService.setActiveSession(updatedSession);
         this.isChatLoading.set(false);
-        // The session will be updated via the service observable
       },
       error: (error) => {
         console.error('Failed to send message:', error);
+        // leave the optimistic message in place but clear loading state
         this.isChatLoading.set(false);
       }
     });
@@ -87,12 +123,25 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!activeSession) return;
 
     this.isQuizLoading.set(true);
-
     this.quizService.generateQuiz(topic, activeSession.id).subscribe({
       next: (quiz) => {
-        this.isQuizLoading.set(false);
-        // Start the quiz automatically
-        this.quizService.startQuiz(quiz.id, activeSession.id).subscribe();
+        // Start the quiz automatically and update active session with quiz and quizState
+        this.quizService.startQuiz(quiz.id, activeSession.id).subscribe({
+          next: (quizState) => {
+            const current = this.activeSession();
+            if (!current) {
+              this.isQuizLoading.set(false);
+              return;
+            }
+            const updatedSession = { ...current, quiz, quizState } as any;
+            this.chatSessionService.setActiveSession(updatedSession);
+            this.isQuizLoading.set(false);
+          },
+          error: (err) => {
+            console.error('Failed to start quiz:', err);
+            this.isQuizLoading.set(false);
+          }
+        });
       },
       error: (error) => {
         console.error('Failed to generate quiz:', error);
@@ -104,9 +153,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   onAnswerSubmit(answer: string): void {
     const activeSession = this.activeSession();
     if (!activeSession?.quizState?.id) return;
-
     this.quizService.submitAnswer(activeSession.quizState.id, activeSession.quizState.currentQuestionIndex, answer)
-      .subscribe();
+      .subscribe({
+        next: (updatedQuizState) => {
+          const current = this.activeSession();
+          if (!current) return;
+          const updatedSession = { ...current, quizState: updatedQuizState } as any;
+          this.chatSessionService.setActiveSession(updatedSession);
+        },
+        error: (err) => console.error('Failed to submit answer:', err)
+      });
   }
 
   onNextQuestion(): void {
