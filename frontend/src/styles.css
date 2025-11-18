@@ -1,0 +1,295 @@
+/* Import Tailwind */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom base styles */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-base-100 text-content-100 antialiased;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(215, 60%, 15%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 98% 98%, hsla(173, 80%, 20%, 0.2) 0px, transparent 50%);
+  }
+  
+  /* Focus styles for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-2 outline-brand-500 outline-offset-2;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-base-200;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-base-400 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-base-500;
+  }
+  
+  /* Selection styles */
+  ::selection {
+    @apply bg-brand-500/30 text-content-100;
+  }
+  
+  ::-moz-selection {
+    @apply bg-brand-500/30 text-content-100;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-dark {
+    @apply bg-base-300/80 backdrop-blur-md border border-base-400/50;
+  }
+  
+  /* Card component */
+  .card {
+    @apply bg-base-200 rounded-lg border border-base-300 shadow-soft;
+  }
+  
+  .card-hover {
+    @apply card transition-all duration-200 hover:shadow-medium hover:border-base-400;
+  }
+  
+  /* Button components */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-base-100 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .btn-primary {
+    @apply btn bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-500 active:bg-brand-700;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-base-300 text-content-200 hover:bg-base-400 focus:ring-base-500 active:bg-base-500;
+  }
+  
+  .btn-ghost {
+    @apply btn text-content-200 hover:bg-base-300/50 focus:ring-base-400;
+  }
+  
+  .btn-danger {
+    @apply btn bg-error-500 text-white hover:bg-error-600 focus:ring-error-500 active:bg-error-700;
+  }
+  
+  /* Input components */
+  .input {
+    @apply w-full px-3 py-2 bg-base-200 border border-base-300 rounded-lg text-content-100 placeholder-content-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  
+  .input-error {
+    @apply input border-error-500 focus:ring-error-500;
+  }
+  
+  /* Badge components */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply badge bg-brand-500/20 text-brand-300;
+  }
+  
+  .badge-success {
+    @apply badge bg-success-500/20 text-success-300;
+  }
+  
+  .badge-warning {
+    @apply badge bg-warning-500/20 text-warning-300;
+  }
+  
+  .badge-error {
+    @apply badge bg-error-500/20 text-error-300;
+  }
+  
+  /* Loading spinner */
+  .spinner {
+    @apply animate-spin rounded-full border-2 border-current border-t-transparent;
+  }
+  
+  /* Message bubbles */
+  .message-user {
+    @apply bg-brand-500 text-white rounded-2xl rounded-br-none;
+  }
+  
+  .message-bot {
+    @apply bg-base-300 text-content-200 rounded-2xl rounded-bl-none;
+  }
+  
+  /* Progress bar */
+  .progress-bar {
+    @apply w-full bg-base-300 rounded-full overflow-hidden;
+  }
+  
+  .progress-fill {
+    @apply h-2 bg-brand-500 rounded-full transition-all duration-500;
+  }
+  
+  /* Quiz option styles */
+  .quiz-option {
+    @apply flex items-center p-4 rounded-lg border-2 border-base-300 cursor-pointer transition-all hover:border-brand-500;
+  }
+  
+  .quiz-option-correct {
+    @apply border-success-500 bg-success-500/10;
+  }
+  
+  .quiz-option-incorrect {
+    @apply border-error-500 bg-error-500/10;
+  }
+  
+  /* Navigation styles */
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors;
+  }
+  
+  .nav-item-active {
+    @apply nav-item bg-base-300 text-content-100;
+  }
+  
+  .nav-item-inactive {
+    @apply nav-item text-content-200 hover:bg-base-300/50 hover:text-content-100;
+  }
+}
+
+/* Custom utility styles */
+@layer utilities {
+  /* Text gradients */
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent;
+  }
+  
+  /* Background gradients */
+  .bg-gradient-brand {
+    @apply bg-gradient-to-br from-brand-500 to-brand-700;
+  }
+  
+  .bg-gradient-dark {
+    @apply bg-gradient-to-br from-base-100 to-base-200;
+  }
+  
+  /* Animation delays */
+  .animation-delay-100 {
+    animation-delay: 100ms;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  /* Height utilities */
+  .h-screen-safe {
+    height: 100vh;
+    height: 100dvh;
+  }
+  
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  
+  /* Scroll snap */
+  .snap-y-mandatory {
+    scroll-snap-type: y mandatory;
+  }
+  
+  .snap-align-start {
+    scroll-snap-align: start;
+  }
+  
+  /* Backdrop filters */
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-break-after {
+    page-break-after: always;
+  }
+  
+  .print-break-before {
+    page-break-before: always;
+  }
+  
+  .print-break-inside-avoid {
+    page-break-inside: avoid;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .bg-base-200 {
+    background-color: #000000;
+  }
+  
+  .bg-base-300 {
+    background-color: #111111;
+  }
+  
+  .border-base-300 {
+    border-color: #333333;
+  }
+  
+  .text-content-200 {
+    color: #ffffff;
+  }
+}
+
+/* Dark mode support (if needed for future light mode) */
+@media (prefers-color-scheme: dark) {
+  /* Already dark by default, but good for future expansion */
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .mobile-tap-highlight {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .mobile-scroll-smooth {
+    -webkit-overflow-scrolling: touch;
+  }
+}

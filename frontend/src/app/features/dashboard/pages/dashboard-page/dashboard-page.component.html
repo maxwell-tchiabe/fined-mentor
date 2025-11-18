@@ -1,0 +1,13 @@
+<div class="flex">
+  <app-nav-panel
+    [sessions]="sessions | async"
+    (newChat)="onNewChat()"
+    (selectSession)="onSelectSession($event)"
+    (deleteSession)="onDeleteSession($event)"
+    (showDashboard)="onShowDashboard()"
+  ></app-nav-panel>
+
+  <div class="flex-1 p-4">
+    <app-dashboard-panel [sessions]="sessions | async"></app-dashboard-panel>
+  </div>
+</div>

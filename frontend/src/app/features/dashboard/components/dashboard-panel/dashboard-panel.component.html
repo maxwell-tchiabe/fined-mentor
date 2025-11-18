@@ -1,0 +1,49 @@
+<div class="bg-base-200 rounded-lg p-6 flex flex-col h-full overflow-y-auto">
+  <header class="mb-6">
+    <h2 class="text-2xl font-bold text-content-100 mb-2">Progress Dashboard</h2>
+    <p class="text-content-200">An overview of your learning journey.</p>
+  </header>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+    <div class="bg-base-300/50 p-4 rounded-lg text-center">
+      <p class="text-sm text-gray-400">Quizzes Taken</p>
+      <p class="text-4xl font-bold text-brand-primary">{{ quizzesTaken }}</p>
+    </div>
+    <div class="bg-base-300/50 p-4 rounded-lg text-center">
+      <p class="text-sm text-gray-400">Total Score</p>
+      <p class="text-4xl font-bold text-brand-primary">{{ totalScore }} / {{ totalQuestions }}</p>
+    </div>
+    <div class="bg-base-300/50 p-4 rounded-lg text-center">
+      <p class="text-sm text-gray-400">Average Score</p>
+      <p class="text-4xl font-bold text-brand-primary">{{ averageScore.toFixed(0) }}%</p>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="text-xl font-semibold text-content-100 mb-4">Performance by Topic</h3>
+    <div *ngIf="objectKeys(quizzesByTopic).length > 0; else noData" class="space-y-4">
+      <div *ngFor="let topic of objectKeys(quizzesByTopic)" class="bg-base-300/50 p-4 rounded-lg">
+        <div class="flex justify-between items-center">
+          <h4 class="font-bold text-content-100 capitalize">{{ topic }}</h4>
+          <p class="font-semibold text-brand-primary">{{ getTopicAverage(topic).toFixed(0) }}%</p>
+        </div>
+        <div class="w-full bg-base-300 rounded-full h-2.5 mt-2">
+          <div
+            class="bg-brand-primary h-2.5 rounded-full"
+            [style.width.%]="getTopicAverage(topic)"
+          ></div>
+        </div>
+        <p class="text-xs text-gray-400 mt-1">
+          ({{ getTopicScore(topic).score }}/{{ getTopicScore(topic).total }} correct)
+        </p>
+      </div>
+    </div>
+
+    <ng-template #noData>
+      <div class="text-center py-8 bg-base-300/50 rounded-lg">
+        <p class="text-content-200">No quiz data yet.</p>
+        <p class="text-sm text-gray-500">Complete a quiz to see your progress here.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
