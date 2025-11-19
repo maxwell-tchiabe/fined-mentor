@@ -71,14 +71,31 @@
         Submit Answer
       </button>
 
-      <ng-container *ngIf="isSubmitted">
-        <button *ngIf="quizState.currentQuestionIndex < quiz.questions.length - 1" (click)="onNext()" class="btn btn-primary w-full">
-          Next Question
+      <div *ngIf="isSubmitted" class="flex gap-2">
+        <button
+            *ngIf="quizState.currentQuestionIndex > 0"
+            (click)="onPrevious()"
+            class="btn btn-secondary flex-1"
+        >
+            Previous
         </button>
-        <button *ngIf="quizState.currentQuestionIndex === quiz.questions.length - 1" (click)="onFinish()" class="btn btn-primary w-full">
-          Finish Quiz
+
+        <button
+            *ngIf="quizState.currentQuestionIndex < quiz.questions.length - 1"
+            (click)="onNext()"
+            class="btn btn-primary flex-1"
+        >
+            Next Question
         </button>
-      </ng-container>
+
+        <button
+            *ngIf="quizState.currentQuestionIndex === quiz.questions.length - 1"
+            (click)="onFinish()"
+            class="btn btn-primary flex-1"
+        >
+            Finish Quiz
+        </button>
+    </div>
     </div>
   </div>
 </div>

@@ -17,6 +17,7 @@ export class QuizPanelComponent implements OnChanges {
   @Input() public isLoading = false;
   @Output() public answerSubmit = new EventEmitter<string>();
   @Output() public nextQuestion = new EventEmitter<void>();
+  @Output() public previousQuestion = new EventEmitter<void>();
   @Output() public restartQuiz = new EventEmitter<void>();
   @Output() public finishQuiz = new EventEmitter<void>();
 
@@ -57,6 +58,10 @@ export class QuizPanelComponent implements OnChanges {
     this.nextQuestion.emit();
   }
 
+  public onPrevious(): void {
+    this.previousQuestion.emit();
+  }
+
   public onFinish(): void {
     this.finishQuiz.emit();
   }
@@ -85,6 +90,6 @@ export class QuizPanelComponent implements OnChanges {
 
   public getProgressPercentage(): number {
     if (!this.quiz || !this.quizState) return 0;
-    return ((this.quizState.currentQuestionIndex + 1) / this.quiz.questions.length) * 100;
+    return ((this.quizState.currentQuestionIndex) / this.quiz.questions.length) * 100;
   }
 }

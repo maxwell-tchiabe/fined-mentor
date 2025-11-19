@@ -10,7 +10,7 @@ import { NavPanelComponent } from '../../../../shared/components/nav-panel/nav-p
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
 import { ChatMessageService } from '../../../../core/services/chat-message.service';
 import { QuizService } from '../../../../core/services/quiz.service';
-import { ChatMessage, ChatSession } from '../../../../core/models/chat.model';
+import { ChatMessage, ChatSession, QuizState } from '../../../../core/models/chat.model';
 
 @Component({
   selector: 'app-chat-page',
@@ -137,11 +137,22 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const activeSession = this.activeSession();
     if (!activeSession?.quizState?.id) return;
 
+    console.log(`Submitting answer for question index: ${activeSession.quizState.currentQuestionIndex}`);
+
     this.quizService.submitAnswer(activeSession.quizState.id, activeSession.quizState.currentQuestionIndex, answer).pipe(
       tap(updatedQuizState => {
+        console.log('Received updated quiz state from backend:', updatedQuizState);
         const current = this.activeSession();
-        if (!current) return;
-        const updatedSession = { ...current, quizState: updatedQuizState };
+        if (!current || !current.quizState) return;
+
+        // Defensive merge to prevent state loss
+        const newQuizState: QuizState = {
+          ...current.quizState,
+          ...updatedQuizState
+        };
+
+        const updatedSession = { ...current, quizState: newQuizState };
+        console.log('Setting new active session:', updatedSession);
         this.chatSessionService.setActiveSession(updatedSession);
       }),
       catchError(err => {
@@ -156,11 +167,32 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const quizState = activeSession?.quizState;
     if (!activeSession || !quizState) return;
 
+    const newIndex = quizState.currentQuestionIndex + 1;
+    console.log(`Moving to next question index: ${newIndex}`);
+
     const updatedSession: ChatSession = {
       ...activeSession,
       quizState: {
         ...quizState,
-        currentQuestionIndex: quizState.currentQuestionIndex + 1
+        currentQuestionIndex: newIndex
+      }
+    };
+    this.chatSessionService.setActiveSession(updatedSession);
+  }
+
+  public onPreviousQuestion(): void {
+    const activeSession = this.activeSession();
+    const quizState = activeSession?.quizState;
+    if (!activeSession || !quizState) return;
+
+    const newIndex = quizState.currentQuestionIndex - 1;
+    console.log(`Moving to previous question index: ${newIndex}`);
+
+    const updatedSession: ChatSession = {
+      ...activeSession,
+      quizState: {
+        ...quizState,
+        currentQuestionIndex: newIndex
       }
     };
     this.chatSessionService.setActiveSession(updatedSession);
@@ -171,8 +203,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const quizState = activeSession?.quizState;
     if (!quizState?.id) return;
 
+    console.log('Finishing quiz...');
+
     this.quizService.finishQuiz(quizState.id).pipe(
       tap(finishedQuizState => {
+        console.log('Received finished quiz state:', finishedQuizState);
         const current = this.activeSession();
         if (!current) return;
         const updatedSession = { ...current, quizState: finishedQuizState };
