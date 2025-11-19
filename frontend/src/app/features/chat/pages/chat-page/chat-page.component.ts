@@ -145,10 +145,12 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         const current = this.activeSession();
         if (!current || !current.quizState) return;
 
-        // Defensive merge to prevent state loss
+        // Defensive merge to prevent state loss, explicitly preserving the current index
+        const preservedIndex = current.quizState.currentQuestionIndex;
         const newQuizState: QuizState = {
           ...current.quizState,
-          ...updatedQuizState
+          ...updatedQuizState,
+          currentQuestionIndex: preservedIndex
         };
 
         const updatedSession = { ...current, quizState: newQuizState };
