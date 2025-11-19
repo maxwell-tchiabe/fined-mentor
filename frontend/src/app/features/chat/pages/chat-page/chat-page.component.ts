@@ -43,17 +43,25 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       switchMap(params => {
         const sessionId = params['sessionId'];
         if (sessionId) {
+          // If the session is already active, don't re-fetch
+          if (this.activeSession()?.id === sessionId) {
+            return of(this.activeSession());
+          }
           return this.chatSessionService.getSession(sessionId).pipe(
             catchError(err => {
               console.error('Failed to get session:', err);
-              this.router.navigate(['/chat']); // Redirect on error
+              this.router.navigate(['/chat']);
               return EMPTY;
             })
           );
         }
         return of(null);
       })
-    ).subscribe();
+    ).subscribe(session => {
+      if (session) {
+        this.chatSessionService.setActiveSession(session);
+      }
+    });
   }
 
   public ngOnDestroy(): void {

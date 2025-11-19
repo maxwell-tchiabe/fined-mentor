@@ -70,6 +70,18 @@ public class ChatController {
         }
     }
 
+    @GetMapping("/sessions/{sessionId}")
+    public ResponseEntity<ApiResponse<ChatSession>> getChatSession(@PathVariable String sessionId) {
+        try {
+            log.info("Retrieving chat session with details for id: {}", sessionId);
+            ChatSession session = chatSessionService.getSessionWithDetails(sessionId);
+            return ResponseEntity.ok(ApiResponse.success(session));
+        } catch (Exception e) {
+            log.error("Error retrieving chat session: {}", sessionId, e);
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
     @GetMapping("/sessions/{sessionId}/history")
     public ResponseEntity<ApiResponse<List<ChatMessage>>> getChatHistory(
             @PathVariable String sessionId) {

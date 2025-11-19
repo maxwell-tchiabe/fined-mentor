@@ -12,6 +12,7 @@ public interface ChatSessionService {
     ChatSession updateSessionTitle(String sessionId, String newTitle);
     void deactivateSession(String sessionId);
     ChatSession getSessionWithMessages(String sessionId);
+    ChatSession getSessionWithDetails(String sessionId);
 
     void findById(String chatSessionId);
 }

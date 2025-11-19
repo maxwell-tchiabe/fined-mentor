@@ -2,10 +2,14 @@ package com.fined.mentor.service;
 
 import com.fined.mentor.entity.ChatSession;
 import com.fined.mentor.entity.ChatMessage;
+import com.fined.mentor.entity.Quiz;
+import com.fined.mentor.entity.QuizState;
 import com.fined.mentor.exception.ChatSessionException;
 import com.fined.mentor.exception.ChatSessionNotFoundException;
-import com.fined.mentor.repository.ChatSessionRepository;
 import com.fined.mentor.repository.ChatMessageRepository;
+import com.fined.mentor.repository.ChatSessionRepository;
+import com.fined.mentor.repository.QuizRepository;
+import com.fined.mentor.repository.QuizStateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -22,6 +27,8 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
     private final ChatSessionRepository chatSessionRepository;
     private final ChatMessageRepository chatMessageRepository;
+    private final QuizRepository quizRepository;
+    private final QuizStateRepository quizStateRepository;
 
     @Override
     @Transactional
@@ -54,6 +61,29 @@ public class ChatSessionServiceImpl implements ChatSessionService {
                     log.warn("Chat session not found or inactive: {}", sessionId);
                     return new ChatSessionNotFoundException("Chat session not found: " + sessionId);
                 });
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ChatSession getSessionWithDetails(String sessionId) {
+        log.debug("Retrieving full chat session details for id: {}", sessionId);
+        ChatSession session = getSession(sessionId);
+
+        // Fetch and set messages
+        List<ChatMessage> messages = chatMessageRepository.findByChatSessionIdOrderByTimestampAsc(sessionId);
+        session.setMessages(messages);
+
+        // Fetch and set quiz and quiz state
+        Optional<Quiz> quizOpt = quizRepository.findByChatSessionId(sessionId);
+        if (quizOpt.isPresent()) {
+            Quiz quiz = quizOpt.get();
+            session.setQuiz(quiz);
+
+            Optional<QuizState> quizStateOpt = quizStateRepository.findByQuizId(quiz.getId());
+            quizStateOpt.ifPresent(session::setQuizState);
+        }
+
+        return session;
     }
 
     @Override
