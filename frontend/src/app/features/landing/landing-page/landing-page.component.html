@@ -1,63 +1,531 @@
-<div class="bg-white">
-    <div class="relative overflow-hidden">
-        <div class="max-w-7xl mx-auto">
-            <div class="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-                <svg class="hidden lg:block absolute right-0 inset-y-0 h-full w-48 text-white transform translate-x-1/2"
-                    fill="currentColor" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                    <polygon points="50,0 100,0 50,100 0,100" />
-                </svg>
+<div
+    class="min-h-screen bg-alien-bg text-alien-primary font-sans selection:bg-alien-accent selection:text-white overflow-x-hidden flex flex-col">
 
-                <div class="relative pt-6 px-4 sm:px-6 lg:px-8">
-                    <nav class="relative flex items-center justify-between sm:h-10 lg:justify-start"
-                        aria-label="Global">
-                        <div class="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
-                            <div class="flex items-center justify-between w-full md:w-auto">
-                                <a href="#" class="font-bold text-2xl text-indigo-600">
-                                    Fined Mentor
-                                </a>
-                            </div>
-                        </div>
-                        <div class="hidden md:block md:ml-10 md:pr-4 md:space-x-8">
-                            <a routerLink="/auth/login" class="font-medium text-gray-500 hover:text-gray-900">Log in</a>
-                            <a routerLink="/auth/register"
-                                class="font-medium text-indigo-600 hover:text-indigo-500">Register</a>
-                        </div>
-                    </nav>
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 backdrop-blur-md border-b border-white/5 bg-alien-bg/80" role="navigation"
+        aria-label="Main Navigation">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <a routerLink="/"
+                    class="flex-shrink-0 flex items-center gap-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-alien-accent rounded-lg p-1"
+                    aria-label="Fined Mentor Home">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center"
+                        aria-hidden="true">
+                        <div class="w-4 h-4 bg-alien-bg rounded-full"></div>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">Fined Mentor</span>
+                </a>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#features"
+                            class="nav-link focus:outline-none focus:text-white focus:underline">Features</a>
+                        <a href="#how-it-works" class="nav-link focus:outline-none focus:text-white focus:underline">How
+                            it Works</a>
+                        <a href="#pricing"
+                            class="nav-link focus:outline-none focus:text-white focus:underline">Pricing</a>
+                        <a href="#testimonials"
+                            class="nav-link focus:outline-none focus:text-white focus:underline">Stories</a>
+                    </div>
                 </div>
 
-                <main class="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-                    <div class="sm:text-center lg:text-left">
-                        <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                            <span class="block xl:inline">Master your skills with</span>
-                            <span class="block text-indigo-600 xl:inline"> Fined Mentor</span>
-                        </h1>
-                        <p
-                            class="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                            Join our platform to access expert mentorship, interactive quizzes, and real-time chat
-                            sessions to elevate your career.
-                        </p>
-                        <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                            <div class="rounded-md shadow">
-                                <a routerLink="/auth/register"
-                                    class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
-                                    Get started
-                                </a>
-                            </div>
-                            <div class="mt-3 sm:mt-0 sm:ml-3">
-                                <a routerLink="/auth/login"
-                                    class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 md:py-4 md:text-lg md:px-10">
-                                    Log in
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </main>
+                <!-- Mobile Hamburger -->
+                <div class="md:hidden flex items-center">
+                    <button (click)="toggleMobileMenu()" type="button"
+                        class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-alien-accent"
+                        [attr.aria-expanded]="mobileMenuOpen" aria-controls="mobile-menu" aria-label="Toggle menu">
+                        <!-- Menu / Close icons -->
+                        <svg *ngIf="!mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                        <svg *ngIf="mobileMenuOpen" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a routerLink="/auth/login"
+                        class="px-6 py-2 rounded-full border border-white/20 text-sm font-medium hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">
+                        Sign In
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-            <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-                src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2850&q=80"
-                alt="">
+    </nav>
+
+    <!-- Mobile slide-over menu (modern) -->
+    <div *ngIf="mobileMenuOpen" id="mobile-menu" class="md:hidden fixed inset-0 z-50 flex items-start justify-center">
+        <!-- Backdrop (click to close) -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" (click)="toggleMobileMenu()" aria-hidden="true"></div>
+
+        <!-- Panel -->
+        <div class="relative mt-20 w-11/12 max-w-sm bg-alien-bg/95 border border-white/10 rounded-xl shadow-2xl p-6 transform transition-all">
+            <div class="flex items-center justify-between mb-6">
+                <a routerLink="/" class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center"
+                        aria-hidden="true">
+                        <div class="w-4 h-4 bg-alien-bg rounded-full"></div>
+                    </div>
+                    <span class="font-bold text-lg text-white">Fined Mentor</span>
+                </a>
+                <button (click)="toggleMobileMenu()" aria-label="Close menu" class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-alien-accent">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="space-y-4">
+                <a href="#features" (click)="toggleMobileMenu()" class="block text-lg font-semibold text-white hover:text-alien-accent">Features</a>
+                <a href="#how-it-works" (click)="toggleMobileMenu()" class="block text-lg font-semibold text-white hover:text-alien-accent">How it Works</a>
+                <a href="#pricing" (click)="toggleMobileMenu()" class="block text-lg font-semibold text-white hover:text-alien-accent">Pricing</a>
+                <a href="#testimonials" (click)="toggleMobileMenu()" class="block text-lg font-semibold text-white hover:text-alien-accent">Stories</a>
+            </nav>
+
+            <div class="mt-6">
+                <a routerLink="/auth/login" (click)="toggleMobileMenu()" class="block w-full py-3 rounded-lg text-center bg-alien-accent text-white font-medium hover:opacity-95">Sign In</a>
+            </div>
         </div>
     </div>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section
+            class="pt-32 pb-16 sm:pt-40 sm:pb-24 lg:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center relative"
+            aria-labelledby="hero-heading">
+            <!-- Background Glow -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-hero-glow opacity-20 blur-[100px] -z-10 rounded-full pointer-events-none"
+                aria-hidden="true"></div>
+
+            <!-- Badge -->
+            <div
+                class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8 animate-fade-in">
+                <span class="text-sm text-gray-300">Build Financial Fitness</span>
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+            </div>
+
+            <!-- Headline -->
+            <h1 id="hero-heading"
+                class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 animate-slide-in-right">
+                Master finance, real estate, and investing with <span class="text-gradient-hero">Fined Mentor</span>
+            </h1>
+
+            <!-- Subtext -->
+            <p class="mt-4 text-lg text-gray-400 max-w-2xl mx-auto mb-10 animate-slide-in-left">
+                Our AI mentor is available 24/7 to help you become financially fit — learn finance, real estate, and
+                investment strategies through interactive quizzes and real-time guidance.
+            </p>
+
+            <!-- Buttons -->
+            <div
+                class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-fade-in animation-delay-200">
+                <a routerLink="/auth/register"
+                    class="btn-primary w-full sm:w-auto focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent"
+                    aria-label="Get started for free">
+                    Get Started For Free
+                </a>
+                <a href="#features"
+                    class="btn-secondary w-full sm:w-auto focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent"
+                    aria-label="Learn more about features">
+                    Learn More
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="py-20 bg-alien-bg/50 relative" aria-labelledby="features-heading">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="features-heading" class="text-3xl font-bold text-white sm:text-4xl">Why Choose Fined Mentor?
+                    </h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Everything you need to accelerate your professional
+                        growth in one place.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div
+                        class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-alien-accent/50 transition-colors group">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-blue-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Expert Mentorship</h3>
+                        <p class="text-gray-400">Get guidance from an AI-powered mentor specialized in finance, real estate,
+                            and investing to help you build wealth and avoid common mistakes.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div
+                        class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-alien-accent/50 transition-colors group">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-purple-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Interactive Quizzes</h3>
+                        <p class="text-gray-400">Test your knowledge with our curated quizzes designed to reinforce your
+                            learning and track progress.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div
+                        class="p-8 rounded-2xl bg-white/5 border border-white/10 hover:border-alien-accent/50 transition-colors group">
+                        <div
+                            class="w-12 h-12 rounded-lg bg-pink-500/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-3">Community Support</h3>
+                        <p class="text-gray-400">Join a vibrant community of learners and professionals. Share ideas,
+                            get feedback, and grow together.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="py-20 relative" aria-labelledby="how-it-works-heading">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="how-it-works-heading" class="text-3xl font-bold text-white sm:text-4xl">How It Works</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Three simple steps to start your journey.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+                    <!-- Connecting Line (Desktop) -->
+                    <div
+                        class="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 -z-10">
+                    </div>
+
+                    <!-- Step 1 -->
+                    <div class="relative flex flex-col items-center text-center">
+                        <div
+                            class="w-24 h-24 rounded-full bg-alien-bg border-4 border-blue-500/30 flex items-center justify-center mb-6 z-10">
+                            <span class="text-3xl font-bold text-white">1</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Create Account</h3>
+                        <p class="text-gray-400">Sign up in seconds and build your professional profile.</p>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="relative flex flex-col items-center text-center">
+                        <div
+                            class="w-24 h-24 rounded-full bg-alien-bg border-4 border-purple-500/30 flex items-center justify-center mb-6 z-10">
+                            <span class="text-3xl font-bold text-white">2</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Find a Mentor</h3>
+                        <p class="text-gray-400">Connect instantly with our AI mentor specialized in finance and real estate.</p>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="relative flex flex-col items-center text-center">
+                        <div
+                            class="w-24 h-24 rounded-full bg-alien-bg border-4 border-pink-500/30 flex items-center justify-center mb-6 z-10">
+                            <span class="text-3xl font-bold text-white">3</span>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Start Learning</h3>
+                        <p class="text-gray-400">Schedule sessions, take quizzes, and track your progress.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="py-20 bg-alien-bg/50" aria-labelledby="pricing-heading">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="pricing-heading" class="text-3xl font-bold text-white sm:text-4xl">Simple Pricing</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Choose the plan that fits your needs.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Free Plan -->
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 flex flex-col">
+                        <h3 class="text-xl font-semibold text-white mb-2">Starter</h3>
+                        <div class="text-4xl font-bold text-white mb-6">$0<span
+                                class="text-lg text-gray-400 font-normal">/mo</span></div>
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Access to community
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Basic quizzes
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                1 Mentor connection
+                            </li>
+                        </ul>
+                        <a routerLink="/auth/register"
+                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">Get
+                            Started</a>
+                    </div>
+
+                    <!-- Pro Plan -->
+                    <div
+                        class="p-8 rounded-2xl bg-gradient-to-b from-blue-900/20 to-purple-900/20 border border-alien-accent/50 flex flex-col relative transform md:-translate-y-4">
+                        <div
+                            class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-alien-accent rounded-full text-xs font-bold text-white uppercase tracking-wide">
+                            Most Popular</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">Pro</h3>
+                        <div class="text-4xl font-bold text-white mb-6">$29<span
+                                class="text-lg text-gray-400 font-normal">/mo</span></div>
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Everything in Starter
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Unlimited Mentor connections
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Advanced quizzes & analytics
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Priority support
+                            </li>
+                        </ul>
+                        <a href="mailto:sales@finedmentor.com"
+                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent">Contact
+                            Sales</a>
+                    </div>
+
+                    <!-- Team Plan -->
+                    <div class="p-8 rounded-2xl bg-white/5 border border-white/10 flex flex-col">
+                        <h3 class="text-xl font-semibold text-white mb-2">Team</h3>
+                        <div class="text-4xl font-bold text-white mb-6">$99<span
+                                class="text-lg text-gray-400 font-normal">/mo</span></div>
+                        <ul class="space-y-4 mb-8 flex-grow">
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                5 Team members
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Team dashboard
+                            </li>
+                            <li class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                                Custom learning paths
+                            </li>
+                        </ul>
+                        <a href="mailto:sales@finedmentor.com"
+                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">Contact
+                            Sales</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="py-20 relative" aria-labelledby="testimonials-heading">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 id="testimonials-heading" class="text-3xl font-bold text-white sm:text-4xl">Success Stories</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Hear from our community of learners and mentors.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                            <div class="ml-3">
+                                <div class="text-white font-medium">Sarah Jenkins</div>
+                                <div class="text-sm text-gray-400">Frontend Developer</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 italic">"Fined Mentor helped me bridge the gap between self-taught and
+                            job-ready. My mentor was incredible!"</p>
+                    </div>
+
+                    <!-- Testimonial 2 -->
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600"></div>
+                            <div class="ml-3">
+                                <div class="text-white font-medium">Michael Chen</div>
+                                <div class="text-sm text-gray-400">Product Designer</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 italic">"The quizzes are challenging and the community is so supportive.
+                            I've learned more here in 2 months than a year on my own."</p>
+                    </div>
+
+                    <!-- Testimonial 3 -->
+                    <div class="p-6 rounded-2xl bg-white/5 border border-white/10">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600"></div>
+                            <div class="ml-3">
+                                <div class="text-white font-medium">Jessica Williams</div>
+                                <div class="text-sm text-gray-400">Data Scientist</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 italic">"Finding a mentor who actually understands my career goals was a
+                            game changer. Highly recommend!"</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10 bg-alien-bg pt-16 pb-8" role="contentinfo">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <div class="col-span-1 md:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div
+                            class="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
+                            <div class="w-3 h-3 bg-alien-bg rounded-full"></div>
+                        </div>
+                        <span class="font-bold text-lg text-white">Fined Mentor</span>
+                    </div>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Empowering careers through expert mentorship and interactive learning.
+                    </p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-medium mb-4">Platform</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Browse
+                                Mentors</a></li>
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">How it
+                                Works</a></li>
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Pricing</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-medium mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">About
+                                Us</a></li>
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Blog</a>
+                        </li>
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Careers</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-medium mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Privacy
+                                Policy</a></li>
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Terms of
+                                Service</a></li>
+                        <li><a href="#"
+                                class="hover:text-white transition-colors focus:outline-none focus:text-white">Cookie
+                                Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-gray-500 text-sm">© 2024 Fined Mentor. All rights reserved.</p>
+                <div class="flex gap-4">
+                    <a href="#"
+                        class="text-gray-500 hover:text-white transition-colors focus:outline-none focus:text-white"
+                        aria-label="Twitter">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path
+                                d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84">
+                            </path>
+                        </svg>
+                    </a>
+                    <a href="#"
+                        class="text-gray-500 hover:text-white transition-colors focus:outline-none focus:text-white"
+                        aria-label="GitHub">
+                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
