@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { InputOtpModule } from 'primeng/inputotp';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-activate',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule],
-  templateUrl: './activate.component.html'
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, InputOtpModule],
+  templateUrl: './activate.component.html',
+  styleUrl: './activate.component.css'
 })
 export class ActivateComponent {
   activateForm: FormGroup;
