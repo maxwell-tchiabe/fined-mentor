@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +31,15 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
     @Override
     @Transactional
-    public ChatSession createSession(String title) {
+    public ChatSession createSession(String title, String userId) {
         try {
-            log.info("Creating new chat session with title: {}", title);
+            log.info("Creating new chat session with title: {} for user: {}", title, userId);
 
             ChatSession session = ChatSession.builder()
                     .title(title != null ? title : "New Chat Session")
                     .createdAt(LocalDateTime.now())
                     .active(true)
+                    .userId(userId)
                     .build();
 
             ChatSession savedSession = chatSessionRepository.save(session);
@@ -87,9 +87,9 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     }
 
     @Override
-    public List<ChatSession> getActiveSessions() {
-        log.debug("Retrieving all active chat sessions");
-        return chatSessionRepository.findByActiveTrueOrderByCreatedAtDesc();
+    public List<ChatSession> getActiveSessions(String userId) {
+        log.debug("Retrieving all active chat sessions for user: {}", userId);
+        return chatSessionRepository.findByUserIdAndActiveTrueOrderByCreatedAtDesc(userId);
     }
 
     @Override
@@ -140,10 +140,6 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
             // Load messages for this session
             List<ChatMessage> messages = chatMessageRepository.findByChatSessionIdOrderByTimestampAsc(sessionId);
-
-            // Convert to response DTO or handle as needed
-            // For now, we'll just return the session and the caller can fetch messages separately
-            // Alternatively, you could create a SessionWithMessages DTO
 
             return session;
 

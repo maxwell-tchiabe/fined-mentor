@@ -7,10 +7,13 @@ import com.fined.mentor.chat.entity.ChatMessage;
 import com.fined.mentor.chat.entity.ChatSession;
 import com.fined.mentor.chat.service.ChatService;
 import com.fined.mentor.chat.service.ChatSessionService;
+import com.fined.mentor.auth.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +31,12 @@ public class ChatController {
     public ResponseEntity<ApiResponse<ChatSession>> createChatSession(@RequestParam String title) {
         try {
             log.info("Creating new chat session with title: {}", title);
-            ChatSession session = chatService.createChatSession(title);
+
+            // Get current user
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+
+            ChatSession session = chatSessionService.createSession(title, user.getId());
             return ResponseEntity.ok(ApiResponse.success(session));
         } catch (Exception e) {
             log.error("Error creating chat session", e);
@@ -39,7 +47,11 @@ public class ChatController {
     @GetMapping("/sessions")
     public ResponseEntity<ApiResponse<List<ChatSession>>> getActiveSessions() {
         try {
-            List<ChatSession> sessions = chatSessionService.getActiveSessions();
+            // Get current user
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            User user = (User) authentication.getPrincipal();
+
+            List<ChatSession> sessions = chatSessionService.getActiveSessions(user.getId());
             return ResponseEntity.ok(ApiResponse.success(sessions));
         } catch (Exception e) {
             log.error("Error retrieving active chat sessions", e);

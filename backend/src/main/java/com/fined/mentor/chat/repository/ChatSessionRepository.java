@@ -11,4 +11,6 @@ public interface ChatSessionRepository extends MongoRepository<ChatSession, Stri
     Optional<ChatSession> findByIdAndActiveTrue(String id);
 
     List<ChatSession> findByActiveTrueOrderByCreatedAtDesc();
+
+    List<ChatSession> findByUserIdAndActiveTrueOrderByCreatedAtDesc(String userId);
 }

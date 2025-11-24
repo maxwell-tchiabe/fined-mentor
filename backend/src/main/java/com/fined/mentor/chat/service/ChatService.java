@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface ChatService {
     ChatMessage getChatResponse(String chatSessionId, String userMessage);
+
     List<ChatMessage> getChatHistory(String chatSessionId);
-    ChatSession createChatSession(String title);
+
+    ChatSession createChatSession(String title, String userId);
+
     void deactivateChatSession(String chatSessionId);
 }

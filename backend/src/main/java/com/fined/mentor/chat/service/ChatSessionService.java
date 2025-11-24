@@ -5,11 +5,11 @@ import com.fined.mentor.chat.entity.ChatSession;
 import java.util.List;
 
 public interface ChatSessionService {
-    ChatSession createSession(String title);
+    ChatSession createSession(String title, String userId);
 
     ChatSession getSession(String sessionId);
 
-    List<ChatSession> getActiveSessions();
+    List<ChatSession> getActiveSessions(String userId);
 
     ChatSession updateSessionTitle(String sessionId, String newTitle);
 

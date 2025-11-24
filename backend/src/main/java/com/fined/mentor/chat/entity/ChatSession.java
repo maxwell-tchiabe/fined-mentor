@@ -24,6 +24,7 @@ public class ChatSession {
     private String title;
     private LocalDateTime createdAt;
     private boolean active;
+    private String userId;
 
     @Transient
     private List<ChatMessage> messages;
