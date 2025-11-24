@@ -3,26 +3,18 @@
     <!-- Navigation Panel -->
     <div [class]="'relative h-full transition-all duration-300 ease-in-out ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
       <div [class]="'h-full overflow-hidden ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
-        <app-nav-panel
-          [sessions]="sessions()"
-          [activeSessionId]="activeSession()?.id || null"
-          [currentView]="currentView()"
-          (newChat)="onNewChat()"
-          (selectSession)="onSelectSession($event)"
-          (deleteSession)="onDeleteSession($event)"
-          (showDashboard)="onShowDashboard()"
-        />
+        <app-nav-panel [sessions]="sessions()" [activeSessionId]="activeSession()?.id || null"
+          [currentView]="currentView()" (newChat)="onNewChat()" (selectSession)="onSelectSession($event)"
+          (deleteSession)="onDeleteSession($event)" (showDashboard)="onShowDashboard()" />
       </div>
-      <button
-        (click)="toggleNav()"
+      <button (click)="toggleNav()"
         class="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 w-6 h-6 bg-base-300 rounded-full flex items-center justify-center text-content-200 hover:bg-brand-primary hover:text-white transition-colors shadow-lg"
-        [attr.aria-label]="isNavOpen() ? 'Collapse navigation' : 'Expand navigation'"
-      >
+        [attr.aria-label]="isNavOpen() ? 'Collapse navigation' : 'Expand navigation'">
         <svg *ngIf="isNavOpen()" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
         <svg *ngIf="!isNavOpen()" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
     </div>
@@ -33,49 +25,28 @@
       <ng-container *ngIf="currentView() === 'chat' && activeSession() as session">
         <!-- Desktop: Chat and Quiz side by side -->
         <div class="h-full hidden lg:block">
-          <app-chat-panel
-            [messages]="session.messages"
-            [isLoading]="isChatLoading()"
-            (sendMessage)="onSendMessage($event)"
-          />
+          <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
+            (sendMessage)="onSendMessage($event)" />
         </div>
-        
+
         <div class="h-full lg:col-start-auto">
           <!-- Mobile: Show either Chat or Quiz -->
           <div class="lg:hidden h-full">
-            <app-quiz-panel
-              *ngIf="session.quiz; else mobileChat"
-              [quiz]="session.quiz"
-              [quizState]="session.quizState"
-              [isLoading]="isQuizLoading()"
-              (answerSubmit)="onAnswerSubmit($event)"
-              (nextQuestion)="onNextQuestion()"
-              (previousQuestion)="onPreviousQuestion()"
-              (restartQuiz)="onRestartQuiz()"
-              (finishQuiz)="onFinishQuiz()"
-            />
-            
+            <app-quiz-panel *ngIf="session.quiz; else mobileChat" [quiz]="session.quiz" [quizState]="session.quizState"
+              [isLoading]="isQuizLoading()" (answerSubmit)="onAnswerSubmit($event)" (nextQuestion)="onNextQuestion()"
+              (previousQuestion)="onPreviousQuestion()" (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
+
             <ng-template #mobileChat>
-              <app-chat-panel
-                [messages]="session.messages"
-                [isLoading]="isChatLoading()"
-                (sendMessage)="onSendMessage($event)"
-              />
+              <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
+                (sendMessage)="onSendMessage($event)" />
             </ng-template>
           </div>
-          
+
           <!-- Desktop: Always show Quiz panel -->
           <div class="hidden lg:block h-full">
-            <app-quiz-panel
-              [quiz]="session.quiz"
-              [quizState]="session.quizState"
-              [isLoading]="isQuizLoading()"
-              (answerSubmit)="onAnswerSubmit($event)"
-              (nextQuestion)="onNextQuestion()"
-              (previousQuestion)="onPreviousQuestion()"
-              (restartQuiz)="onRestartQuiz()"
-              (finishQuiz)="onFinishQuiz()"
-            />
+            <app-quiz-panel [quiz]="session.quiz" [quizState]="session.quizState" [isLoading]="isQuizLoading()"
+              (answerSubmit)="onAnswerSubmit($event)" (nextQuestion)="onNextQuestion()"
+              (previousQuestion)="onPreviousQuestion()" (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
           </div>
         </div>
       </ng-container>
@@ -84,10 +55,10 @@
       <div *ngIf="currentView() === 'dashboard'" class="h-full col-span-1 lg:col-span-2">
         <app-dashboard-panel [sessions]="sessions()" />
       </div>
-      
+
       <!-- No Active Session -->
-      <div *ngIf="currentView() === 'chat' && !activeSession()" 
-           class="col-span-1 lg:col-span-2 h-full flex items-center justify-center text-center bg-base-200 rounded-lg">
+      <div *ngIf="currentView() === 'chat' && !activeSession()"
+        class="col-span-1 lg:col-span-2 h-full flex items-center justify-center text-center bg-base-200 rounded-lg">
         <div>
           <h2 class="text-2xl font-bold">Welcome to FinEd Mentor</h2>
           <p class="text-content-200 mt-2">Create a new chat to get started.</p>

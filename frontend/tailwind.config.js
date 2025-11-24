@@ -13,31 +13,38 @@ module.exports = {
           200: '#99f6e4',
           300: '#5eead4',
           400: '#2dd4bf',
-          500: '#14b8a6', // Primary brand color
+          500: '#14b8a6',
           600: '#0d9488',
-          700: '#0f766e', // Secondary brand color
+          700: '#0f766e',
           800: '#115e59',
           900: '#134e4a',
           950: '#042f2e',
         },
-        
+
         // Base colors (dark theme)
         'base': {
-          100: '#0f172a', // slate-900
-          200: '#1e293b', // slate-800
-          300: '#334155', // slate-700
-          400: '#475569', // slate-600
-          500: '#64748b', // slate-500
+          100: '#0f172a',
+          200: '#1e293b',
+          300: '#334155',
+          400: '#475569',
+          500: '#64748b',
         },
-        
+
+        // Alien theme colors (mapped to existing palette for consistency)
+        'alien': {
+          'bg': '#0f172a',
+          'primary': '#f8fafc',
+          'accent': '#14b8a6',
+        },
+
         // Content colors
         'content': {
-          100: '#f8fafc', // slate-50
-          200: '#e2e8f0', // slate-200
-          300: '#cbd5e1', // slate-300
-          400: '#94a3b8', // slate-400
+          100: '#f8fafc',
+          200: '#e2e8f0',
+          300: '#cbd5e1',
+          400: '#94a3b8',
         },
-        
+
         // Semantic colors
         'success': {
           50: '#f0fdf4',
@@ -45,29 +52,32 @@ module.exports = {
           600: '#16a34a',
           700: '#15803d',
         },
-        
+
         'warning': {
           50: '#fffbeb',
           500: '#f59e0b',
           600: '#d97706',
           700: '#b45309',
         },
-        
+
         'error': {
           50: '#fef2f2',
           500: '#ef4444',
           600: '#dc2626',
           700: '#b91c1c',
         },
-        
+
         'info': {
           50: '#eff6ff',
           500: '#3b82f6',
           600: '#2563eb',
           700: '#1d4ed8',
-        }
+        },
+
+        // Hero glow gradient
+        'hero-glow': 'radial-gradient(circle, rgba(20, 184, 166, 0.3) 0%, rgba(59, 130, 246, 0.2) 50%, rgba(236, 72, 153, 0.1) 100%)',
       },
-      
+
       // Custom animations
       animation: {
         'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -77,7 +87,7 @@ module.exports = {
         'bounce-subtle': 'bounceSubtle 2s infinite',
         'spin-slow': 'spin 3s linear infinite',
       },
-      
+
       // Keyframes for custom animations
       keyframes: {
         fadeIn: {
@@ -97,29 +107,29 @@ module.exports = {
           '50%': { transform: 'translateY(-5px)' },
         },
       },
-      
+
       // Custom spacing scale
       spacing: {
         '18': '4.5rem',
         '88': '22rem',
         '128': '32rem',
       },
-      
+
       // Custom typography
       fontSize: {
-        'xxs': ['0.625rem', '0.75rem'], // 10px
-        'xs': ['0.75rem', '1rem'],      // 12px
-        'sm': ['0.875rem', '1.25rem'],  // 14px
-        'base': ['1rem', '1.5rem'],     // 16px
-        'lg': ['1.125rem', '1.75rem'],  // 18px
-        'xl': ['1.25rem', '1.75rem'],   // 20px
-        '2xl': ['1.5rem', '2rem'],      // 24px
-        '3xl': ['1.875rem', '2.25rem'], // 30px
-        '4xl': ['2.25rem', '2.5rem'],   // 36px
-        '5xl': ['3rem', '1'],           // 48px
-        '6xl': ['3.75rem', '1'],        // 60px
+        'xxs': ['0.625rem', '0.75rem'],
+        'xs': ['0.75rem', '1rem'],
+        'sm': ['0.875rem', '1.25rem'],
+        'base': ['1rem', '1.5rem'],
+        'lg': ['1.125rem', '1.75rem'],
+        'xl': ['1.25rem', '1.75rem'],
+        '2xl': ['1.5rem', '2rem'],
+        '3xl': ['1.875rem', '2.25rem'],
+        '4xl': ['2.25rem', '2.5rem'],
+        '5xl': ['3rem', '1'],
+        '6xl': ['3.75rem', '1'],
       },
-      
+
       // Custom box shadow
       boxShadow: {
         'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.1), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
@@ -128,18 +138,18 @@ module.exports = {
         'glow': '0 0 20px rgba(20, 184, 166, 0.3)',
         'glow-md': '0 0 30px rgba(20, 184, 166, 0.4)',
       },
-      
+
       // Custom border radius
       borderRadius: {
         '4xl': '2rem',
         '5xl': '2.5rem',
       },
-      
+
       // Custom backdrop blur
       backdropBlur: {
         xs: '2px',
       },
-      
+
       // Custom z-index
       zIndex: {
         '60': '60',
@@ -148,13 +158,13 @@ module.exports = {
         '90': '90',
         '100': '100',
       },
-      
+
       // Custom screens
       screens: {
         'xs': '475px',
         '3xl': '1600px',
       },
-      
+
       // Custom font families
       fontFamily: {
         'sans': ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
@@ -162,7 +172,7 @@ module.exports = {
       },
     },
   },
-  
+
   // Variants
   variants: {
     extend: {
@@ -175,7 +185,7 @@ module.exports = {
       animation: ['hover', 'focus'],
     },
   },
-  
+
   // Plugins
   plugins: [
     require('@tailwindcss/forms')({

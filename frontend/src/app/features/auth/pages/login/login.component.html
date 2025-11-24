@@ -1,40 +1,80 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+<div
+    class="min-h-screen flex items-center justify-center bg-alien-bg py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <!-- Background Glow -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-alien-accent/20 opacity-20 blur-[100px] -z-10 rounded-full pointer-events-none"
+        aria-hidden="true"></div>
+
+    <div class="max-w-md w-full space-y-8 glass p-8 rounded-2xl shadow-2xl animate-fade-in">
+        <div class="flex flex-col items-center">
+            <a routerLink="/" class="flex items-center gap-3 mb-6 group">
+                <div
+                    class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                    <div class="w-5 h-5 bg-alien-bg rounded-full"></div>
+                </div>
+                <span class="font-bold text-2xl tracking-tight text-white">Fined Mentor</span>
+            </a>
+            <h2 class="mt-2 text-center text-3xl font-bold text-white">Welcome back</h2>
+            <p class="mt-2 text-center text-sm text-gray-400">
+                Sign in to continue your journey
+            </p>
         </div>
+
         <form class="mt-8 space-y-6" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-            <div class="rounded-md shadow-sm -space-y-px">
+            <div class="space-y-4">
                 <div>
-                    <label for="usernameOrEmail" class="sr-only">Username or Email</label>
+                    <label for="usernameOrEmail" class="block text-sm font-medium text-gray-300 mb-1">Username or
+                        Email</label>
                     <input id="usernameOrEmail" type="text" formControlName="usernameOrEmail" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Username or Email">
+                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
+                        placeholder="Enter your username or email">
                 </div>
                 <div>
-                    <label for="password" class="sr-only">Password</label>
+                    <div class="flex items-center justify-between mb-1">
+                        <label for="password" class="block text-sm font-medium text-gray-300">Password</label>
+                        <div class="text-sm">
+                            <a href="#"
+                                class="font-medium text-alien-accent hover:text-alien-accent/80 transition-colors">
+                                Forgot your password?
+                            </a>
+                        </div>
+                    </div>
                     <input id="password" type="password" formControlName="password" required
-                        class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                        placeholder="Password">
+                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
+                        placeholder="Enter your password">
                 </div>
             </div>
 
-            <div *ngIf="error" class="text-red-500 text-sm text-center">
+            <div *ngIf="error"
+                class="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center animate-pulse-fast">
                 {{ error }}
             </div>
 
             <div>
                 <button type="submit" [disabled]="loginForm.invalid || loading"
-                    class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50">
-                    <span *ngIf="loading">Loading...</span>
+                    class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-alien-accent hover:bg-alien-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-alien-bg focus:ring-alien-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-glow hover:shadow-glow-md">
+                    <span *ngIf="loading" class="absolute left-0 inset-y-0 flex items-center pl-3">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                    </span>
                     <span *ngIf="!loading">Sign in</span>
+                    <span *ngIf="loading">Signing in...</span>
                 </button>
             </div>
 
-            <div class="text-center">
-                <a routerLink="/auth/register" class="font-medium text-indigo-600 hover:text-indigo-500">
-                    Don't have an account? Register
-                </a>
+            <div class="text-center mt-4">
+                <p class="text-sm text-gray-400">
+                    Don't have an account?
+                    <a routerLink="/auth/register"
+                        class="font-medium text-alien-accent hover:text-alien-accent/80 transition-colors">
+                        Create one now
+                    </a>
+                </p>
             </div>
         </form>
     </div>
