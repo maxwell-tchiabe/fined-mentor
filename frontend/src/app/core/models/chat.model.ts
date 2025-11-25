@@ -37,12 +37,11 @@ export interface QuizState {
   quizId: string;
   chatSessionId: string;
   currentQuestionIndex: number;
-  userAnswers: (string | null)[];
-  isSubmitted: boolean[];
+  userAnswers: Record<number, string>;
+  isSubmitted: Record<number, boolean>;
   score: number;
-  isFinished: boolean;
+  finished: boolean;
 }
-
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;

@@ -17,12 +17,12 @@
   </div>
 
   <!-- Quiz Completed -->
-  <div *ngIf="!isLoading && quiz && quizState?.isFinished"
-       class="text-center flex flex-col items-center justify-center h-full p-6">
+  <div *ngIf="!isLoading && quiz && quizState && quizState.finished"
+    class="text-center flex flex-col items-center justify-center h-full p-6">
     <h3 class="text-2xl font-bold text-content-100 mb-2">Quiz Completed!</h3>
     <p class="text-lg text-content-200 mb-4">You scored</p>
     <div class="text-6xl font-extrabold text-brand-primary mb-6">
-      {{ quizState?.score }}<span class="text-4xl text-content-200">/{{ quiz.questions.length }}</span>
+      {{ quizState.score }}<span class="text-4xl text-content-200">/{{ quiz.questions.length }}</span>
     </div>
     <button (click)="onRestart()" class="btn btn-primary">
       Take Another Quiz
@@ -31,7 +31,7 @@
   </div>
 
   <!-- Active Quiz -->
-  <div *ngIf="!isLoading && quiz && quizState && !quizState.isFinished" class="flex flex-col h-full">
+  <div *ngIf="!isLoading && quiz && quizState && !quizState.finished" class="flex flex-col h-full">
     <header class="mb-6">
       <h2 class="text-2xl font-bold text-content-100 mb-2">Quiz: {{ quiz.topic }}</h2>
       <div>
@@ -39,7 +39,8 @@
           Question {{ quizState.currentQuestionIndex + 1 }} of {{ quiz.questions.length }}
         </p>
         <div class="w-full bg-base-300 rounded-full h-2.5">
-          <div class="bg-primary h-2.5 rounded-full transition-all duration-500" [style.width.%]="getProgressPercentage()"></div>
+          <div class="bg-primary h-2.5 rounded-full transition-all duration-500"
+            [style.width.%]="getProgressPercentage()"></div>
         </div>
       </div>
     </header>
@@ -47,8 +48,11 @@
     <div class="flex-1">
       <h3 class="text-lg font-semibold text-content-100 mb-4">{{ currentQuestion?.question }}</h3>
       <div class="space-y-3">
-        <label *ngFor="let option of currentQuestion?.options; let i = index" [for]="'option-' + i" [class]="getOptionClasses(option)">
-          <input [id]="'option-' + i" type="radio" name="quiz-option" [value]="option" [checked]="selectedOption === option" (change)="onOptionSelect(option)" [disabled]="isSubmitted" class="radio radio-primary" />
+        <label *ngFor="let option of currentQuestion?.options; let i = index" [for]="'option-' + i"
+          [class]="getOptionClasses(option)">
+          <input [id]="'option-' + i" type="radio" name="quiz-option" [value]="option"
+            [checked]="selectedOption === option" (change)="onOptionSelect(option)" [disabled]="isSubmitted"
+            class="radio radio-primary" />
           <span class="ml-4 text-content-200">{{ option }}</span>
         </label>
       </div>
@@ -72,30 +76,20 @@
       </button>
 
       <div *ngIf="isSubmitted" class="flex gap-2">
-        <button
-            *ngIf="quizState.currentQuestionIndex > 0"
-            (click)="onPrevious()"
-            class="btn btn-secondary flex-1"
-        >
-            Previous
+        <button *ngIf="quizState.currentQuestionIndex > 0" (click)="onPrevious()" class="btn btn-secondary flex-1">
+          Previous
         </button>
 
-        <button
-            *ngIf="quizState.currentQuestionIndex < quiz.questions.length - 1"
-            (click)="onNext()"
-            class="btn btn-primary flex-1"
-        >
-            Next Question
+        <button *ngIf="quizState.currentQuestionIndex < quiz.questions.length - 1" (click)="onNext()"
+          class="btn btn-primary flex-1">
+          Next Question
         </button>
 
-        <button
-            *ngIf="quizState.currentQuestionIndex === quiz.questions.length - 1"
-            (click)="onFinish()"
-            class="btn btn-primary flex-1"
-        >
-            Finish Quiz
+        <button *ngIf="quizState.currentQuestionIndex === quiz.questions.length - 1" (click)="onFinish()"
+          class="btn btn-primary flex-1">
+          Finish Quiz
         </button>
-    </div>
+      </div>
     </div>
   </div>
 </div>

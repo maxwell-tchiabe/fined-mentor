@@ -21,7 +21,7 @@ export class ChatSessionService extends ApiService {
 
   createSession(title: string): Observable<ChatSession> {
     return this.http.post<ApiResponse<ChatSession>>(
-      `${this.apiUrl}/chat/sessions?title=${encodeURIComponent(title)}`, 
+      `${this.apiUrl}/chat/sessions?title=${encodeURIComponent(title)}`,
       {}
     ).pipe(
       map(response => response.data),
@@ -57,7 +57,7 @@ export class ChatSessionService extends ApiService {
         const currentSessions = this.sessionsSubject.value;
         const updatedSessions = currentSessions.filter(s => s.id !== sessionId);
         this.sessionsSubject.next(updatedSessions);
-        
+
         if (this.activeSessionSubject.value?.id === sessionId) {
           this.activeSessionSubject.next(updatedSessions[0] || null);
         }
@@ -67,6 +67,16 @@ export class ChatSessionService extends ApiService {
 
   setActiveSession(session: ChatSession): void {
     this.activeSessionSubject.next(session);
+
+    // Also update the session in the sessions list so dashboard gets updated
+    const currentSessions = this.sessionsSubject.value;
+    const sessionIndex = currentSessions.findIndex(s => s.id === session.id);
+
+    if (sessionIndex >= 0) {
+      const updatedSessions = [...currentSessions];
+      updatedSessions[sessionIndex] = session;
+      this.sessionsSubject.next(updatedSessions);
+    }
   }
 
   private loadSessions(): void {

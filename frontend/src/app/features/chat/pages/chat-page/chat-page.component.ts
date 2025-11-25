@@ -36,7 +36,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private route: ActivatedRoute,
     private router: Router
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.sessionSubscription = this.route.params.pipe(
@@ -219,8 +219,19 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       tap(finishedQuizState => {
         console.log('Received finished quiz state:', finishedQuizState);
         const current = this.activeSession();
-        if (!current) return;
-        const updatedSession = { ...current, quizState: finishedQuizState };
+        if (!current || !current.quizState) return;
+
+        // Defensive merge to prevent state loss, explicitly preserving the isFinished flag
+        const preservedIsFinished = finishedQuizState.finished;
+        console.log('Preserved isFinished:', preservedIsFinished);
+        const newQuizState: QuizState = {
+          ...current.quizState,
+          ...finishedQuizState,
+          finished: preservedIsFinished
+        };
+
+        const updatedSession = { ...current, quizState: newQuizState };
+        console.log('Setting new active session:', updatedSession);
         this.chatSessionService.setActiveSession(updatedSession);
       }),
       catchError(err => {

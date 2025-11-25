@@ -30,7 +30,7 @@ export class DashboardPanelComponent implements OnChanges {
   }
 
   private calculateStats(): void {
-    const finishedSessions = (this.sessions || []).filter(s => s.quiz && s.quizState?.isFinished);
+    const finishedSessions = (this.sessions || []).filter(s => s.quiz && s.quizState?.finished);
 
     this.quizzesTaken = finishedSessions.length;
     this.totalScore = finishedSessions.reduce((acc, s) => acc + (s.quizState?.score || 0), 0);
@@ -51,7 +51,7 @@ export class DashboardPanelComponent implements OnChanges {
   public getTopicAverage(topic: string): number {
     const stats = this.quizzesByTopic[topic];
     if (!stats) return 0;
-    
+
     const topicTotalScore = stats.scores.reduce((a, b) => a + b, 0);
     const topicTotalQuestions = stats.total.reduce((a, b) => a + b, 0);
     return topicTotalQuestions > 0 ? (topicTotalScore / topicTotalQuestions) * 100 : 0;
@@ -60,13 +60,13 @@ export class DashboardPanelComponent implements OnChanges {
   public getTopicScore(topic: string): { score: number; total: number } {
     const stats = this.quizzesByTopic[topic];
     if (!stats) return { score: 0, total: 0 };
-    
+
     const score = stats.scores.reduce((a, b) => a + b, 0);
     const total = stats.total.reduce((a, b) => a + b, 0);
     return { score, total };
   }
 
   public objectKeys(obj: any): string[] {
-  return Object.keys(obj);
-}
+    return Object.keys(obj);
+  }
 }
