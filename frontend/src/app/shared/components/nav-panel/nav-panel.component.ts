@@ -19,10 +19,10 @@ export class NavPanelComponent {
   @Output() public deleteSession = new EventEmitter<string>();
   @Output() public showDashboard = new EventEmitter<void>();
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
 
   public get sortedSessions(): ChatSession[] {
-    return [...(this.sessions || [])].sort((a, b) => 
+    return [...(this.sessions || [])].sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
   }
