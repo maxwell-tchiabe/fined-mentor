@@ -74,7 +74,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
         session.setMessages(messages);
 
         // Fetch and set quiz and quiz state
-        Optional<Quiz> quizOpt = quizRepository.findByChatSessionId(sessionId);
+        Optional<Quiz> quizOpt = quizRepository.findFirstByChatSessionIdOrderByCreatedAtDesc(sessionId);
         if (quizOpt.isPresent()) {
             Quiz quiz = quizOpt.get();
             session.setQuiz(quiz);

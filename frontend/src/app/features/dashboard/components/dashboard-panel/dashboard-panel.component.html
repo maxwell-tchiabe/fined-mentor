@@ -7,15 +7,15 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
     <div class="bg-base-300/50 p-4 rounded-lg text-center">
       <p class="text-sm text-gray-400">Quizzes Taken</p>
-      <p class="text-4xl font-bold text-brand-primary">{{ quizzesTaken }}</p>
+      <p class="text-4xl font-bold text-brand-500">{{ quizzesTaken }}</p>
     </div>
     <div class="bg-base-300/50 p-4 rounded-lg text-center">
       <p class="text-sm text-gray-400">Total Score</p>
-      <p class="text-4xl font-bold text-brand-primary">{{ totalScore }} / {{ totalQuestions }}</p>
+      <p class="text-4xl font-bold text-brand-500">{{ totalScore }} / {{ totalQuestions }}</p>
     </div>
     <div class="bg-base-300/50 p-4 rounded-lg text-center">
       <p class="text-sm text-gray-400">Average Score</p>
-      <p class="text-4xl font-bold text-brand-primary">{{ averageScore.toFixed(0) }}%</p>
+      <p class="text-4xl font-bold text-brand-500">{{ averageScore.toFixed(0) }}%</p>
     </div>
   </div>
 
@@ -25,10 +25,10 @@
       <div *ngFor="let topic of objectKeys(quizzesByTopic)" class="bg-base-300/50 p-4 rounded-lg">
         <div class="flex justify-between items-center">
           <h4 class="font-bold text-content-100 capitalize">{{ topic }}</h4>
-          <p class="font-semibold text-brand-primary">{{ getTopicAverage(topic).toFixed(0) }}%</p>
+          <p class="font-semibold text-brand-500">{{ getTopicAverage(topic).toFixed(0) }}%</p>
         </div>
         <div class="w-full bg-base-300 rounded-full h-2.5 mt-2">
-          <div class="bg-brand-primary h-2.5 rounded-full" [style.width.%]="getTopicAverage(topic)"></div>
+          <div class="bg-brand-500 h-2.5 rounded-full" [style.width.%]="getTopicAverage(topic)"></div>
         </div>
         <p class="text-xs text-gray-400 mt-1">
           ({{ getTopicScore(topic).score }}/{{ getTopicScore(topic).total }} correct)

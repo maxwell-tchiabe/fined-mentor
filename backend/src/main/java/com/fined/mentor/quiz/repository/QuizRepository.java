@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface QuizRepository extends MongoRepository<Quiz, String> {
     Optional<Quiz> findByChatSessionId(String chatSessionId);
+
+    Optional<Quiz> findFirstByChatSessionIdOrderByCreatedAtDesc(String chatSessionId);
 }

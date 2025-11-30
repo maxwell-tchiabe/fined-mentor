@@ -150,8 +150,7 @@ public class QuizServiceImpl implements QuizService {
                 boolean isCorrect = isAnswerCorrect(
                         userAns,
                         questions.get(i).getCorrectAnswer(),
-                        questions.get(i).getType()
-                );
+                        questions.get(i).getType());
                 if (isCorrect) {
                     score++;
                 }
@@ -184,12 +183,15 @@ public class QuizServiceImpl implements QuizService {
     }
 
     private String normalizeTrueFalseAnswer(String answer) {
-        if (answer == null) return "";
+        if (answer == null)
+            return "";
 
         String normalized = answer.trim().toLowerCase();
-        if (normalized.startsWith("t") || normalized.equals("yes") || normalized.equals("y") || normalized.equals("1")) {
+        if (normalized.startsWith("t") || normalized.equals("yes") || normalized.equals("y")
+                || normalized.equals("1")) {
             return "true";
-        } else if (normalized.startsWith("f") || normalized.equals("no") || normalized.equals("n") || normalized.equals("0")) {
+        } else if (normalized.startsWith("f") || normalized.equals("no") || normalized.equals("n")
+                || normalized.equals("0")) {
             return "false";
         }
         return normalized;
@@ -219,7 +221,8 @@ public class QuizServiceImpl implements QuizService {
 
         if (question.getType() == QuizQuestion.QuestionType.MULTIPLE_CHOICE) {
             if (question.getOptions() == null || question.getOptions().length < 2) {
-                throw new QuizValidationException("Multiple choice questions must have at least 2 options for question " + (index + 1));
+                throw new QuizValidationException(
+                        "Multiple choice questions must have at least 2 options for question " + (index + 1));
             }
 
             // Verify correct answer is among options
@@ -232,7 +235,8 @@ public class QuizServiceImpl implements QuizService {
             }
 
             if (!correctAnswerFound) {
-                throw new QuizValidationException("Correct answer must be one of the provided options for question " + (index + 1));
+                throw new QuizValidationException(
+                        "Correct answer must be one of the provided options for question " + (index + 1));
             }
         }
     }
@@ -299,7 +303,6 @@ public class QuizServiceImpl implements QuizService {
         return quiz.getQuestions().size();
     }
 
-
     @Override
     public QuizState startQuiz(String quizId, String chatSessionId) {
         Quiz quiz = quizRepository.findById(quizId)
@@ -318,7 +321,7 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public Quiz getQuizBySessionId(String sessionId) {
-        return quizRepository.findByChatSessionId(sessionId)
+        return quizRepository.findFirstByChatSessionIdOrderByCreatedAtDesc(sessionId)
                 .orElseThrow(() -> new RuntimeException("Quiz not found for this session"));
     }
 
@@ -330,7 +333,7 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public QuizState getQuizStateBySessionId(String sessionId) {
-        return quizStateRepository.findByChatSessionId(sessionId)
+        return quizStateRepository.findFirstByChatSessionIdOrderByIdDesc(sessionId)
                 .orElseThrow(() -> new RuntimeException("Quiz state not found for this session"));
     }
 }

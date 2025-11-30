@@ -1,5 +1,6 @@
 package com.fined.mentor.quiz.service;
 
+import com.fined.mentor.quiz.dto.GeneratedQuizDTO;
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.exception.QuizGenerationException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +14,11 @@ import java.util.Map;
 
 @Slf4j
 @Service
-
 class QuizGenerationServiceImpl implements QuizGenerationService {
-
 
     private final ChatClient chatClient;
 
-    public QuizGenerationServiceImpl(ChatClient.Builder builder){
+    public QuizGenerationServiceImpl(ChatClient.Builder builder) {
         this.chatClient = builder.build();
     }
 
@@ -28,26 +27,30 @@ class QuizGenerationServiceImpl implements QuizGenerationService {
         try {
             log.info("Generating quiz for topic: {}", topic);
 
-            // Use BeanOutputConverter instead of BeanOutputParser
-            BeanOutputConverter<Quiz> outputConverter = new BeanOutputConverter<>(Quiz.class);
+            // Use BeanOutputConverter with DTO to avoid ID generation issues
+            BeanOutputConverter<GeneratedQuizDTO> outputConverter = new BeanOutputConverter<>(GeneratedQuizDTO.class);
 
             String promptString = """
-                You are FinEd Mentor, an expert in finance, real estate, and investment.
-                Generate a 5-question quiz on the topic of "{topic}".
-                The quiz should be suitable for a beginner.
-                The questions should be a mix of multiple-choice and true/false.
-                Provide a concise explanation for each correct answer.
-                {format}
-                """;
+                    You are FinEd Mentor, an expert in finance, real estate, and investment.
+                    Generate a 5-question quiz on the topic of "{topic}".
+                    The quiz should be suitable for a beginner.
+                    The questions should be a mix of multiple-choice and true/false.
+                    Provide a concise explanation for each correct answer.
+                    {format}
+                    """;
 
             PromptTemplate promptTemplate = new PromptTemplate(promptString);
             Prompt prompt = promptTemplate.create(Map.of("topic", topic, "format", outputConverter.getFormat()));
 
             String content = chatClient.prompt(prompt).call().content();
 
-            // Parse the AI response content with BeanOutputConverter
-            Quiz quiz = outputConverter.convert(content);
-            quiz.setCreatedAt(java.time.LocalDateTime.now());
+            GeneratedQuizDTO generatedQuiz = outputConverter.convert(content);
+
+            Quiz quiz = Quiz.builder()
+                    .topic(generatedQuiz.getTopic())
+                    .questions(generatedQuiz.getQuestions())
+                    .createdAt(java.time.LocalDateTime.now())
+                    .build();
 
             log.debug("Successfully generated quiz with {} questions", quiz.getQuestions().size());
 

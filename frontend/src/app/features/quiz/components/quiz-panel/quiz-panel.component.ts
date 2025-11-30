@@ -72,24 +72,24 @@ export class QuizPanelComponent implements OnChanges {
 
   public getOptionClasses(option: string): string {
     const baseClasses = 'flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all';
-    
+
     if (!this.isSubmitted) {
       return `${baseClasses} border-base-300 hover:border-brand-primary`;
     }
-    
+
     if (option === this.currentQuestion?.correctAnswer) {
       return `${baseClasses} border-green-500 bg-green-500/10`;
     }
-    
+
     if (option === this.userAnswer && option !== this.currentQuestion?.correctAnswer) {
       return `${baseClasses} border-red-500 bg-red-500/10`;
     }
-    
+
     return `${baseClasses} border-base-300`;
   }
 
   public getProgressPercentage(): number {
     if (!this.quiz || !this.quizState) return 0;
-    return ((this.quizState.currentQuestionIndex) / this.quiz.questions.length) * 100;
+    return ((this.quizState.currentQuestionIndex + 1) / this.quiz.questions.length) * 100;
   }
 }
