@@ -31,11 +31,32 @@ class QuizGenerationServiceImpl implements QuizGenerationService {
             BeanOutputConverter<GeneratedQuizDTO> outputConverter = new BeanOutputConverter<>(GeneratedQuizDTO.class);
 
             String promptString = """
-                    You are FinEd Mentor, an expert in finance, real estate, and investment.
-                    Generate a 5-question quiz on the topic of "{topic}".
-                    The quiz should be suitable for a beginner.
-                    The questions should be a mix of multiple-choice and true/false.
-                    Provide a concise explanation for each correct answer.
+                    Generate a 5-question beginner quiz on "{topic}" (finance/real estate/investment domain).
+
+                    REASONING STEPS:
+                    1. Identify 5 core concepts beginners should know about "{topic}"
+                    2. For each concept, determine if multiple-choice or true/false fits best
+                    3. Ensure balanced difficulty progression (easiest to moderate)
+                    4. Write 1-2 sentence explanations using simple terms
+
+                    EXAMPLE (DO NOT COPY):
+                    Question: "What is compound interest?"
+                    Type: Multiple Choice
+                    Options: ["Interest on interest earned", "Simple interest rate", "Bank fee structure", "Investment loss"]
+                    Correct: "Interest on interest earned"
+                    Explanation: "Compound interest grows your money faster because you earn interest on both your initial deposit and previously earned interest."
+
+                    REQUIREMENTS:
+                    - Question mix: 3 multiple-choice + 2 true/false
+                    - Each explanation: 1-2 sentences maximum
+                    - Vocabulary: 8th-grade reading level
+
+                    AVOID:
+                    - Complex calculations or formulas
+                    - Jargon without definitions
+                    - Trick questions or ambiguous phrasing
+                    - Questions requiring current market data
+
                     {format}
                     """;
 

@@ -1,6 +1,6 @@
 export interface ChatMessage {
   id?: string;
-  role: 'user' | 'model';
+  role: 'USER' | 'MODEL';
   text: string;
   timestamp?: Date;
   chatSessionId?: string;

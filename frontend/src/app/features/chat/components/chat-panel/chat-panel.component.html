@@ -7,20 +7,11 @@
     <div *ngFor="let msg of messages; trackBy: trackByMessage" [class]="getMessageClasses(msg)">
 
       <div class="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center"
-        [class.bg-brand-primary]="msg.role.toLowerCase() === 'model'"
-        [class.bg-base-300]="msg.role.toLowerCase() === 'user'">
+        [class.bg-brand-500]="msg.role === 'MODEL'" [class.bg-base-300]="msg.role === 'USER'">
 
-        <svg *ngIf="msg.role.toLowerCase() === 'model'" class="w-5 h-5 text-base-100" fill="none" stroke="currentColor"
-          viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
+        <i *ngIf="msg.role === 'MODEL'" class="pi pi-comment text-xl text-base-100"></i>
 
-        <svg *ngIf="msg.role.toLowerCase() === 'user'" class="w-5 h-5 text-content-200" fill="none"
-          stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
+        <i *ngIf="msg.role === 'USER'" class="pi pi-user text-xl text-content-200"></i>
       </div>
 
       <div [class]="getBubbleClasses(msg)">
@@ -39,9 +30,7 @@
         [disabled]="isLoading" />
       <button type="submit" [disabled]="isLoading || !messageInput.trim()"
         class="p-2 mr-2 rounded-full bg-brand-primary text-white disabled:bg-base-300 disabled:text-gray-500 hover:bg-brand-secondary transition-colors">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-        </svg>
+        <i class="pi pi-send text-xl"></i>
       </button>
     </div>
   </form>

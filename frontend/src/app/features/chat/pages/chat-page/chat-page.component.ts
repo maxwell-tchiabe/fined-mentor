@@ -74,7 +74,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     const tempMessage: ChatMessage = {
       id: `tmp-${Date.now()}`,
-      role: 'user',
+      role: 'USER',
       text: message,
       timestamp: new Date()
     };
@@ -101,20 +101,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         if (!current) return;
 
         let updatedMessages = [...(current.messages || [])];
-        const tmpIndex = updatedMessages.findIndex(m => m.id && m.id.toString().startsWith('tmp-'));
 
-        if (tmpIndex >= 0 && response.id) {
-          updatedMessages[tmpIndex] = response;
-        } else {
-          updatedMessages.push(response);
-        }
+        // Append the model response. We keep the temporary user message.
+        updatedMessages.push(response);
 
         const updatedSession = { ...current, messages: updatedMessages };
         this.chatSessionService.setActiveSession(updatedSession);
       }),
       catchError(error => {
         console.error('Failed to send message:', error);
-        return of(null); // Keep the optimistic message
+        return of(null);
       })
     ).subscribe(() => this.isChatLoading.set(false));
   }

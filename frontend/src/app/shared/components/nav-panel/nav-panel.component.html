@@ -2,10 +2,7 @@
   <div class="p-4 flex items-center justify-between border-b border-base-300">
     <div class="flex items-center gap-2">
       <div class="w-8 h-8 flex-shrink-0 bg-brand-primary rounded-full flex items-center justify-center">
-        <svg class="w-5 h-5 text-base-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
+        <i class="pi pi-comment text-xl text-brand-500"></i>
       </div>
       <h1 class="text-xl font-bold text-content-100">FinEd Mentor</h1>
     </div>
@@ -13,21 +10,16 @@
 
   <div class="p-2 space-y-2">
     <button (click)="onNewChat()"
-      class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-brand-primary text-white hover:bg-brand-secondary transition-colors">
+      class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium rounded-md bg-brand-500 text-alien-primary hover:bg-brand-700 transition-colors">
       New Chat
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
+      <i class="pi pi-plus text-xl"></i>
     </button>
 
     <button (click)="onShowDashboard()"
       [class]="currentView === 'dashboard' ? 
                'w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md bg-base-300 text-content-100 transition-colors' :
                'w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md hover:bg-base-300/50 transition-colors'">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-      </svg>
+      <i class="pi pi-chart-bar text-xl"></i>
       Dashboard
     </button>
   </div>
@@ -43,10 +35,7 @@
         <button (click)="onDeleteSession($event, session.id)"
           class="ml-2 p-1 rounded-full text-gray-500 hover:bg-red-500/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
           aria-label="Delete chat">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
+          <i class="pi pi-trash text-base"></i>
         </button>
       </div>
     </div>

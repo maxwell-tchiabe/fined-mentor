@@ -56,13 +56,13 @@ export class ChatPanelComponent implements OnChanges {
 
   public getMessageClasses(msg: ChatMessage): string {
     const baseClasses = 'flex items-start gap-3';
-    return msg.role.toLowerCase() === 'user' ? `${baseClasses} flex-row-reverse` : baseClasses;
+    return msg.role === 'USER' ? `${baseClasses} flex-row-reverse` : baseClasses;
   }
 
   public getBubbleClasses(msg: ChatMessage): string {
     const baseClasses = 'max-w-md lg:max-w-lg px-4 py-3 rounded-2xl';
-    return msg.role.toLowerCase() === 'user'
-      ? `${baseClasses} bg-brand-primary text-white rounded-br-none`
+    return msg.role === 'USER'
+      ? `${baseClasses} bg-brand-500 text-content-200 rounded-br-none`
       : `${baseClasses} bg-base-300 text-content-200 rounded-bl-none`;
   }
 }
