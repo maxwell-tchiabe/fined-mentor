@@ -16,10 +16,12 @@ export class ChatPanelComponent implements OnChanges {
   @Input() public messages: ChatMessage[] = [];
   @Input() public isLoading = false;
   @Output() public sendMessage = new EventEmitter<string>();
+  @Output() public generateQuiz = new EventEmitter<string>();
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   public messageInput = '';
+  public isQuizMode = false;
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['messages']) {
@@ -27,9 +29,18 @@ export class ChatPanelComponent implements OnChanges {
     }
   }
 
+  public toggleQuizMode(): void {
+    this.isQuizMode = !this.isQuizMode;
+    this.messageInput = ''; // Clear input when switching modes
+  }
+
   public onSubmit(): void {
     if (this.messageInput.trim() && !this.isLoading) {
-      this.sendMessage.emit(this.messageInput.trim());
+      if (this.isQuizMode) {
+        this.generateQuiz.emit(this.messageInput.trim());
+      } else {
+        this.sendMessage.emit(this.messageInput.trim());
+      }
       this.messageInput = '';
     }
   }

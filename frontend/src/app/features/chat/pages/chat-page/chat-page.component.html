@@ -26,7 +26,7 @@
         <!-- Desktop: Chat and Quiz side by side -->
         <div class="h-full hidden lg:block">
           <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
-            (sendMessage)="onSendMessage($event)" />
+            (sendMessage)="onSendMessage($event)" (generateQuiz)="generateQuiz($event)" />
         </div>
 
         <div class="h-full lg:col-start-auto">
@@ -38,7 +38,7 @@
 
             <ng-template #mobileChat>
               <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
-                (sendMessage)="onSendMessage($event)" />
+                (sendMessage)="onSendMessage($event)" (generateQuiz)="generateQuiz($event)" />
             </ng-template>
           </div>
 
