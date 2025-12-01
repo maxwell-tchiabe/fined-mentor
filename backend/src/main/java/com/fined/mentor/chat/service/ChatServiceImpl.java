@@ -3,6 +3,7 @@ package com.fined.mentor.chat.service;
 import com.fined.mentor.chat.entity.ChatMessage;
 import com.fined.mentor.chat.entity.ChatSession;
 import com.fined.mentor.chat.exception.ChatException;
+import com.fined.mentor.tavily.TavilySearchTool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
@@ -21,17 +22,29 @@ public class ChatServiceImpl implements ChatService {
     private final ChatClient chatClient;
     private final ChatSessionService chatSessionService;
     private final ChatMessageService chatMessageService;
+    private final TavilySearchTool tavilySearchTool;
 
     public ChatServiceImpl(ChatClient.Builder chatClientBuilder,
             ChatSessionService chatSessionService,
-            ChatMessageService chatMessageService) {
+            ChatMessageService chatMessageService,
+            TavilySearchTool tavilySearchTool) {
         this.chatClient = chatClientBuilder.build();
         this.chatSessionService = chatSessionService;
         this.chatMessageService = chatMessageService;
+        this.tavilySearchTool = tavilySearchTool;
     }
 
     private static final String SYSTEM_PROMPT = """
             You are FinEd Mentor, an expert in finance, real estate, and investment.
+            You have access to a web search tool. Use it to find current information when asked about recent events, market trends, or specific data points.
+            Always cite your sources when using information from the web.
+            
+            **Source References**:
+               Include a list of the most relevant sources in markdown format:
+               - [Source 1 Title](url1)
+               - [Source 2 Title](url2)
+               - [Source 3 Title](url3)
+               Provide up to 5 sources based on their relevance and credibility.
 
             REASONING APPROACH (follow for every response):
             1. Analyze user's question to identify their knowledge level
@@ -114,7 +127,10 @@ public class ChatServiceImpl implements ChatService {
 
             Prompt prompt = new Prompt(history);
 
-            String responseContent = chatClient.prompt(prompt).call().content();
+            String responseContent = chatClient.prompt(prompt)
+                    .tools(tavilySearchTool)
+                    .call()
+                    .content();
 
             ChatMessage aiResponse = chatMessageService.saveMessage(
                     ChatMessage.builder()

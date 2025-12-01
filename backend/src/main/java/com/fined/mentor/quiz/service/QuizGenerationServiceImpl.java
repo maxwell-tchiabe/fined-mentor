@@ -5,6 +5,7 @@ import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.exception.QuizGenerationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import com.fined.mentor.tavily.TavilySearchTool;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.BeanOutputConverter;
@@ -17,9 +18,11 @@ import java.util.Map;
 class QuizGenerationServiceImpl implements QuizGenerationService {
 
     private final ChatClient chatClient;
+    private final TavilySearchTool tavilySearchTool;
 
-    public QuizGenerationServiceImpl(ChatClient.Builder builder) {
+    public QuizGenerationServiceImpl(ChatClient.Builder builder, TavilySearchTool tavilySearchTool) {
         this.chatClient = builder.build();
+        this.tavilySearchTool = tavilySearchTool;
     }
 
     @Override
@@ -32,6 +35,7 @@ class QuizGenerationServiceImpl implements QuizGenerationService {
 
             String promptString = """
                     Generate a 5-question beginner quiz on "{topic}" (finance/real estate/investment domain).
+                    You have access to a web search tool. Use it to find current information if the topic relates to recent events or trends.
 
                     REASONING STEPS:
                     1. Identify 5 core concepts beginners should know about "{topic}"
@@ -55,7 +59,7 @@ class QuizGenerationServiceImpl implements QuizGenerationService {
                     - Complex calculations or formulas
                     - Jargon without definitions
                     - Trick questions or ambiguous phrasing
-                    - Questions requiring current market data
+                    - Questions requiring current market data (unless using search tool)
 
                     {format}
                     """;
@@ -63,7 +67,10 @@ class QuizGenerationServiceImpl implements QuizGenerationService {
             PromptTemplate promptTemplate = new PromptTemplate(promptString);
             Prompt prompt = promptTemplate.create(Map.of("topic", topic, "format", outputConverter.getFormat()));
 
-            String content = chatClient.prompt(prompt).call().content();
+            String content = chatClient.prompt(prompt)
+                    .tools(tavilySearchTool)
+                    .call()
+                    .content();
 
             GeneratedQuizDTO generatedQuiz = outputConverter.convert(content);
 
