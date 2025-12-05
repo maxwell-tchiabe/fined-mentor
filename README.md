@@ -62,17 +62,17 @@ To get started with FinEd Mentor locally:
 
 ## Course syllabus
 
-| Step | Topic | Description |
-|:---:|---|---|
-| <div align="center">1</div> | **Vue d'ensemble (High-Level Overview)** | Understand the project architecture, the problem it solves, and the high-level design. |
-| <div align="center">2</div> | **Authentification Spring Security** | Implement secure authentication using **JWT** and email validation with **OTP**. |
-| <div align="center">3</div> | **API Chat et Quiz (Spring AI)** | Integrate **Google GenAI** to power the chat interface and generate dynamic quizzes. |
-| <div align="center">4</div> | **Gestion de l'État (State Management)** | Master **Angular Signals** for reactive and efficient state management in the frontend. |
-| <div align="center">5</div> | **Modules Principaux** | Deep dive into the core modules: **Authentification**, **Chat**, and **Quiz**. |
-| <div align="center">6</div> | **Dockeriser le Backend** | Create optimized Docker images for the **OpenJDK** Spring Boot application. |
-| <div align="center">7</div> | **Dockeriser le Frontend** | Containerize the Angular app using **Nginx** as a high-performance web server. |
-| <div align="center">8</div> | **Orchestration : Kubernetes** | Deploy the full stack to a **Kubernetes** cluster with Ingress, Services, and Pods. |
-| <div align="center">9</div> | **CI/CD : Jenkins & Argo CD** | Automate the pipeline: **Jenkins** for CI (Build/Test) and **Argo CD** for CD (GitOps). |
+| Lesson Number | Written Lesson | Video Lesson | Description |
+|---------------|----------------|--------------|-------------|
+| <div align="center">1</div> | [Project overview](https://maxwelltbtech.substack.com/p/system-design-and-architecture-fined) | <a href="https://youtu.be/Ar6GB81qmEo"><img src="img/video_thumbnails/Youtube_Thumbnail_1.png" alt="Thumbnail 1" width="400"></a> | Understand the project architecture, the problem it solves, and the high-level design. |
+| <div align="center">2</div> | [Project overview](https://maxwelltbtech.substack.com/p/securisez-votre-api-tuto-complet) | <a href="https://youtu.be/vMFdDQqFUqU"><img src="img/video_thumbnails/Youtube_Thumbnail_2.png" alt="Thumbnail 2" width="400"></a> | Implement secure authentication using **JWT** and email validation with **OTP**. |
+| <div align="center">3</div> | coming soon..| coming soon.. | Integrate **Google GenAI** to power the chat interface and generate dynamic quizzes. |
+| <div align="center">4</div> | coming soon..| coming soon.. | Master **Angular Signals** for reactive and efficient state management in the frontend. |
+| <div align="center">5</div> | coming soon..| coming soon.. | Deep dive into the core modules: **Authentification**, **Chat**, and **Quiz** |
+| <div align="center">6</div> | coming soon..| coming soon.. |  Create optimized Docker images for the **OpenJDK** Spring Boot application. |
+| <div align="center">7</div> | coming soon..| coming soon.. | Containerize the Angular app using **Nginx** as a high-performance web server. |
+| <div align="center">8</div> | coming soon..| coming soon.. | Deploy the full stack to a **Kubernetes** cluster with Ingress, Services, and Pods. |
+| <div align="center">9</div> | coming soon..| coming soon.. | Automate the pipeline: **Jenkins** for CI (Build/Test) and **Argo CD** for CD (GitOps).  |
 
 ## The tech stack
 
