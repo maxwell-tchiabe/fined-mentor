@@ -51,6 +51,29 @@ This project is for Software Engineers, Fullstack Developers, and DevOps enthusi
 *   Orchestrate microservices with **Kubernetes**
 *   Implement a GitOps pipeline with **Jenkins** and **Argo CD**
 
+<table style="border-collapse: collapse; border: none;">
+  <tr style="border: none;">
+    <td width="20%" style="border: none;">
+      <a href="https://maxwelltbtech.substack.com/" aria-label="The Neural Maze">
+        <img src="https://substackcdn.com/image/fetch/$s_!O-aM!,w_176,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F250dfa6e-5a19-462e-afac-3cedcb07547a_500x500.png" alt=" Maxwell tb tech Logo" width="150"/>
+      </a>
+    </td>
+    <td width="80%" style="border: none;">
+      <div>
+        <h2>📬 Stay Updated</h2>
+        <p><b><a href="https://maxwelltbtech.substack.com/">Join  Maxwell TB Tech</a></b> and Build the future: Full-stack development in the age of AI, directly to your inbox. Don't miss out!</p>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <a href="https://maxwelltbtech.substack.com/">
+    <img src="https://img.shields.io/static/v1?label&logo=substack&message=Subscribe%20Now&style=for-the-badge&color=black&scale=2" alt="Subscribe Now" height="40">
+  </a>
+</p>
+
+
 ## Getting started
 
 To get started with FinEd Mentor locally:
@@ -115,12 +138,11 @@ To get started with FinEd Mentor locally:
 
 <table>
   <tr>
-    <td align="center"><img src="https://github.com/github.png" width="100" style="border-radius:50%;"/></td>
+    <td align="center"><img src="https://avatars.githubusercontent.com/u/79485395?v=4" width="100" style="border-radius:50%;"/></td>
     <td>
-      <strong>Maxwell Tchiabe</strong><br />
-      <i>Fullstack Engineer & DevOps Enthusiast</i><br /><br />
-      <a href="#">LinkedIn</a><br />
-      <a href="#">GitHub</a>
+      <strong>Loic Maxwell Tchiabe | Passionierter Full Stack Developer | Spezialist für Angular, Java & Python </strong><br />
+      <i>Cloud & AI Systems Enthusiast.</i><br /><br />
+      <a href="https://www.linkedin.com/in/loic-maxwell-tchiabe-softwareentwickler-cloud-ai-java-python-angular/">LinkedIn</a><br />
     </td>
   </tr>
 </table>
