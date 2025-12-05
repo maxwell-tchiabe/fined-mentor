@@ -113,7 +113,7 @@ To get started with FinEd Mentor locally:
     <td>**Angular 18**: A modern frontend framework using Signals for reactive UI components.</td>
   </tr>
   <tr>
-    <td><img src="https://webimages.mongodb.com/_com_assets/cms/kuyjf3vea2hg347wt-Logos_Lockup_Full%20Color_rgb.svg" width="100" alt="MongoDB"/></td>
+    <td><img src="https://tse2.mm.bing.net/th/id/OIP.QJnvahq_EBdUGjYQUYrhvAHaDt?pid=Api&P=0&h=180" width="100" alt="MongoDB"/></td>
     <td>**MongoDB**: Flexible NoSQL database for storing users, chats, and quizzes.</td>
   </tr>
   <tr>
