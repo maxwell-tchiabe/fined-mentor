@@ -143,6 +143,8 @@ To get started with FinEd Mentor locally:
       <strong>Loic Maxwell Tchiabe | Passionierter Full Stack Developer | Spezialist für Angular, Java & Python </strong><br />
       <i>Cloud & AI Systems Enthusiast.</i><br /><br />
       <a href="https://www.linkedin.com/in/loic-maxwell-tchiabe-softwareentwickler-cloud-ai-java-python-angular/">LinkedIn</a><br />
+      <a href="www.youtube.com/@MaxwellTBTech">Youtube</a><br />
+      <a href="https://maxwelltbtech.substack.com/">Substack</a><br />
     </td>
   </tr>
 </table>
