@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fined-mentor-backend
+  labels:
+    app: fined-mentor-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fined-mentor-backend
+  template:
+    metadata:
+      labels:
+        app: fined-mentor-backend
+    spec:
+      containers:
+      - name: fined-mentor-backend
+        image: loicmaxwell/fined-mentor-backend:latest
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-config
+                key: MONGODB_URI
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-config
+                key: JWT_SECRET
+          - name: EMAIL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-config
+                key: EMAIL_USERNAME
+          - name: EMAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-config
+                key: EMAIL_PASSWORD       
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fined-mentor-backend
+spec:
+  selector:
+    app: fined-mentor-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  
