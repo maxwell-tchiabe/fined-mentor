@@ -1,0 +1,42 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: fined-mentor-backend
+  namespace: default
+
+spec:
+  parentRefs:
+  - name: gateway-api
+    sectionName: http #allows us to bind to a specific listener in the Gateway
+    kind: Gateway
+
+  hostnames:
+  - fined-mentor-backend.com
+
+  rules:
+  - backendRefs:
+    - name: fined-mentor-backend
+      port: 8080
+      weight: 1
+---
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: fined-mentor-frontend
+  namespace: default
+
+spec:
+  parentRefs:
+  - name: gateway-api
+    sectionName: http
+    kind: Gateway
+
+  hostnames:
+  - fined-mentor-frontend.com
+
+  rules:
+  - backendRefs:
+    - name: fined-mentor-frontend
+      port: 80
+      weight: 1

@@ -16,30 +16,40 @@ spec:
     spec:
       containers:
       - name: fined-mentor-backend
-        image: loicmaxwell/fined-mentor-backend:latest
+        image: loicmaxwell/fined-mentor-backend:v2
         ports:
         - containerPort: 8080
         env:
-          - name: MONGODB_URI
+          - name: MONGO_URI
             valueFrom:
-              secretKeyRef:
-                name: fined-mentor-backend-config
-                key: MONGODB_URI
+              configMapKeyRef:
+                name: fined-mentor-config
+                key: MONGO_URI
           - name: JWT_SECRET
             valueFrom:
               secretKeyRef:
-                name: fined-mentor-backend-config
+                name: fined-mentor-backend-secret
                 key: JWT_SECRET
           - name: EMAIL_USERNAME
             valueFrom:
               secretKeyRef:
-                name: fined-mentor-backend-config
+                name: fined-mentor-backend-secret
                 key: EMAIL_USERNAME
           - name: EMAIL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: fined-mentor-backend-config
-                key: EMAIL_PASSWORD       
+                name: fined-mentor-backend-secret
+                key: EMAIL_PASSWORD
+          - name: GOOGLE_GENAI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: GOOGLE_GENAI_API_KEY
+          - name: TAVILY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: TAVILY_API_KEY
 ---
 apiVersion: v1
 kind: Service

@@ -407,3 +407,5 @@ dmypy.json
 target/
 dist/
 build/
+infrastructure/secret.yaml
+infrastructure/configmap.yaml
