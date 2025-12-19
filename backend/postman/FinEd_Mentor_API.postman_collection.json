@@ -1,0 +1,341 @@
+{
+    "info": {
+        "_postman_id": "fined-mentor-api",
+        "name": "FinEd Mentor API",
+        "description": "Collection for FinEd Mentor Chat and Quiz APIs",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Chat",
+            "item": [
+                {
+                    "name": "Create Chat Session",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/sessions?title=My Session",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "sessions"
+                            ],
+                            "query": [
+                                {
+                                    "key": "title",
+                                    "value": "My Session"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Active Sessions",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/sessions",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "sessions"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Send Message",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"chatSessionId\": \"{{chatSessionId}}\",\n    \"message\": \"Hello, how can I save money?\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/message",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "message"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Chat Session Details",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/sessions/{{chatSessionId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "sessions",
+                                "{{chatSessionId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Chat History",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/sessions/{{chatSessionId}}/history",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "sessions",
+                                "{{chatSessionId}}",
+                                "history"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Deactivate Session",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/chat/sessions/{{chatSessionId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "chat",
+                                "sessions",
+                                "{{chatSessionId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Quiz",
+            "item": [
+                {
+                    "name": "Generate Quiz",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"topic\": \"Investing Basics\",\n    \"chatSessionId\": \"{{chatSessionId}}\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/generate",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "generate"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Start Quiz",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/{{quizId}}/start?chatSessionId={{chatSessionId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "{{quizId}}",
+                                "start"
+                            ],
+                            "query": [
+                                {
+                                    "key": "chatSessionId",
+                                    "value": "{{chatSessionId}}"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Submit Answer",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"quizStateId\": \"{{quizStateId}}\",\n    \"questionIndex\": 0,\n    \"answer\": \"A\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/answer",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "answer"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Quiz by Session",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/sessions/{{chatSessionId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "sessions",
+                                "{{chatSessionId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Quiz State",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/state/{{quizStateId}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "state",
+                                "{{quizStateId}}"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Quiz State by Session",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/sessions/{{chatSessionId}}/state",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "sessions",
+                                "{{chatSessionId}}",
+                                "state"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Finish Quiz",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/api/quiz/{{quizStateId}}/finish",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "api",
+                                "quiz",
+                                "{{quizStateId}}",
+                                "finish"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:8080",
+            "type": "string"
+        },
+        {
+            "key": "chatSessionId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "quizId",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "quizStateId",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
