@@ -88,8 +88,8 @@ To get started with FinEd Mentor locally:
 | Lesson Number | Written Lesson | Video Lesson | Description |
 |---------------|----------------|--------------|-------------|
 | <div align="center">1</div> | [Project overview](https://maxwelltbtech.substack.com/p/system-design-and-architecture-fined) | <a href="https://youtu.be/Ar6GB81qmEo"><img src="img/Youtube_Thumbnail_1.png" alt="Thumbnail 1" width="400"></a> | Understand the project architecture, the problem it solves, and the high-level design. |
-| <div align="center">2</div> | [Project overview](https://maxwelltbtech.substack.com/p/securisez-votre-api-tuto-complet) | <a href="https://youtu.be/vMFdDQqFUqU"><img src="img/Youtube_Thumbnail_2.png" alt="Thumbnail 2" width="400"></a> | Implement secure authentication using **JWT** and email validation with **OTP**. |
-| <div align="center">3</div> | coming soon..| coming soon.. | Integrate **Google GenAI** to power the chat interface and generate dynamic quizzes. |
+| <div align="center">2</div> | [securisez-votre-api-tuto-complet](https://maxwelltbtech.substack.com/p/securisez-votre-api-tuto-complet) | <a href="https://youtu.be/vMFdDQqFUqU"><img src="img/Youtube_Thumbnail_2.png" alt="Thumbnail 2" width="400"></a> | Implement secure authentication using **JWT** and email validation with **OTP**. |
+| <div align="center">3</div> | [Comprendre l'Architecture en Couches Spring Boot ](https://maxwelltbtech.substack.com/p/comprendre-larchitecture-en-couches)| <a href="https://youtu.be/PDxFdmfDD9c"><img src="img/Youtube Thumbnail_3.png" alt="Thumbnail 3" width="400"></a>  | Integrate **Google GenAI** to power the chat interface and generate dynamic quizzes. |
 | <div align="center">4</div> | coming soon..| coming soon.. | Master **Angular Signals** for reactive and efficient state management in the frontend. |
 | <div align="center">5</div> | coming soon..| coming soon.. | Deep dive into the core modules: **Authentification**, **Chat**, and **Quiz** |
 | <div align="center">6</div> | coming soon..| coming soon.. |  Create optimized Docker images for the **OpenJDK** Spring Boot application. |
