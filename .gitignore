@@ -409,3 +409,6 @@ dist/
 build/
 infrastructure/secret.yaml
 infrastructure/configmap.yaml
+terraform/id_ed25519.pub
+terraform/.terraform/*
+terraform/.terraform.lock.hcl
