@@ -9,7 +9,7 @@ pipeline {
         DOCKER_FRONTEND_IMAGE_NAME = 'loicmaxwell/fined-mentor-frontend'
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
         GITHUB_CREDENTIALS = credentials('github-credentials')
-        GIT_BRANCH = "master"
+        GIT_BRANCH = "main"
     }
     
     stages {
@@ -24,33 +24,33 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script {
-                    clone("https://github.com/lax66/tws-e-commerce-app_hackathon.git","master")
+                    clone("https://github.com/maxwell-tchiabe/fined-mentor.git","main")
                 }
             }
         }
         
         stage('Build Docker Images') {
             parallel {
-                stage('Build Main App Image') {
+                stage('Build backend Image') {
                     steps {
                         script {
                             docker_build(
-                                imageName: env.DOCKER_IMAGE_NAME,
+                                imageName: env.DOCKER_BACKEND_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
-                                dockerfile: 'Dockerfile',
+                                dockerfile: 'backend/Dockerfile',
                                 context: '.'
                             )
                         }
                     }
                 }
                 
-                stage('Build Migration Image') {
+                stage('Build frontend Image') {
                     steps {
                         script {
                             docker_build(
-                                imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
+                                imageName: env.DOCKER_FRONTEND_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
-                                dockerfile: 'scripts/Dockerfile.migration',
+                                dockerfile: 'frontend/Dockerfile',
                                 context: '.'
                             )
                         }
@@ -80,11 +80,11 @@ pipeline {
         
         stage('Push Docker Images') {
             parallel {
-                stage('Push Main App Image') {
+                stage('Push Backend Image') {
                     steps {
                         script {
                             docker_push(
-                                imageName: env.DOCKER_IMAGE_NAME,
+                                imageName: env.DOCKER_BACKEND_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
                                 credentials: 'docker-hub-credentials'
                             )
@@ -92,11 +92,11 @@ pipeline {
                     }
                 }
                 
-                stage('Push Migration Image') {
+                stage('Push Frontend Image') {
                     steps {
                         script {
                             docker_push(
-                                imageName: env.DOCKER_MIGRATION_IMAGE_NAME,
+                                imageName: env.DOCKER_FRONTEND_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
                                 credentials: 'docker-hub-credentials'
                             )
@@ -112,10 +112,10 @@ pipeline {
                 script {
                     update_k8s_manifests(
                         imageTag: env.DOCKER_IMAGE_TAG,
-                        manifestsPath: 'kubernetes',
+                        manifestsPath: 'infrastructure',
                         gitCredentials: 'github-credentials',
-                        gitUserName: 'Jenkins CI',
-                        gitUserEmail: 'misc.lucky66@gmail.com'
+                        gitUserName: 'maxwell-tchiabe',
+                        gitUserEmail: 'maxwelltchiabe@gmail.com'
                     )
                 }
             }
