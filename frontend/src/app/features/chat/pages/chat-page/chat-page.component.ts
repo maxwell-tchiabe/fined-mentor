@@ -27,6 +27,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
   public activeSession = toSignal(this.chatSessionService.activeSession$, { initialValue: null });
+  public errorMessage = signal<string | null>(null); 
 
   private sessionSubscription: Subscription | undefined;
 
@@ -68,6 +69,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.sessionSubscription?.unsubscribe();
   }
 
+  public setErrorMessage(message: string): void {
+    this.errorMessage.set(message);
+    setTimeout(() => this.errorMessage.set(null), 3000); 
+  }
+
   public onSendMessage(message: string): void {
     const activeSession = this.activeSession();
     if (!activeSession) return;
@@ -86,14 +92,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     this.chatSessionService.setActiveSession(optimisticSession);
     this.isChatLoading.set(true);
-
-    const testMatch = message.match(/test me on\s+(.+)/i);
-    if (testMatch && testMatch[1]) {
-      const topic = testMatch[1].trim();
-      this.generateQuiz(topic);
-      this.isChatLoading.set(false);
-      return;
-    }
+    this.errorMessage.set(null); 
 
     this.chatMessageService.sendMessage(activeSession.id, message).pipe(
       tap(response => {
@@ -110,6 +109,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       }),
       catchError(error => {
         console.error('Failed to send message:', error);
+        this.setErrorMessage('Failed to send message. Please try again.');
         return of(null);
       })
     ).subscribe(() => this.isChatLoading.set(false));
@@ -120,6 +120,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!activeSession) return;
 
     this.isQuizLoading.set(true);
+    this.errorMessage.set(null); // Clear previous error
 
     this.quizService.generateQuiz(topic, activeSession.id).pipe(
       switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
@@ -132,6 +133,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       )),
       catchError(error => {
         console.error('Failed to generate or start quiz:', error);
+        this.setErrorMessage('Failed to generate quiz. Please try again.');
         return of(null);
       })
     ).subscribe(() => this.isQuizLoading.set(false));

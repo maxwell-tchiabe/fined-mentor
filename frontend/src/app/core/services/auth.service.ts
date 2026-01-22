@@ -3,38 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
+import { ApiResponse } from '../models/chat.model';
+import { LoginRequest, RegisterRequest, ActivateRequest, JwtResponse } from '../models/auth.model';
 
-export interface RegisterRequest {
-    username: string;
-    email: string;
-    password: string;
-    firstName: string;
-    lastName: string;
-}
-
-export interface LoginRequest {
-    usernameOrEmail: string;
-    password: string;
-}
-
-export interface ActivateRequest {
-    token: string;
-}
-
-export interface JwtResponse {
-    token: string;
-    type: string;
-    id: string;
-    username: string;
-    email: string;
-    roles: string[];
-}
-
-export interface ApiResponse<T> {
-    success: boolean;
-    message: string;
-    data: T;
-}
 
 @Injectable({
     providedIn: 'root'
@@ -96,7 +67,7 @@ export class AuthService {
         localStorage.setItem(this.TOKEN_KEY, data.token);
         // Store minimal user info
         const user: JwtResponse = {
-            token: data.token, // Redundant but keeping structure
+            token: data.token, 
             type: data.type,
             id: data.id,
             username: data.username,

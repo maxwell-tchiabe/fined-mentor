@@ -16,7 +16,6 @@ export class ChatSessionService extends ApiService {
 
   constructor(http: HttpClient) {
     super(http);
-    this.loadSessions();
   }
 
   createSession(title: string): Observable<ChatSession> {
@@ -44,7 +43,10 @@ export class ChatSessionService extends ApiService {
       `${this.apiUrl}/chat/sessions`
     ).pipe(
       map(response => response.data),
-      tap(sessions => this.sessionsSubject.next(sessions))
+      tap(sessions => {
+        console.log('getActiveSessions: received sessions', sessions);
+        this.sessionsSubject.next(sessions);
+      })
     );
   }
 
@@ -79,7 +81,11 @@ export class ChatSessionService extends ApiService {
     }
   }
 
-  private loadSessions(): void {
-    this.getActiveSessions().subscribe();
+  loadSessions(): Observable<ChatSession[]> {
+    return this.getActiveSessions().pipe(
+      tap(() => {
+        console.log('Sessions loaded successfully');
+      })
+    );
   }
 }

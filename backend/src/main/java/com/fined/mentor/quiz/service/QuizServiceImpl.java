@@ -238,6 +238,26 @@ public class QuizServiceImpl implements QuizService {
                 throw new QuizValidationException(
                         "Correct answer must be one of the provided options for question " + (index + 1));
             }
+        } else if (question.getType() == QuizQuestion.QuestionType.TRUE_FALSE) {
+            if (!"true".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
+                !"false".equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+                throw new QuizValidationException(
+                        "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question " + (index + 1));
+            }
+
+            // Ensure correct answer matches one of the TRUE_FALSE options
+            boolean correctAnswerFound = false;
+            for (String option : question.getOptions()) {
+                if (option != null && option.trim().equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+                    correctAnswerFound = true;
+                    break;
+                }
+            }
+
+            if (!correctAnswerFound) {
+                throw new QuizValidationException(
+                        "Correct answer must match one of the TRUE_FALSE options for question " + (index + 1));
+            }
         }
     }
 

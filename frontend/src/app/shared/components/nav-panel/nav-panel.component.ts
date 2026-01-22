@@ -1,7 +1,9 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ChatSession } from '../../../core/models/chat.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-nav-panel',
@@ -10,7 +12,7 @@ import { ChatSession } from '../../../core/models/chat.model';
   templateUrl: './nav-panel.component.html',
   styleUrls: ['./nav-panel.component.css']
 })
-export class NavPanelComponent {
+export class NavPanelComponent implements OnDestroy {
   @Input() public sessions: ChatSession[] | null = [];
   @Input() public activeSessionId: string | null = null;
   @Input() public currentView: 'chat' | 'dashboard' = 'chat';
@@ -19,7 +21,19 @@ export class NavPanelComponent {
   @Output() public deleteSession = new EventEmitter<string>();
   @Output() public showDashboard = new EventEmitter<void>();
 
-  constructor(private router: Router) { }
+  public userName: string = 'User'; 
+  public isMenuOpen: boolean = false; 
+  private userSubscription: Subscription | undefined; 
+
+  constructor(private router: Router, private authService: AuthService) {
+    this.userSubscription = this.authService.currentUser$.subscribe(user => {
+      this.userName = user?.username || 'User';
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe(); 
+  }
 
   public get sortedSessions(): ChatSession[] {
     return [...(this.sessions || [])].sort((a, b) =>
@@ -50,5 +64,18 @@ export class NavPanelComponent {
 
   public isSessionActive(sessionId: string): boolean {
     return this.activeSessionId === sessionId && this.currentView === 'chat';
+  }
+
+  public toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  public closeMenu(): void {
+    this.isMenuOpen = false;
+  }
+
+  public onLogout(): void {
+    this.authService.logout();
+    this.closeMenu();
   }
 }
