@@ -17,6 +17,8 @@ services:
       - GOOGLE_GENAI_API_KEY=${GOOGLE_GENAI_API_KEY}
       - EMAIL_USERNAME=${EMAIL_USERNAME}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+      - TAVILY_API_KEY=${TAVILY_API_KEY}
     networks:
       - fined-mentor-network
 
