@@ -91,11 +91,9 @@ To get started with FinEd Mentor locally:
 | <div align="center">2</div> | [securisez-votre-api-tuto-complet](https://maxwelltbtech.substack.com/p/securisez-votre-api-tuto-complet) | <a href="https://youtu.be/vMFdDQqFUqU"><img src="img/Youtube_Thumbnail_2.png" alt="Thumbnail 2" width="400"></a> | Implement secure authentication using **JWT** and email validation with **OTP**. |
 | <div align="center">3</div> | [Comprendre l'Architecture en Couches Spring Boot ](https://maxwelltbtech.substack.com/p/comprendre-larchitecture-en-couches)| <a href="https://youtu.be/PDxFdmfDD9c"><img src="img/Youtube Thumbnail_3.png" alt="Thumbnail 3" width="400"></a>  | Integrate **Google GenAI** to power the chat interface and generate dynamic quizzes. |
 | <div align="center">4</div> | [Deep dive frontend Angular ](https://maxwelltbtech.substack.com/p/deep-dive-frontend-angular)| <a href="https://youtu.be/e2YiwnT5MlU"><img src="img/Youtube-Thumbnail-jour-4.png" alt="Thumbnail 4" width="400"></a> | Master **Angular Signals** for reactive and efficient state management in the frontend. |
-| <div align="center">5</div> | coming soon..| coming soon.. | Deep dive into the core modules: **Authentification**, **Chat**, and **Quiz** |
-| <div align="center">6</div> | coming soon..| coming soon.. |  Create optimized Docker images for the **OpenJDK** Spring Boot application. |
-| <div align="center">7</div> | coming soon..| coming soon.. | Containerize the Angular app using **Nginx** as a high-performance web server. |
-| <div align="center">8</div> | coming soon..| coming soon.. | Deploy the full stack to a **Kubernetes** cluster with Ingress, Services, and Pods. |
-| <div align="center">9</div> | coming soon..| coming soon.. | Automate the pipeline: **Jenkins** for CI (Build/Test) and **Argo CD** for CD (GitOps).  |
+| <div align="center">5</div> | [Dockeriser proprement une appli full‑stack — principes et recette pratique](https://open.substack.com/pub/maxwelltbtech/p/dockeriser-proprement-une-appli-fullstack?r=69je8w&utm_campaign=post&utm_medium=web&showWelcomeOnShare=true)| <a href="https://youtu.be/fNnt2r6RLN0"><img src="img/Youtube_Thumbnail_5.png" alt="Thumbnail 5" width="400"></a> | Dockerfile multi‑stage + Nginx — Dockeriser Backend & Frontend |
+| <div align="center">6</div> | coming soon..| coming soon.. | Deploy the full stack to a **Kubernetes** cluster with Ingress, Services, and Pods. |
+| <div align="center">7</div> | coming soon..| coming soon.. | Automate the pipeline: **Jenkins** for CI (Build/Test) and **Argo CD** for CD (GitOps).  |
 
 ## The tech stack
 
