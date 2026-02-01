@@ -25,10 +25,12 @@ kind: Service
 metadata:
   name: fined-mentor-frontend
 spec:
+  type: NodePort
   selector:
     app: fined-mentor-frontend
   ports:
     - protocol: TCP
       port: 80
       targetPort: 80
+      nodePort: 30080
   
