@@ -24,21 +24,46 @@ public class EmailService {
             message.setText(
                     String.format(
                             "Hello %s,\n\n" +
-                                    "Welcome to FinEd Mentor! Please use the following OTP to activate your account:\n\n" +
+                                    "Welcome to FinEd Mentor! Please use the following OTP to activate your account:\n\n"
+                                    +
                                     "OTP: %s\n\n" +
                                     "This OTP will expire in 24 hours.\n\n" +
                                     "If you didn't create an account, please ignore this email.\n\n" +
                                     "Best regards,\n" +
                                     "FinEd Mentor Team",
-                            username, activationToken
-                    )
-            );
+                            username, activationToken));
 
             mailSender.send(message);
             log.info("Activation email sent to: {}", toEmail);
         } catch (Exception e) {
             log.error("Failed to send activation email to: {}", toEmail, e);
             throw new EmailException("Failed to send activation email");
+        }
+    }
+
+    @Async
+    public void sendPasswordResetEmail(String toEmail, String username, String resetToken) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(toEmail);
+            message.setSubject("Reset Your FinEd Mentor Password");
+            message.setText(
+                    String.format(
+                            "Hello %s,\n\n" +
+                                    "We received a request to reset your password. Please use the following OTP to reset it:\n\n"
+                                    +
+                                    "OTP: %s\n\n" +
+                                    "This OTP will expire in 1 hour.\n\n" +
+                                    "If you didn't request a password reset, please ignore this email.\n\n" +
+                                    "Best regards,\n" +
+                                    "FinEd Mentor Team",
+                            username, resetToken));
+
+            mailSender.send(message);
+            log.info("Password reset email sent to: {}", toEmail);
+        } catch (Exception e) {
+            log.error("Failed to send password reset email to: {}", toEmail, e);
+            throw new EmailException("Failed to send password reset email");
         }
     }
 }

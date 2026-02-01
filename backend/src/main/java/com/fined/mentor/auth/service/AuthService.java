@@ -81,9 +81,7 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()
-                )
-        );
+                        loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtService.generateToken(authentication);
@@ -123,5 +121,31 @@ public class AuthService {
         emailService.sendActivationEmail(user.getEmail(), user.getUsername(), activationToken.getToken());
 
         log.info("Activation token resent to: {}", user.getEmail());
+    }
+
+    @Transactional
+    public void initiatePasswordReset(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+
+        Token resetToken = tokenService.createPasswordResetToken(user);
+        emailService.sendPasswordResetEmail(user.getEmail(), user.getUsername(), resetToken.getToken());
+
+        log.info("Password reset initiated for: {}", user.getEmail());
+    }
+
+    @Transactional
+    public void resetPassword(String tokenValue, String newPassword) {
+        Token token = tokenService.validateToken(tokenValue, Token.TokenType.PASSWORD_RESET)
+                .orElseThrow(() -> new InvalidTokenException("Invalid or expired password reset token"));
+
+        User user = token.getUser();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setUpdatedAt(LocalDateTime.now());
+
+        userRepository.save(user);
+        tokenService.markTokenAsUsed(token);
+
+        log.info("Password reset successfully for user: {}", user.getEmail());
     }
 }

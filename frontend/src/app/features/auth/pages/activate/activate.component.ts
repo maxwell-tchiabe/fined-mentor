@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputOtpModule } from 'primeng/inputotp';
 import { Router, RouterModule } from '@angular/router';
+import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
@@ -13,70 +14,72 @@ import { AuthService } from '../../../../core/services/auth.service';
   styleUrl: './activate.component.css'
 })
 export class ActivateComponent {
-  activateForm: FormGroup;
-  loading = false;
-  error = '';
-  successMessage = '';
+  public activateForm: FormGroup;
+  public loading: boolean = false;
+  public error: string = '';
+  public successMessage: string = '';
 
-  showResend = false;
-  resendEmail = '';
-  resendLoading = false;
-  resendMessage = '';
-  resendSuccess = false;
+  public showResend: boolean = false;
+  public resendEmail: string = '';
+  public resendLoading: boolean = false;
+  public resendMessage: string = '';
+  public resendSuccess: boolean = false;
+
+  private readonly REDIRECT_DELAY_MS: number = 2000;
 
   constructor(
-    private fb: FormBuilder,
+    private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {
-    this.activateForm = this.fb.group({
+    this.activateForm = this.formBuilder.group({
       token: ['', Validators.required]
     });
   }
 
-  onSubmit(): void {
+  public onSubmit(): void {
     if (this.activateForm.invalid) return;
 
     this.loading = true;
     this.error = '';
     this.successMessage = '';
 
-    this.authService.activate(this.activateForm.value).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.successMessage = 'Account activated successfully. Redirecting to login...';
-          setTimeout(() => {
-            this.router.navigate(['/auth/login']);
-          }, 2000);
-        } else {
-          this.error = response.message || 'Activation failed';
+    this.authService.activate(this.activateForm.value)
+      .pipe(finalize(() => this.loading = false))
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.successMessage = 'Account activated successfully. Redirecting to login...';
+            setTimeout(() => {
+              this.router.navigate(['/auth/login']);
+            }, this.REDIRECT_DELAY_MS);
+          } else {
+            this.error = response.message || 'Activation failed';
+          }
+        },
+        error: (err) => {
+          this.error = err.error?.message || 'An error occurred during activation';
         }
-        this.loading = false;
-      },
-      error: (err) => {
-        this.error = err.error?.message || 'An error occurred during activation';
-        this.loading = false;
-      }
-    });
+      });
   }
 
-  onResend(): void {
+  public onResend(): void {
     if (!this.resendEmail) return;
 
     this.resendLoading = true;
     this.resendMessage = '';
 
-    this.authService.resendActivation(this.resendEmail).subscribe({
-      next: (response) => {
-        this.resendSuccess = true;
-        this.resendMessage = 'Activation code resent. Please check your email.';
-        this.resendLoading = false;
-      },
-      error: (err) => {
-        this.resendSuccess = false;
-        this.resendMessage = err.error?.message || 'Failed to resend activation code.';
-        this.resendLoading = false;
-      }
-    });
+    this.authService.resendActivation(this.resendEmail)
+      .pipe(finalize(() => this.resendLoading = false))
+      .subscribe({
+        next: (response) => {
+          this.resendSuccess = true;
+          this.resendMessage = 'Activation code resent. Please check your email.';
+        },
+        error: (err) => {
+          this.resendSuccess = false;
+          this.resendMessage = err.error?.message || 'Failed to resend activation code.';
+        }
+      });
   }
 }

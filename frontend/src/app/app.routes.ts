@@ -24,6 +24,16 @@ export const routes: Routes = [
       .then(c => c.ActivateComponent)
   },
   {
+    path: 'auth/forgot-password',
+    loadComponent: () => import('./features/auth/pages/forgot-password/forgot-password.component')
+      .then(c => c.ForgotPasswordComponent)
+  },
+  {
+    path: 'auth/reset-password',
+    loadComponent: () => import('./features/auth/pages/reset-password/reset-password.component')
+      .then(c => c.ResetPasswordComponent)
+  },
+  {
     path: 'chat',
     canActivate: [AuthGuard],
     loadComponent: () => import('./features/chat/pages/chat-page/chat-page.component')

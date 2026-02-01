@@ -56,6 +56,14 @@ export class AuthService {
         return this.http.post<ApiResponse<any>>(`${this.apiUrl}/resend-activation?email=${email}`, {});
     }
 
+    forgotPassword(email: string): Observable<ApiResponse<any>> {
+        return this.http.post<ApiResponse<any>>(`${this.apiUrl}/forgot-password`, { email });
+    }
+
+    resetPassword(token: string, newPassword: string): Observable<ApiResponse<any>> {
+        return this.http.post<ApiResponse<any>>(`${this.apiUrl}/reset-password`, { token, newPassword });
+    }
+
     logout(): void {
         localStorage.removeItem(this.TOKEN_KEY);
         localStorage.removeItem(this.USER_KEY);
@@ -67,7 +75,7 @@ export class AuthService {
         localStorage.setItem(this.TOKEN_KEY, data.token);
         // Store minimal user info
         const user: JwtResponse = {
-            token: data.token, 
+            token: data.token,
             type: data.type,
             id: data.id,
             username: data.username,

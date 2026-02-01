@@ -23,8 +23,7 @@ public class AuthController {
         authService.registerUser(registerRequest);
 
         return ResponseEntity.ok(ApiResponse.success(
-                "Registration successful. Please check your email for activation OTP."
-        ));
+                "Registration successful. Please check your email for activation OTP."));
     }
 
     @PostMapping("/login")
@@ -52,5 +51,23 @@ public class AuthController {
         authService.resendActivationToken(email);
 
         return ResponseEntity.ok(ApiResponse.success("Activation OTP sent successfully"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        log.info("Forgot password request for: {}", request.getEmail());
+
+        authService.initiatePasswordReset(request.getEmail());
+
+        return ResponseEntity.ok(ApiResponse.success("Password reset OTP sent to your email"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        log.info("Reset password request with token");
+
+        authService.resetPassword(request.getToken(), request.getNewPassword());
+
+        return ResponseEntity.ok(ApiResponse.success("Password reset successfully"));
     }
 }

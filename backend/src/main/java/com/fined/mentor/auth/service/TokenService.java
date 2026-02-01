@@ -38,6 +38,26 @@ public class TokenService {
         return savedToken;
     }
 
+    public Token createPasswordResetToken(User user) {
+        // Delete any existing password reset tokens for this user
+        tokenRepository.deleteByUserAndType(user, Token.TokenType.PASSWORD_RESET);
+
+        String tokenValue = generateOTP();
+
+        Token token = Token.builder()
+                .token(tokenValue)
+                .user(user)
+                .type(Token.TokenType.PASSWORD_RESET)
+                .createdAt(LocalDateTime.now())
+                .expiresAt(LocalDateTime.now().plusHours(1)) // 1 hour expiry
+                .build();
+
+        Token savedToken = tokenRepository.save(token);
+        log.debug("Created password reset token for user: {}", user.getEmail());
+
+        return savedToken;
+    }
+
     public Optional<Token> validateToken(String tokenValue, Token.TokenType type) {
         Optional<Token> tokenOpt = tokenRepository.findByTokenAndType(tokenValue, type);
 
