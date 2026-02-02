@@ -8,10 +8,12 @@ import { ChatMessageService } from './core/services/chat-message.service';
 import { QuizService } from './core/services/quiz.service';
 import { ChatSession, ChatMessage } from './core/models/chat.model';
 
+import { ToastModule } from 'primeng/toast';
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet],
+  imports: [CommonModule, RouterOutlet, ToastModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
@@ -24,7 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private router: Router
     , private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initializeApp();
