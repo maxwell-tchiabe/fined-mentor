@@ -52,6 +52,12 @@ export class ChatPanelComponent implements OnChanges {
     }
   }
 
+  public autoResize(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+  }
+
   private scrollToBottom(): void {
     setTimeout(() => {
       if (this.messagesContainer) {

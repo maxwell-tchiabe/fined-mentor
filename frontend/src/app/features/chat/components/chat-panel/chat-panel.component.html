@@ -22,28 +22,40 @@
     <app-loading-spinner *ngIf="isLoading" size="sm" [showText]="false"></app-loading-spinner>
   </div>
 
-  <form (ngSubmit)="onSubmit()" class="p-4 bg-base-300/50 border-t border-base-300">
-    <div class="flex items-center bg-base-200 rounded-full transition-all duration-300" [class.ring-2]="isQuizMode"
-      [class.ring-brand-500]="isQuizMode">
+  <div class="p-4 bg-base-300/50 border-t border-base-300">
+    <div class="bg-base-200 rounded-2xl p-4 shadow-sm border border-base-300/50 transition-all duration-300"
+      [class.ring-2]="isQuizMode" [class.ring-brand-500]="isQuizMode">
 
-      <!-- Quiz Mode Toggle -->
-      <button type="button" (click)="toggleQuizMode()" class="p-2 ml-2 rounded-full transition-colors duration-300"
-        [class.text-brand-500]="isQuizMode" [class.bg-brand-500]="isQuizMode" [class.text-white]="isQuizMode"
-        [class.text-content-300]="!isQuizMode" [class.hover:text-brand-500]="!isQuizMode" title="Toggle Quiz Mode">
-        <i class="pi" [class.pi-bolt]="!isQuizMode" [class.pi-times]="isQuizMode" style="font-size: 1.2rem"></i>
-      </button>
+      <!-- Input Area -->
+      <form (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
+        <!-- Text Input -->
+        <textarea [(ngModel)]="messageInput" (keypress)="onKeyPress($event)" name="messageInput"
+          [placeholder]="isQuizMode ? 'Enter a topic to generate a quiz...' : 'Ask me anything...'"
+          class="w-full bg-transparent border-none p-0 text-content-100 placeholder-gray-500 focus:ring-0 text-base resize-none overflow-y-auto"
+          [disabled]="isLoading" autocomplete="off" rows="1" (input)="autoResize($event)"></textarea>
 
-      <input type="text" [(ngModel)]="messageInput" (keypress)="onKeyPress($event)" name="messageInput"
-        [placeholder]="isQuizMode ? 'Enter a topic to generate a quiz...' : 'Ask me anything...'"
-        class="w-full bg-transparent px-4 py-3 text-content-200 placeholder-gray-500 focus:outline-none"
-        [disabled]="isLoading" />
+        <!-- Bottom Actions -->
+        <div class="flex items-center justify-between">
+          <!-- Quiz Toggle (Bottom Left) -->
+          <button type="button" (click)="toggleQuizMode()"
+            class="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 border"
+            [class.border-brand-500]="isQuizMode" [class.bg-brand-500]="isQuizMode" [class.text-white]="isQuizMode"
+            [class.border-base-300]="!isQuizMode" [class.bg-base-100]="!isQuizMode"
+            [class.text-content-200]="!isQuizMode" [class.hover:border-brand-400]="!isQuizMode"
+            [class.hover:text-brand-500]="!isQuizMode">
+            <i class="pi" [class.pi-bolt]="!isQuizMode" [class.pi-times]="isQuizMode"></i>
+            <span>Quiz</span>
+          </button>
 
-      <button type="submit" [disabled]="isLoading || !messageInput.trim()"
-        class="p-2 mr-2 rounded-full text-white disabled:bg-base-300 disabled:text-gray-500 transition-colors"
-        [class.bg-brand-primary]="!isQuizMode" [class.hover:bg-brand-secondary]="!isQuizMode"
-        [class.bg-brand-500]="isQuizMode" [class.hover:bg-brand-400]="isQuizMode">
-        <i class="pi" [class.pi-send]="!isQuizMode" [class.pi-bolt]="isQuizMode" style="font-size: 1.2rem"></i>
-      </button>
+          <!-- Send Button (Bottom Right) -->
+          <button type="submit" [disabled]="isLoading || !messageInput.trim()"
+            class="p-2 rounded-full transition-all duration-200 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+            [class.bg-brand-500]="messageInput.trim()" [class.text-white]="messageInput.trim()"
+            [class.bg-base-300]="!messageInput.trim()" [class.text-content-300]="!messageInput.trim()">
+            <i class="pi pi-arrow-up text-lg font-bold"></i>
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>

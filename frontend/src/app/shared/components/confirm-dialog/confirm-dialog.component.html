@@ -1,0 +1,34 @@
+<div *ngIf="isOpen"
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto overflow-x-hidden bg-black/50 backdrop-blur-sm animate-fade-in">
+    <div
+        class="relative w-full max-w-md transform rounded-2xl bg-base-200 p-6 shadow-2xl transition-all border border-base-300">
+
+        <!-- Header -->
+        <div class="mb-4">
+            <h3 class="text-lg font-bold text-content-100 leading-6">
+                {{ title }}
+            </h3>
+        </div>
+
+        <!-- Body -->
+        <div class="mb-6">
+            <p class="text-sm text-content-300">
+                {{ message }}
+            </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-3">
+            <button type="button" (click)="onCancel()"
+                class="rounded-lg px-4 py-2 text-sm font-medium text-content-200 hover:bg-base-300 transition-colors focus:outline-none focus:ring-2 focus:ring-base-400 focus:ring-offset-2 focus:ring-offset-base-200">
+                {{ cancelText }}
+            </button>
+
+            <button type="button" (click)="onConfirm()"
+                [ngClass]="isDestructive ? 'bg-red-500 hover:bg-red-600 text-white focus:ring-red-500' : 'bg-brand-500 hover:bg-brand-600 text-white focus:ring-brand-500'"
+                class="rounded-lg px-4 py-2 text-sm font-medium shadow-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-base-200">
+                {{ confirmText }}
+            </button>
+        </div>
+    </div>
+</div>

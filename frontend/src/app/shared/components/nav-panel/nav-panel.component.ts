@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { ChatSession } from '../../../core/models/chat.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-nav-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ConfirmDialogComponent],
   templateUrl: './nav-panel.component.html',
   styleUrls: ['./nav-panel.component.css']
 })
@@ -21,9 +22,16 @@ export class NavPanelComponent implements OnDestroy {
   @Output() public deleteSession = new EventEmitter<string>();
   @Output() public showDashboard = new EventEmitter<void>();
 
-  public userName: string = 'User'; 
-  public isMenuOpen: boolean = false; 
-  private userSubscription: Subscription | undefined; 
+  public userName: string = 'User';
+  public isMenuOpen: boolean = false;
+
+  // Confirm Dialog State
+  public isDeleteModalOpen = false;
+  public sessionToDeleteId: string | null = null;
+  public deleteModalTitle = 'Delete chat?';
+  public deleteModalMessage = 'Once deleted, this chat cannot be restored, and any sharing links from it will be disabled. Delete?';
+
+  private userSubscription: Subscription | undefined;
 
   constructor(private router: Router, private authService: AuthService) {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
@@ -32,7 +40,7 @@ export class NavPanelComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.userSubscription?.unsubscribe(); 
+    this.userSubscription?.unsubscribe();
   }
 
   public get sortedSessions(): ChatSession[] {
@@ -50,11 +58,26 @@ export class NavPanelComponent implements OnDestroy {
     this.router.navigate(['/chat', sessionId]);
   }
 
-  public onDeleteSession(event: Event, sessionId: string): void {
+  public openDeleteModal(event: Event, sessionId: string): void {
     event.stopPropagation();
-    if (confirm('Are you sure you want to delete this chat?')) {
-      this.deleteSession.emit(sessionId);
+    this.sessionToDeleteId = sessionId;
+    this.isDeleteModalOpen = true;
+  }
+
+  public onConfirmDelete(): void {
+    if (this.sessionToDeleteId) {
+      this.deleteSession.emit(this.sessionToDeleteId);
+      this.closeDeleteModal();
     }
+  }
+
+  public onCancelDelete(): void {
+    this.closeDeleteModal();
+  }
+
+  private closeDeleteModal(): void {
+    this.isDeleteModalOpen = false;
+    this.sessionToDeleteId = null;
   }
 
   public onShowDashboard(): void {
