@@ -3,6 +3,7 @@ package com.fined.mentor.chat.controller;
 import com.fined.mentor.core.dto.ApiResponse;
 import com.fined.mentor.chat.dto.ChatMessageRequest;
 import com.fined.mentor.chat.dto.ChatMessageResponse;
+import com.fined.mentor.chat.dto.UpdateSessionTitleRequest;
 import com.fined.mentor.chat.entity.ChatMessage;
 import com.fined.mentor.chat.entity.ChatSession;
 import com.fined.mentor.chat.service.ChatService;
@@ -102,6 +103,20 @@ public class ChatController {
             return ResponseEntity.ok(ApiResponse.success(history));
         } catch (Exception e) {
             log.error("Error retrieving chat history for session: {}", sessionId, e);
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PutMapping("/sessions/{sessionId}/title")
+    public ResponseEntity<ApiResponse<ChatSession>> updateSessionTitle(
+            @PathVariable String sessionId,
+            @Valid @RequestBody UpdateSessionTitleRequest request) {
+        try {
+            log.info("Updating title for session: {} to: {}", sessionId, request.getTitle());
+            ChatSession updatedSession = chatSessionService.updateSessionTitle(sessionId, request.getTitle());
+            return ResponseEntity.ok(ApiResponse.success(updatedSession));
+        } catch (Exception e) {
+            log.error("Error updating session title for session: {}", sessionId, e);
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
         }
     }

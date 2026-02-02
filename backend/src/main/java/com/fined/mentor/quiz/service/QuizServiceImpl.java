@@ -4,7 +4,6 @@ import com.fined.mentor.chat.service.ChatSessionService;
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.entity.QuizQuestion;
 import com.fined.mentor.quiz.entity.QuizState;
-import com.fined.mentor.core.exception.*;
 import com.fined.mentor.quiz.exception.*;
 import com.fined.mentor.quiz.repository.QuizRepository;
 import com.fined.mentor.quiz.repository.QuizStateRepository;
@@ -240,7 +239,7 @@ public class QuizServiceImpl implements QuizService {
             }
         } else if (question.getType() == QuizQuestion.QuestionType.TRUE_FALSE) {
             if (!"true".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                !"false".equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+                    !"false".equalsIgnoreCase(question.getCorrectAnswer().trim())) {
                 throw new QuizValidationException(
                         "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question " + (index + 1));
             }

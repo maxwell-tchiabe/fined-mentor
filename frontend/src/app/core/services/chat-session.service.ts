@@ -67,6 +67,29 @@ export class ChatSessionService extends ApiService {
     );
   }
 
+  updateSessionTitle(sessionId: string, newTitle: string): Observable<ChatSession> {
+    return this.http.put<ApiResponse<ChatSession>>(
+      `${this.apiUrl}/chat/sessions/${sessionId}/title`,
+      { title: newTitle }
+    ).pipe(
+      map(response => response.data),
+      tap(updatedSession => {
+        const currentSessions = this.sessionsSubject.value;
+        const sessionIndex = currentSessions.findIndex(s => s.id === sessionId);
+
+        if (sessionIndex >= 0) {
+          const updatedSessions = [...currentSessions];
+          updatedSessions[sessionIndex] = updatedSession;
+          this.sessionsSubject.next(updatedSessions);
+        }
+
+        if (this.activeSessionSubject.value?.id === sessionId) {
+          this.activeSessionSubject.next(updatedSession);
+        }
+      })
+    );
+  }
+
   setActiveSession(session: ChatSession): void {
     this.activeSessionSubject.next(session);
 

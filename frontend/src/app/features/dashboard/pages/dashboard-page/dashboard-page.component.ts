@@ -21,7 +21,7 @@ export class DashboardPageComponent {
   constructor(
     private chatSessionService: ChatSessionService,
     private router: Router
-  ) {}
+  ) { }
 
   public toggleNav(): void {
     this.isNavOpen.update(open => !open);
@@ -47,6 +47,15 @@ export class DashboardPageComponent {
     this.chatSessionService.deactivateSession(sessionId).pipe(
       catchError(err => {
         console.error('Failed to delete session:', err);
+        return of(null);
+      })
+    ).subscribe();
+  }
+
+  public onUpdateSessionTitle(event: { sessionId: string, newTitle: string }): void {
+    this.chatSessionService.updateSessionTitle(event.sessionId, event.newTitle).pipe(
+      catchError(err => {
+        console.error('Failed to update session title:', err);
         return of(null);
       })
     ).subscribe();

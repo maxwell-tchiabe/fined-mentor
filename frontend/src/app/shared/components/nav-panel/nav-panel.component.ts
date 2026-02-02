@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ChatSession } from '../../../core/models/chat.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -9,7 +10,7 @@ import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.compone
 @Component({
   selector: 'app-nav-panel',
   standalone: true,
-  imports: [CommonModule, ConfirmDialogComponent],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent],
   templateUrl: './nav-panel.component.html',
   styleUrls: ['./nav-panel.component.css']
 })
@@ -21,6 +22,7 @@ export class NavPanelComponent implements OnDestroy {
   @Output() public selectSession = new EventEmitter<string>();
   @Output() public deleteSession = new EventEmitter<string>();
   @Output() public showDashboard = new EventEmitter<void>();
+  @Output() public updateSessionTitle = new EventEmitter<{ sessionId: string, newTitle: string }>();
 
   public userName: string = 'User';
   public isMenuOpen: boolean = false;
@@ -30,6 +32,10 @@ export class NavPanelComponent implements OnDestroy {
   public sessionToDeleteId: string | null = null;
   public deleteModalTitle = 'Delete chat?';
   public deleteModalMessage = 'Once deleted, this chat cannot be restored, and any sharing links from it will be disabled. Delete?';
+
+  // Edit Title State
+  public editingSessionId: string | null = null;
+  public editedTitle: string = '';
 
   private userSubscription: Subscription | undefined;
 
@@ -100,5 +106,31 @@ export class NavPanelComponent implements OnDestroy {
   public onLogout(): void {
     this.authService.logout();
     this.closeMenu();
+  }
+
+  public startEditTitle(event: Event, sessionId: string, currentTitle: string): void {
+    event.stopPropagation();
+    this.editingSessionId = sessionId;
+    this.editedTitle = currentTitle;
+  }
+
+  public saveTitle(event: Event, sessionId: string): void {
+    event.stopPropagation();
+    const trimmedTitle = this.editedTitle.trim();
+
+    if (trimmedTitle && trimmedTitle !== this.sessions?.find(s => s.id === sessionId)?.title) {
+      this.updateSessionTitle.emit({ sessionId, newTitle: trimmedTitle });
+    }
+
+    this.cancelEdit();
+  }
+
+  public cancelEdit(): void {
+    this.editingSessionId = null;
+    this.editedTitle = '';
+  }
+
+  public isEditing(sessionId: string): boolean {
+    return this.editingSessionId === sessionId;
   }
 }

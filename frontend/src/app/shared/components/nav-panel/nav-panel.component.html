@@ -27,16 +27,44 @@
   <div class="flex-1 overflow-y-auto p-2">
     <h3 class="px-3 text-xs font-semibold uppercase text-gray-500 tracking-wider mb-2">Chat History</h3>
     <div class="space-y-1">
-      <div *ngFor="let session of sortedSessions" (click)="onSelectSession(session.id)"
+      <div *ngFor="let session of sortedSessions"
         [class]="isSessionActive(session.id) ? 
                  'group flex items-center justify-between w-full px-3 py-2 text-sm text-left font-medium rounded-md cursor-pointer bg-base-300 text-content-100 transition-colors' :
                  'group flex items-center justify-between w-full px-3 py-2 text-sm text-left font-medium rounded-md cursor-pointer hover:bg-base-300/50 transition-colors'">
-        <span class="truncate flex-1">{{ session.title }}</span>
-        <button (click)="openDeleteModal($event, session.id)"
-          class="ml-2 p-1 rounded-full text-gray-500 hover:bg-red-500/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-          aria-label="Delete chat">
-          <i class="pi pi-trash text-base"></i>
-        </button>
+
+        <!-- Normal View -->
+        <div *ngIf="!isEditing(session.id)" class="flex items-center justify-between w-full"
+          (click)="onSelectSession(session.id)">
+          <span class="truncate flex-1">{{ session.title }}</span>
+          <div class="flex items-center gap-1 ml-2">
+            <button (click)="startEditTitle($event, session.id, session.title)"
+              class="p-1 rounded-full text-gray-500 hover:bg-blue-500/20 hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Edit title">
+              <i class="pi pi-pencil text-base"></i>
+            </button>
+            <button (click)="openDeleteModal($event, session.id)"
+              class="p-1 rounded-full text-gray-500 hover:bg-red-500/20 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Delete chat">
+              <i class="pi pi-trash text-base"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Edit View -->
+        <div *ngIf="isEditing(session.id)" class="flex items-center gap-2 w-full" (click)="$event.stopPropagation()">
+          <input type="text" [(ngModel)]="editedTitle" (keydown.enter)="saveTitle($event, session.id)"
+            (keydown.escape)="cancelEdit()"
+            class="flex-1 px-2 py-1 text-sm bg-base-100 border border-base-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500 text-content-100"
+            placeholder="Enter title" autofocus>
+          <button (click)="saveTitle($event, session.id)"
+            class="p-1 rounded-full text-green-500 hover:bg-green-500/20 transition-colors" aria-label="Save">
+            <i class="pi pi-check text-base"></i>
+          </button>
+          <button (click)="cancelEdit()" class="p-1 rounded-full text-red-500 hover:bg-red-500/20 transition-colors"
+            aria-label="Cancel">
+            <i class="pi pi-times text-base"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

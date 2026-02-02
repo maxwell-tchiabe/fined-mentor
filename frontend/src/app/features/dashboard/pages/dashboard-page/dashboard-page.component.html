@@ -4,7 +4,8 @@
     <div [class]="'relative h-full transition-all duration-300 ease-in-out ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
       <div [class]="'h-full overflow-hidden ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
         <app-nav-panel [sessions]="sessions()" (newChat)="onNewChat()" (selectSession)="onSelectSession($event)"
-          (deleteSession)="onDeleteSession($event)" (showDashboard)="onShowDashboard()" />
+          (deleteSession)="onDeleteSession($event)" (updateSessionTitle)="onUpdateSessionTitle($event)"
+          (showDashboard)="onShowDashboard()" />
       </div>
       <button (click)="toggleNav()"
         class="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 w-6 h-6 bg-base-300 rounded-full flex items-center justify-center text-content-200 hover:bg-brand-primary hover:text-white transition-colors shadow-lg"

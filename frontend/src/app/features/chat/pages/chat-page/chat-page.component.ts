@@ -27,7 +27,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
   public activeSession = toSignal(this.chatSessionService.activeSession$, { initialValue: null });
-  public errorMessage = signal<string | null>(null); 
+  public errorMessage = signal<string | null>(null);
 
   private sessionSubscription: Subscription | undefined;
 
@@ -71,7 +71,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public setErrorMessage(message: string): void {
     this.errorMessage.set(message);
-    setTimeout(() => this.errorMessage.set(null), 3000); 
+    setTimeout(() => this.errorMessage.set(null), 3000);
   }
 
   public onSendMessage(message: string): void {
@@ -92,7 +92,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     this.chatSessionService.setActiveSession(optimisticSession);
     this.isChatLoading.set(true);
-    this.errorMessage.set(null); 
+    this.errorMessage.set(null);
 
     this.chatMessageService.sendMessage(activeSession.id, message).pipe(
       tap(response => {
@@ -271,6 +271,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.chatSessionService.deactivateSession(sessionId).pipe(
       catchError(err => {
         console.error('Failed to delete session:', err);
+        return of(null);
+      })
+    ).subscribe();
+  }
+
+  public onUpdateSessionTitle(event: { sessionId: string, newTitle: string }): void {
+    this.chatSessionService.updateSessionTitle(event.sessionId, event.newTitle).pipe(
+      catchError(err => {
+        console.error('Failed to update session title:', err);
+        this.setErrorMessage('Failed to update title. Please try again.');
         return of(null);
       })
     ).subscribe();
