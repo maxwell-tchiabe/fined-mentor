@@ -7,15 +7,15 @@ import { ChatSessionService } from '../services/chat-session.service';
   providedIn: 'root'
 })
 export class SessionGuard implements CanActivate {
-  
+
   constructor(
     private chatSessionService: ChatSessionService,
     private router: Router
-  ) {}
+  ) { }
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const sessionId = route.params['sessionId'];
-    
+
     if (!sessionId) {
       this.router.navigate(['/']);
       return of(false);
@@ -32,7 +32,7 @@ export class SessionGuard implements CanActivate {
         }
       }),
       catchError(() => {
-        this.router.navigate(['/']);
+        this.router.navigate(['/chat']);
         return of(false);
       })
     );
