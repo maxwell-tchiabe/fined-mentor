@@ -11,6 +11,8 @@ RUN mvn clean package -DskipTests
 # Stage 2: Run the application
 FROM eclipse-temurin:21-jre-alpine
 
+#RUN apk add --no-cache ca-certificates
+
 WORKDIR /app
 
 COPY --from=build /app/target/mentor-0.0.1-SNAPSHOT.jar app.jar
