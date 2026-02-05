@@ -30,8 +30,17 @@ public class RateLimitFilter implements Filter {
     ProxyManager<String> proxyManager;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
+        String path = httpRequest.getRequestURI();
+
+        // Skip rate limiting for actuator endpoints (health, prometheus)
+        if (path.startsWith("/actuator")) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
         String key = httpRequest.getRemoteAddr();
         Bucket bucket = proxyManager.builder().build(key, bucketConfiguration);
 
@@ -45,7 +54,8 @@ public class RateLimitFilter implements Filter {
 
             ObjectMapper mapper = new ObjectMapper();
             httpResponse.setContentType("application/json");
-            httpResponse.setHeader("X-Rate-Limit-Retry-After-Seconds", "" + TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill()));
+            httpResponse.setHeader("X-Rate-Limit-Retry-After-Seconds",
+                    "" + TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill()));
             httpResponse.setStatus(429);
             httpResponse.getWriter().write(mapper.writeValueAsString(apiResponse));
         }
