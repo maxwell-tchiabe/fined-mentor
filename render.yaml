@@ -1,0 +1,60 @@
+services:
+  # Redis Instance (Free)
+  - type: redis
+    name: fined-mentor-redis
+    region: frankfurt # You can change this to your preferred region
+    plan: free
+    ipAllowList: [] # Only allow internal connections
+
+  # Backend Web Service (Free)
+  - type: web
+    name: fined-mentor-backend
+    region: frankfurt
+    plan: free
+    runtime: docker
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: MONGO_URI
+        sync: false # Should be set in Render Dashboard
+      - key: GOOGLE_GENAI_API_KEY
+        sync: false # Should be set in Render Dashboard
+      - key: EMAIL_USERNAME
+        sync: false
+      - key: EMAIL_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: fined-mentor-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: fined-mentor-redis
+          property: port
+    healthCheckPath: /actuator/health
+
+  # Frontend Web Service (Free)
+  - type: web
+    name: fined-mentor-frontend
+    region: frankfurt
+    plan: free
+    runtime: docker
+    dockerContext: frontend
+    dockerfilePath: frontend/Dockerfile
+    envVars:
+      - key: API_URL
+        fromService:
+          type: web
+          name: fined-mentor-backend
+          property: host
+    # If using Static Site (recommended for Angular), use this instead:
+    # - type: static
+    #   name: fined-mentor-frontend
+    #   publishPath: frontend/dist/fined-mentor-frontend/browser
+    #   buildCommand: cd frontend && npm install && npm run build

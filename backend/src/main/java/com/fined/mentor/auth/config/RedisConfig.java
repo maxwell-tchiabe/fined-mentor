@@ -19,30 +19,36 @@ import java.util.function.Supplier;
 
 @Configuration
 public class RedisConfig {
-    private RedisClient redisClient() {
-        return RedisClient.create(RedisURI.builder()
-                .withHost("localhost")
-                .withPort(6379)
-                .withSsl(false)
-                .build());
-    }
+        private RedisClient redisClient() {
+                String host = System.getenv().getOrDefault("REDIS_HOST", "localhost");
+                String portStr = System.getenv().getOrDefault("REDIS_PORT", "6379");
+                int port = Integer.parseInt(portStr);
+                boolean isSsl = Boolean.parseBoolean(System.getenv().getOrDefault("REDIS_SSL", "false"));
 
-    @Bean
-    public ProxyManager<String> lettuceBasedProxyManager() {
-        RedisClient redisClient = redisClient();
-        StatefulRedisConnection<String, byte[]> redisConnection = redisClient
-                .connect(RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE));
+                return RedisClient.create(RedisURI.builder()
+                                .withHost(host)
+                                .withPort(port)
+                                .withSsl(isSsl)
+                                .build());
+        }
 
-        return LettuceBasedProxyManager.builderFor(redisConnection)
-                .withExpirationStrategy(
-                        ExpirationAfterWriteStrategy.basedOnTimeForRefillingBucketUpToMax(Duration.ofMinutes(1L)))
-                .build();
-    }
+        @Bean
+        public ProxyManager<String> lettuceBasedProxyManager() {
+                RedisClient redisClient = redisClient();
+                StatefulRedisConnection<String, byte[]> redisConnection = redisClient
+                                .connect(RedisCodec.of(StringCodec.UTF8, ByteArrayCodec.INSTANCE));
 
-    @Bean
-    public Supplier<BucketConfiguration> bucketConfiguration() {
-        return () -> BucketConfiguration.builder()
-                .addLimit(Bandwidth.simple(5L, Duration.ofMinutes(1L)))
-                .build();
-    }
+                return LettuceBasedProxyManager.builderFor(redisConnection)
+                                .withExpirationStrategy(
+                                                ExpirationAfterWriteStrategy.basedOnTimeForRefillingBucketUpToMax(
+                                                                Duration.ofMinutes(1L)))
+                                .build();
+        }
+
+        @Bean
+        public Supplier<BucketConfiguration> bucketConfiguration() {
+                return () -> BucketConfiguration.builder()
+                                .addLimit(Bandwidth.simple(5L, Duration.ofMinutes(1L)))
+                                .build();
+        }
 }
