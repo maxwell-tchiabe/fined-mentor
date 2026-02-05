@@ -9,6 +9,21 @@ export const routes: Routes = [
       .then(c => c.LandingPageComponent)
   },
   {
+    path: 'impressum',
+    loadComponent: () => import('./features/legal/pages/impressum/impressum.component')
+      .then(c => c.ImpressumComponent)
+  },
+  {
+    path: 'privacy',
+    loadComponent: () => import('./features/legal/pages/privacy-policy/privacy-policy.component')
+      .then(c => c.PrivacyPolicyComponent)
+  },
+  {
+    path: 'terms-of-service',
+    loadComponent: () => import('./features/legal/pages/terms-of-service/terms-of-service.component')
+      .then(c => c.TermsOfServiceComponent)
+  },
+  {
     path: 'auth/login',
     loadComponent: () => import('./features/auth/pages/login/login.component')
       .then(c => c.LoginComponent)

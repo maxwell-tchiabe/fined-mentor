@@ -5,11 +5,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { InputOtpModule } from 'primeng/inputotp';
 import { AuthService } from '../../../../core/services/auth.service';
+import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, InputOtpModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, InputOtpModule, FormsModule, FooterComponent],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })

@@ -33,20 +33,6 @@
                         class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
                         placeholder="Enter your email">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="firstName" class="block text-sm font-medium text-gray-300 mb-1">First Name</label>
-                        <input id="firstName" type="text" formControlName="firstName" required
-                            class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
-                            placeholder="First Name">
-                    </div>
-                    <div>
-                        <label for="lastName" class="block text-sm font-medium text-gray-300 mb-1">Last Name</label>
-                        <input id="lastName" type="text" formControlName="lastName" required
-                            class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
-                            placeholder="Last Name">
-                    </div>
-                </div>
                 <div>
                     <label for="password" class="block text-sm font-medium text-gray-300 mb-1">Password</label>
                     <input id="password" type="password" formControlName="password" required
@@ -63,6 +49,15 @@
             <div *ngIf="successMessage"
                 class="p-3 rounded-lg bg-green-500/10 border border-green-500/20 text-green-400 text-sm text-center animate-fade-in">
                 {{ successMessage }}
+            </div>
+
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-500">
+                    By signing up you agree to our
+                    <a routerLink="/terms-of-service" class="text-alien-accent hover:underline">terms of service</a>
+                    and
+                    <a routerLink="/privacy" class="text-alien-accent hover:underline">privacy policy</a>.
+                </p>
             </div>
 
             <div>
@@ -95,3 +90,4 @@
         </form>
     </div>
 </div>
+<app-footer></app-footer>

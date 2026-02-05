@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
+import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FooterComponent],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {
@@ -27,8 +28,6 @@ export class RegisterComponent {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email]],
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }

@@ -56,8 +56,6 @@ public class AuthService {
                 .username(registerRequest.getUsername())
                 .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .firstName(registerRequest.getFirstName())
-                .lastName(registerRequest.getLastName())
                 .activated(false)
                 .enabled(true)
                 .createdAt(LocalDateTime.now())

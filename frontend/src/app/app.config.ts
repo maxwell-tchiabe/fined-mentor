@@ -1,5 +1,5 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { routes } from './app.routes';
 import { AuthInterceptor, ErrorInterceptor } from './core/interceptors';
@@ -9,7 +9,10 @@ import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes),
+    provideRouter(routes, withInMemoryScrolling({
+      scrollPositionRestoration: 'enabled',
+      anchorScrolling: 'enabled'
+    })),
     provideHttpClient(withInterceptorsFromDi()),
     importProvidersFrom(BrowserAnimationsModule),
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

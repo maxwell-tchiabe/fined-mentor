@@ -5,11 +5,12 @@ import { InputOtpModule } from 'primeng/inputotp';
 import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
+import { FooterComponent } from '../../../../shared/components/footer/footer.component';
 
 @Component({
   selector: 'app-activate',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, InputOtpModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, InputOtpModule, FooterComponent],
   templateUrl: './activate.component.html',
   styleUrl: './activate.component.css'
 })
