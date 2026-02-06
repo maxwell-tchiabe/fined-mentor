@@ -27,6 +27,12 @@ services:
         sync: false
       - key: TAVILY_API_KEY
         sync: false
+      - key: MAILGUN_API_KEY
+        sync: false
+      - key: MAILGUN_DOMAIN
+        sync: false
+      - key: MAILGUN_FROM
+        sync: false
       - key: REDIS_HOST
         fromService:
           type: redis
