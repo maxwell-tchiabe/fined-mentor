@@ -20,13 +20,13 @@ export class LoadingSpinnerComponent {
   get sizeClass(): string {
     return {
       'sm': 'h-8',
-      'md': 'h-16', 
+      'md': 'h-16',
       'lg': 'h-24'
     }[this.size];
   }
 
   get spinnerClasses(): string {
-    const base = 'border-brand-primary';
+    const base = 'border-brand-500';
     const size = {
       'sm': 'h-6 w-6 border-2',
       'md': 'h-8 w-8 border-3',

@@ -33,9 +33,10 @@
         <div class="h-full lg:col-start-auto">
           <!-- Mobile: Show either Chat or Quiz -->
           <div class="lg:hidden h-full">
-            <app-quiz-panel *ngIf="session.quiz; else mobileChat" [quiz]="session.quiz" [quizState]="session.quizState"
-              [isLoading]="isQuizLoading()" (answerSubmit)="onAnswerSubmit($event)" (nextQuestion)="onNextQuestion()"
-              (previousQuestion)="onPreviousQuestion()" (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
+            <app-quiz-panel *ngIf="session.quiz || isQuizLoading(); else mobileChat" [quiz]="session.quiz"
+              [quizState]="session.quizState" [isLoading]="isQuizLoading()" (answerSubmit)="onAnswerSubmit($event)"
+              (nextQuestion)="onNextQuestion()" (previousQuestion)="onPreviousQuestion()"
+              (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
 
             <ng-template #mobileChat>
               <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
