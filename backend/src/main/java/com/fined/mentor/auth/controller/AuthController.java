@@ -1,12 +1,23 @@
 package com.fined.mentor.auth.controller;
 
 import com.fined.mentor.auth.dto.*;
+import com.fined.mentor.auth.entity.User;
 import com.fined.mentor.auth.service.AuthService;
+import com.fined.mentor.auth.service.JwtService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -15,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
@@ -30,9 +43,33 @@ public class AuthController {
     public ResponseEntity<ApiResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.info("Login request for: {}", loginRequest.getUsernameOrEmail());
 
-        JwtResponse jwtResponse = authService.authenticateUser(loginRequest);
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsernameOrEmail(),
+                        loginRequest.getPassword()));
 
-        return ResponseEntity.ok(ApiResponse.success("Login successful", jwtResponse));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        ResponseCookie jwtCookie = jwtService.generateJwtCookie(authentication);
+
+        User user = (User) authentication.getPrincipal();
+        List<String> roles = user.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        JwtResponse jwtResponse = new JwtResponse(null, user.getId(), user.getUsername(), user.getEmail(), roles);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(ApiResponse.success("Login successful", jwtResponse));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse> logoutUser() {
+        ResponseCookie cookie = jwtService.getCleanJwtCookie();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(ApiResponse.success("You've been signed out!"));
     }
 
     @PostMapping("/activate")

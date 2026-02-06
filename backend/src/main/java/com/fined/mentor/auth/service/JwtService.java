@@ -1,13 +1,18 @@
 package com.fined.mentor.auth.service;
 
+import com.fined.mentor.auth.entity.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
 import java.time.Instant;
@@ -26,6 +31,9 @@ public class JwtService {
     @Value("${app.jwt.expiration}") // 24 hours
     private long jwtExpirationMs;
 
+    @Value("${app.jwt.cookieName}")
+    private String jwtCookie;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
@@ -34,18 +42,46 @@ public class JwtService {
         Instant now = Instant.now();
         Instant expiry = now.plus(jwtExpirationMs, ChronoUnit.SECONDS);
 
-        String username = authentication.getName();
+        User user = (User) authentication.getPrincipal();
         List<String> roles = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(user.getUsername())
                 .claim("roles", roles)
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiry))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
+
+    public ResponseCookie generateJwtCookie(Authentication authentication) {
+        String jwt = generateToken(authentication);
+        return ResponseCookie.from(jwtCookie, jwt)
+                .path("/api")
+                .maxAge(jwtExpirationMs)
+                .httpOnly(true)
+                .secure(false) // Set to true in production with HTTPS
+                .sameSite("Lax")
+                .build();
+    }
+
+    public ResponseCookie getCleanJwtCookie() {
+        return ResponseCookie.from(jwtCookie, null)
+                .path("/api")
+                .maxAge(0)
+                .httpOnly(true)
+                .build();
+    }
+
+    public String getJwtFromCookies(HttpServletRequest request) {
+        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+        if (cookie != null) {
+            return cookie.getValue();
+        } else {
+            return null;
+        }
     }
 
     public String getUsernameFromToken(String token) {

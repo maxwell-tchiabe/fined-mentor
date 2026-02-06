@@ -12,7 +12,6 @@ import { LoginRequest, RegisterRequest, ActivateRequest, JwtResponse } from '../
 })
 export class AuthService {
     private readonly apiUrl = `${environment.apiUrl}/auth`;
-    private readonly TOKEN_KEY = 'jwtToken';
     private readonly USER_KEY = 'currentUser';
 
     private currentUserSubject = new BehaviorSubject<JwtResponse | null>(null);
@@ -65,17 +64,26 @@ export class AuthService {
     }
 
     logout(): void {
-        localStorage.removeItem(this.TOKEN_KEY);
+        this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+            next: () => {
+                this.clearLocalData();
+            },
+            error: () => {
+                this.clearLocalData();
+            }
+        });
+    }
+
+    private clearLocalData(): void {
         localStorage.removeItem(this.USER_KEY);
         this.currentUserSubject.next(null);
         this.router.navigate(['/auth/login']);
     }
 
     private handleLoginSuccess(data: JwtResponse): void {
-        localStorage.setItem(this.TOKEN_KEY, data.token);
-        // Store minimal user info
+        // Store minimal user info (token is now in HttpOnly cookie)
         const user: JwtResponse = {
-            token: data.token,
+            token: '', // No longer stored here
             type: data.type,
             id: data.id,
             username: data.username,
@@ -87,10 +95,10 @@ export class AuthService {
     }
 
     getToken(): string | null {
-        return localStorage.getItem(this.TOKEN_KEY);
+        return null; // Token is handled by the browser via cookies
     }
 
     isAuthenticated(): boolean {
-        return !!this.getToken();
+        return !!this.currentUserSubject.value;
     }
 }

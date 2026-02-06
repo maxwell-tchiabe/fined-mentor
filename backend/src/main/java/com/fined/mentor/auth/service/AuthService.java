@@ -1,7 +1,5 @@
 package com.fined.mentor.auth.service;
 
-import com.fined.mentor.auth.dto.JwtResponse;
-import com.fined.mentor.auth.dto.LoginRequest;
 import com.fined.mentor.auth.dto.RegisterRequest;
 import com.fined.mentor.auth.exception.InvalidTokenException;
 import com.fined.mentor.auth.exception.UserAlreadyActivatedException;
@@ -14,29 +12,21 @@ import com.fined.mentor.auth.entity.Token;
 import com.fined.mentor.auth.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
     private final TokenService tokenService;
     private final EmailService emailService;
 
@@ -73,23 +63,6 @@ public class AuthService {
         // Create and send activation token
         Token activationToken = tokenService.createActivationToken(savedUser);
         emailService.sendActivationEmail(savedUser.getEmail(), savedUser.getUsername(), activationToken.getToken());
-    }
-
-    public JwtResponse authenticateUser(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtService.generateToken(authentication);
-
-        User user = (User) authentication.getPrincipal();
-        List<String> roles = user.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        return new JwtResponse(jwt, user.getId(), user.getUsername(), user.getEmail(), roles);
     }
 
     @Transactional

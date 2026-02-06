@@ -9,15 +9,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    let headers = req.headers.set('Content-Type', 'application/json');
-
-    const token = this.authService.getToken();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
     const modifiedReq = req.clone({
-      headers: headers
+      headers: req.headers.set('Content-Type', 'application/json'),
+      withCredentials: true
     });
 
     return next.handle(modifiedReq);
