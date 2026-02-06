@@ -25,6 +25,10 @@ services:
         sync: false
       - key: JWT_SECRET
         sync: false
+      - key: APP_JWT_COOKIE_SECURE
+        value: "true"
+      - key: APP_JWT_COOKIE_SAMESITE
+        value: "None"
       - key: TAVILY_API_KEY
         sync: false
       - key: MAILGUN_API_KEY

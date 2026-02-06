@@ -34,6 +34,12 @@ public class JwtService {
     @Value("${app.jwt.cookieName}")
     private String jwtCookie;
 
+    @Value("${app.jwt.cookieSecure:false}")
+    private boolean cookieSecure;
+
+    @Value("${app.jwt.cookieSameSite:Lax}")
+    private String cookieSameSite;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
@@ -62,8 +68,8 @@ public class JwtService {
                 .path("/api")
                 .maxAge(jwtExpirationMs)
                 .httpOnly(true)
-                .secure(false) // Set to true in production with HTTPS
-                .sameSite("Lax")
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .build();
     }
 
@@ -72,6 +78,8 @@ public class JwtService {
                 .path("/api")
                 .maxAge(0)
                 .httpOnly(true)
+                .secure(cookieSecure)
+                .sameSite(cookieSameSite)
                 .build();
     }
 
