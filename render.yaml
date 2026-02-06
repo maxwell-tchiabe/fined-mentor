@@ -28,7 +28,7 @@ services:
       - key: APP_JWT_COOKIE_SECURE
         value: "true"
       - key: APP_JWT_COOKIE_SAMESITE
-        value: "None"
+        value: "Lax"
       - key: TAVILY_API_KEY
         sync: false
       - key: MAILGUN_API_KEY
