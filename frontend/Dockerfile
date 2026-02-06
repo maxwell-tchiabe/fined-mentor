@@ -16,7 +16,8 @@ FROM nginx:alpine
 
 COPY --from=build /app/dist/fined-mentor-frontend/browser /usr/share/nginx/html
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Use /etc/nginx/templates/ for dynamic configuration with envsubst
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
 EXPOSE 80
 

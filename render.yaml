@@ -63,6 +63,8 @@ services:
           type: web
           name: fined-mentor-backend
           property: host
+      - key: BACKEND_URL
+        value: "https://fined-mentor-backend.onrender.com"
     # If using Static Site (recommended for Angular), use this instead:
     # - type: static
     #   name: fined-mentor-frontend
