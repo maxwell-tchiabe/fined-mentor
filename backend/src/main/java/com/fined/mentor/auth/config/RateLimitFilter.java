@@ -10,11 +10,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.web.filter.OncePerRequestFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -32,40 +33,40 @@ public class RateLimitFilter extends OncePerRequestFilter {
     ProxyManager<String> proxyManager;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        String path = request.getRequestURI();
-
-        // Skip rate limiting for actuator endpoints (health, prometheus)
-        if (path.startsWith("/actuator")) {
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws IOException, ServletException {
+        if (request.getRequestURI().startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String key = request.getRemoteAddr();
+        String key = getClientIp(request);
 
         try {
-            Bucket bucket = proxyManager.builder().build(key, bucketConfiguration);
+            Bucket bucket = proxyManager.builder().build(key, bucketConfiguration.get());
             ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
-            log.info("Rate limit check for IP: {} - Path: {} - Remaining: {}", key, path, probe.getRemainingTokens());
-
             if (probe.isConsumed()) {
+                response.setHeader("X-RateLimit-Remaining", String.valueOf(probe.getRemainingTokens()));
                 filterChain.doFilter(request, response);
             } else {
-                log.warn("Rate limit exceeded for IP: {} - Path: {}", key, path);
-                ApiResponse apiResponse = ApiResponse.error("Too many requests");
-
-                ObjectMapper mapper = new ObjectMapper();
-                response.setContentType("application/json");
-                response.setHeader("X-Rate-Limit-Retry-After-Seconds",
-                        "" + TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill()));
                 response.setStatus(429);
-                response.getWriter().write(mapper.writeValueAsString(apiResponse));
+                response.setHeader("X-RateLimit-Retry-After-Seconds",
+                        String.valueOf(TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill())));
+                response.setContentType("application/json");
+                MAPPER.writeValue(response.getWriter(), ApiResponse.error("Too many requests"));
             }
         } catch (Exception e) {
-            log.error("Error during rate limiting for IP: {}. Falling back to allowing request.", key, e);
-            filterChain.doFilter(request, response);
+            log.error("Rate limit failed for IP: {}. Denying access.", key, e);
+            response.setStatus(503);
+            MAPPER.writeValue(response.getWriter(), ApiResponse.error("Service unavailable"));
         }
     }
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private String getClientIp(HttpServletRequest request) {
+        String xForwardedFor = request.getHeader("X-Forwarded-For");
+        return (xForwardedFor != null ? xForwardedFor.split(",")[0].trim() : request.getRemoteAddr());
+    }
+
 }
