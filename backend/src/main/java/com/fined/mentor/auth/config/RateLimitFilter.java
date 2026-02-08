@@ -6,9 +6,11 @@ import io.github.bucket4j.Bucket;
 import io.github.bucket4j.BucketConfiguration;
 import io.github.bucket4j.ConsumptionProbe;
 import io.github.bucket4j.distributed.proxy.ProxyManager;
-import jakarta.servlet.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.filter.OncePerRequestFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -21,7 +23,7 @@ import java.util.function.Supplier;
 @Slf4j
 @Component
 @Order(1)
-public class RateLimitFilter implements Filter {
+public class RateLimitFilter extends OncePerRequestFilter {
 
     @Autowired
     Supplier<BucketConfiguration> bucketConfiguration;
@@ -30,34 +32,40 @@ public class RateLimitFilter implements Filter {
     ProxyManager<String> proxyManager;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        String path = httpRequest.getRequestURI();
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String path = request.getRequestURI();
 
         // Skip rate limiting for actuator endpoints (health, prometheus)
         if (path.startsWith("/actuator")) {
-            filterChain.doFilter(servletRequest, servletResponse);
+            filterChain.doFilter(request, response);
             return;
         }
 
-        String key = httpRequest.getRemoteAddr();
-        Bucket bucket = proxyManager.builder().build(key, bucketConfiguration);
+        String key = request.getRemoteAddr();
 
-        ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
-        log.debug(">>>>>>>>remainingTokens: {}", probe.getRemainingTokens());
-        if (probe.isConsumed()) {
-            filterChain.doFilter(servletRequest, servletResponse);
-        } else {
-            HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
-            ApiResponse apiResponse = ApiResponse.error("Too many requests");
+        try {
+            Bucket bucket = proxyManager.builder().build(key, bucketConfiguration);
+            ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
-            ObjectMapper mapper = new ObjectMapper();
-            httpResponse.setContentType("application/json");
-            httpResponse.setHeader("X-Rate-Limit-Retry-After-Seconds",
-                    "" + TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill()));
-            httpResponse.setStatus(429);
-            httpResponse.getWriter().write(mapper.writeValueAsString(apiResponse));
+            log.info("Rate limit check for IP: {} - Path: {} - Remaining: {}", key, path, probe.getRemainingTokens());
+
+            if (probe.isConsumed()) {
+                filterChain.doFilter(request, response);
+            } else {
+                log.warn("Rate limit exceeded for IP: {} - Path: {}", key, path);
+                ApiResponse apiResponse = ApiResponse.error("Too many requests");
+
+                ObjectMapper mapper = new ObjectMapper();
+                response.setContentType("application/json");
+                response.setHeader("X-Rate-Limit-Retry-After-Seconds",
+                        "" + TimeUnit.NANOSECONDS.toSeconds(probe.getNanosToWaitForRefill()));
+                response.setStatus(429);
+                response.getWriter().write(mapper.writeValueAsString(apiResponse));
+            }
+        } catch (Exception e) {
+            log.error("Error during rate limiting for IP: {}. Falling back to allowing request.", key, e);
+            filterChain.doFilter(request, response);
         }
     }
 }
