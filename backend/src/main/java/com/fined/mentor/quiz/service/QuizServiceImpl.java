@@ -231,7 +231,6 @@ public class QuizServiceImpl implements QuizService {
 
     private void validateQuiz(Quiz quiz) {
         if (quiz.getQuestions() == null || quiz.getQuestions().isEmpty()) {
-            log.info("quiz{}", quiz);
             throw new QuizValidationException("Quiz must have at least one question");
         }
 
