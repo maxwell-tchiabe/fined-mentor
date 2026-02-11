@@ -1,0 +1,229 @@
+{
+    "APP_NAME": "Fined Mentor",
+    "NAV": {
+        "HOME": "Home",
+        "FEATURES": "Features",
+        "HOW_IT_WORKS": "How it Works",
+        "PRICING": "Pricing",
+        "STORIES": "Stories",
+        "SIGN_IN": "Sign In",
+        "DASHBOARD": "Dashboard",
+        "NEW_CHAT": "New Chat",
+        "SETTINGS": "Settings",
+        "LOGOUT": "Log out",
+        "CHAT_HISTORY": "Chat History",
+        "CONTACT": "Contact"
+    },
+    "HERO": {
+        "BADGE": "Build Financial Fitness",
+        "TITLE_PREFIX": "Master finance, real estate, and investing with",
+        "TITLE_SUFFIX": "Fined Mentor",
+        "SUBTITLE": "Our AI mentor is available 24/7 to help you become financially fit — learn finance, real estate, and investment strategies through interactive quizzes and real-time guidance.",
+        "GET_STARTED": "Get Started For Free",
+        "LEARN_MORE": "Learn More"
+    },
+    "FEATURES": {
+        "TITLE": "Why Choose Fined Mentor?",
+        "SUBTITLE": "Everything you need to accelerate your professional growth in one place.",
+        "MENTORSHIP_TITLE": "Expert Mentorship",
+        "MENTORSHIP_DESC": "Get guidance from an AI-powered mentor specialized in finance, real estate, and investing to help you build wealth and avoid common mistakes.",
+        "QUIZZES_TITLE": "Interactive Quizzes",
+        "QUIZZES_DESC": "Test your knowledge with our curated quizzes designed to reinforce your learning and track progress.",
+        "COMMUNITY_TITLE": "Community Support",
+        "COMMUNITY_DESC": "Join a vibrant community of learners and professionals. Share ideas, get feedback, and grow together."
+    },
+    "HOW_IT_WORKS": {
+        "TITLE": "How It Works",
+        "SUBTITLE": "Three simple steps to start your journey.",
+        "STEP1_TITLE": "Create Account",
+        "STEP1_DESC": "Sign up in seconds and build your professional profile.",
+        "STEP2_TITLE": "Find a Mentor",
+        "STEP2_DESC": "Connect instantly with our AI mentor specialized in finance and real estate.",
+        "STEP3_TITLE": "Start Learning",
+        "STEP3_DESC": "Schedule sessions, take quizzes, and track your progress."
+    },
+    "PRICING": {
+        "TITLE": "Simple Pricing",
+        "SUBTITLE": "Choose the plan that fits your needs.",
+        "STARTER": {
+            "TITLE": "Starter",
+            "PRICE": "$0",
+            "PERIOD": "/mo",
+            "FEATURE_1": "100 tokens per day",
+            "FEATURE_2": "Access to community",
+            "FEATURE_3": "Basic quizzes",
+            "FEATURE_4": "1 Mentor connection",
+            "BUTTON": "Get Started"
+        },
+        "PRO": {
+            "BADGE": "Most Popular",
+            "TITLE": "Pro",
+            "FEATURE_1": "Everything in Starter",
+            "FEATURE_2": "Unlimited Mentor connections",
+            "FEATURE_3": "Advanced quizzes & analytics",
+            "FEATURE_4": "Priority support",
+            "BUTTON": "Contact Sales"
+        },
+        "TEAM": {
+            "TITLE": "Team",
+            "FEATURE_1": "5 Team members",
+            "FEATURE_2": "Team dashboard",
+            "FEATURE_3": "Custom learning paths",
+            "BUTTON": "Contact Sales"
+        }
+    },
+    "TESTIMONIALS": {
+        "TITLE": "Success Stories",
+        "SUBTITLE": "Hear from our community of learners and mentors.",
+        "STORY1": {
+            "NAME": "Sarah Jenkins",
+            "ROLE": "Frontend Developer",
+            "TEXT": "\"Fined Mentor helped me bridge the gap between self-taught and job-ready. My mentor was incredible!\""
+        },
+        "STORY2": {
+            "NAME": "Michael Chen",
+            "ROLE": "Product Designer",
+            "TEXT": "\"The quizzes are challenging and the community is so supportive. I've learned more here in 2 months than a year on my own.\""
+        },
+        "STORY3": {
+            "NAME": "Jessica Williams",
+            "ROLE": "Data Scientist",
+            "TEXT": "\"Finding a mentor who actually understands my career goals was a game changer. Highly recommend!\""
+        }
+    },
+    "FOOTER": {
+        "DESC": "Empowering careers through expert mentorship and interactive learning.",
+        "PLATFORM": "Platform",
+        "BROWSE_MENTORS": "Browse Mentors",
+        "HOW_IT_WORKS": "How it Works",
+        "PRICING": "Pricing",
+        "COMPANY": "Company",
+        "ABOUT_US": "About Us",
+        "BLOG": "Blog",
+        "LEGAL": "Legal",
+        "IMPRESSUM": "Impressum",
+        "PRIVACY_POLICY": "Privacy Policy",
+        "TERMS_OF_SERVICE": "Terms of Service",
+        "COPYRIGHT": "© 2026 Fined Mentor. All rights reserved."
+    },
+    "SETTINGS": {
+        "TITLE": "Settings",
+        "LANGUAGE": "Language",
+        "THEME": "Theme",
+        "CLOSE": "Close"
+    },
+    "AUTH": {
+        "LOGIN": {
+            "TITLE": "Welcome back",
+            "SUBTITLE": "Sign in to continue your journey",
+            "USERNAME_OR_EMAIL": "Username or Email",
+            "USERNAME_PLACEHOLDER": "Enter your username or email",
+            "PASSWORD": "Password",
+            "FORGOT_PASSWORD": "Forgot your password?",
+            "PASSWORD_PLACEHOLDER": "Enter your password",
+            "SUBMIT": "Sign in",
+            "SUBMITTING": "Signing in...",
+            "NO_ACCOUNT": "Don't have an account?",
+            "CREATE_ACCOUNT": "Create one now"
+        },
+        "REGISTER": {
+            "TITLE": "Create your account",
+            "SUBTITLE": "Join our community of learners today",
+            "USERNAME": "Username",
+            "USERNAME_PLACEHOLDER": "Choose a username",
+            "EMAIL": "Email address",
+            "EMAIL_PLACEHOLDER": "Enter your email",
+            "PASSWORD": "Password",
+            "PASSWORD_PLACEHOLDER": "Create a password",
+            "AGREE_TEXT": "By signing up you agree to our",
+            "TERMS": "terms of service",
+            "AND": "and",
+            "PRIVACY": "privacy policy",
+            "SUBMIT": "Create Account",
+            "SUBMITTING": "Creating account...",
+            "HAVE_ACCOUNT": "Already have an account?",
+            "SIGN_IN": "Sign in here"
+        },
+        "ACTIVATE": {
+            "TITLE": "Activate Account",
+            "SUBTITLE": "Enter the code sent to your email",
+            "TOKEN_LABEL": "Activation Token",
+            "SUBMIT": "Activate",
+            "SUBMITTING": "Activating...",
+            "NO_CODE": "Didn't receive a code?",
+            "RESEND": "Resend Activation",
+            "RESEND_SUBMIT": "Send",
+            "RESEND_EMAIL_PLACEHOLDER": "Enter your email"
+        },
+        "FORGOT_PASSWORD": {
+            "TITLE": "Forgot Password",
+            "SUBTITLE": "Enter your email address and we'll send you a link to reset your password.",
+            "EMAIL": "Email address",
+            "EMAIL_PLACEHOLDER": "Enter your email address",
+            "SUBMIT": "Send Reset Link",
+            "SUBMITTING": "Sending...",
+            "BACK_TO_LOGIN": "Back to Sign In"
+        },
+        "RESET_PASSWORD": {
+            "TITLE": "Reset Password",
+            "SUBTITLE": "Enter your new password below.",
+            "TOKEN": "OTP / Token",
+            "TOKEN_REQUIRED": "Token is required",
+            "NEW_PASSWORD": "New Password",
+            "NEW_PASSWORD_PLACEHOLDER": "Enter new password",
+            "PASSWORD_REQUIRED": "Password is required",
+            "PASSWORD_MINLENGTH": "Password must be at least 6 characters",
+            "CONFIRM_PASSWORD": "Confirm New Password",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Confirm new password",
+            "CONFIRM_REQUIRED": "Confirmation is required",
+            "PASSWORD_MISMATCH": "Passwords must match",
+            "SUBMIT": "Reset Password",
+            "SUBMITTING": "Resetting...",
+            "SUCCESS": "Password reset successfully.",
+            "ERROR": "Something went wrong. Please try again."
+        }
+    },
+    "QUIZ": {
+        "GENERATING": "Generating your quiz...",
+        "TITLE_ADAPTIVE": "Adaptive Assessment",
+        "DESC_ADAPTIVE": "Ready for a challenge? Ask the mentor in the chat to test you on a topic, for example:",
+        "EXAMPLE_PROMPT": "\"Test me on real estate investing\"",
+        "COMPLETED_TITLE": "Quiz Completed!",
+        "SCORED": "You scored",
+        "RESTART_BUTTON": "Take Another Quiz",
+        "RETURN_INSTRUCTION": "Return to the chat to start a new test.",
+        "TITLE_TOPIC": "Quiz: {{topic}}",
+        "QUESTION_PROGRESS": "Question {{current}} of {{total}}",
+        "CORRECT": "Correct!",
+        "INCORRECT": "Incorrect",
+        "SUBMIT_BUTTON": "Submit Answer",
+        "PREVIOUS_BUTTON": "Previous",
+        "NEXT_BUTTON": "Next Question",
+        "FINISH_BUTTON": "Finish Quiz"
+    },
+    "DASHBOARD": {
+        "TITLE": "Progress Dashboard",
+        "SUBTITLE": "An overview of your learning journey.",
+        "QUIZZES_TAKEN": "Quizzes Taken",
+        "TOTAL_SCORE": "Total Score",
+        "AVERAGE_SCORE": "Average Score",
+        "TOPIC_PERFORMANCE": "Performance by Topic",
+        "NO_DATA": "No quiz data yet.",
+        "NO_DATA_DESC": "Complete a quiz to see your progress here.",
+        "NAV_EXPAND": "Expand navigation",
+        "NAV_COLLAPSE": "Collapse navigation"
+    },
+    "CHAT": {
+        "TITLE": "FinEd Mentor Chat",
+        "WELCOME_TITLE": "Welcome to FinEd Mentor",
+        "WELCOME_DESC": "Create a new chat to get started.",
+        "INPUT_PLACEHOLDER": "Ask me anything...",
+        "QUIZ_PLACEHOLDER": "Enter a topic to generate a quiz...",
+        "QUIZ_BUTTON": "Quiz"
+    },
+    "LANGUAGES": {
+        "en": "English",
+        "fr": "French",
+        "de": "German"
+    }
+}

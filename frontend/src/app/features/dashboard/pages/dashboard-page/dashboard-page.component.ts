@@ -6,11 +6,12 @@ import { catchError, of, tap } from 'rxjs';
 import { DashboardPanelComponent } from '../../components/dashboard-panel/dashboard-panel.component';
 import { NavPanelComponent } from '../../../../shared/components/nav-panel/nav-panel.component';
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
-  imports: [CommonModule, DashboardPanelComponent, NavPanelComponent],
+  imports: [CommonModule, DashboardPanelComponent, NavPanelComponent, TranslateModule],
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.css']
 })

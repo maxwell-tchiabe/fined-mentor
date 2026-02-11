@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { ChatMessage } from '../../../../core/models/chat.model';
 import { MarkdownPipe } from '../../../../shared/pipes/markdown.pipe';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, MarkdownPipe, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, MarkdownPipe, LoadingSpinnerComponent, TranslateModule],
   templateUrl: './chat-panel.component.html',
   styleUrls: ['./chat-panel.component.css']
 })

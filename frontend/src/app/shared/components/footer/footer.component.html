@@ -11,55 +11,58 @@
                     <span class="font-bold text-lg text-white">Fined Mentor</span>
                 </div>
                 <p class="text-gray-400 text-sm leading-relaxed">
-                    Empowering careers through expert mentorship and interactive learning.
+                    {{ 'FOOTER.DESC' | translate }}
                 </p>
             </div>
 
             <div>
-                <h4 class="text-white font-medium mb-4">Platform</h4>
+                <h4 class="text-white font-medium mb-4">{{ 'FOOTER.PLATFORM' | translate }}</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
                     <li><a routerLink="/"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">Browse
-                            Mentors</a></li>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.BROWSE_MENTORS' | translate }}</a></li>
                     <li><a routerLink="/" fragment="how-it-works"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">How it
-                            Works</a></li>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.HOW_IT_WORKS' | translate }}</a></li>
                     <li><a routerLink="/" fragment="pricing"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">Pricing</a>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.PRICING' | translate }}</a>
                     </li>
                 </ul>
             </div>
 
             <div>
-                <h4 class="text-white font-medium mb-4">Company</h4>
+                <h4 class="text-white font-medium mb-4">{{ 'FOOTER.COMPANY' | translate }}</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
                     <li><a href="https://maxwelltbtech.com/" target="_blank"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">About
-                            Us</a></li>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.ABOUT_US' | translate }}</a></li>
                     <li><a href="https://maxwelltbtech.substack.com/" target="_blank"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">Blog</a>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.BLOG' | translate }}</a>
                     </li>
                 </ul>
             </div>
 
             <div>
-                <h4 class="text-white font-medium mb-4">Legal</h4>
+                <h4 class="text-white font-medium mb-4">{{ 'FOOTER.LEGAL' | translate }}</h4>
                 <ul class="space-y-2 text-sm text-gray-400">
                     <li><a routerLink="/impressum"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">Impressum</a>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.IMPRESSUM' | translate }}</a>
                     </li>
                     <li><a routerLink="/privacy"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">Privacy
-                            Policy</a></li>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.PRIVACY_POLICY' | translate }}</a></li>
                     <li><a routerLink="/terms-of-service"
-                            class="hover:text-white transition-colors focus:outline-none focus:text-white">Terms of
-                            Service</a></li>
+                            class="hover:text-white transition-colors focus:outline-none focus:text-white">{{
+                            'FOOTER.TERMS_OF_SERVICE' | translate }}</a></li>
                 </ul>
             </div>
         </div>
 
         <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-gray-500 text-sm">© 2026 Fined Mentor. All rights reserved.</p>
+            <p class="text-gray-500 text-sm">{{ 'FOOTER.COPYRIGHT' | translate }}</p>
             <div class="flex gap-4">
                 <a href="https://github.com/maxwell-tchiabe/fined-mentor" target="_blank"
                     class="text-gray-500 hover:text-white transition-colors focus:outline-none focus:text-white"

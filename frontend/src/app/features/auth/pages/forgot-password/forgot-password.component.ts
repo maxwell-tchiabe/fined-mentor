@@ -5,11 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-forgot-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FooterComponent, TranslateModule],
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.css']
 })

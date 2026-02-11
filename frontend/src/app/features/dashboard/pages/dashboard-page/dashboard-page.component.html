@@ -9,7 +9,7 @@
       </div>
       <button (click)="toggleNav()"
         class="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 w-6 h-6 bg-base-300 rounded-full flex items-center justify-center text-content-200 hover:bg-brand-primary hover:text-white transition-colors shadow-lg"
-        [attr.aria-label]="isNavOpen() ? 'Collapse navigation' : 'Expand navigation'">
+        [attr.aria-label]="isNavOpen() ? ('DASHBOARD.NAV_COLLAPSE' | translate) : ('DASHBOARD.NAV_EXPAND' | translate)">
         <i *ngIf="isNavOpen()" class="pi pi-chevron-left text-xs"></i>
         <i *ngIf="!isNavOpen()" class="pi pi-chevron-right text-xs"></i>
       </button>

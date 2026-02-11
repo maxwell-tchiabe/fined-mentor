@@ -18,14 +18,17 @@
             <div class="hidden md:block">
                 <div class="ml-10 flex items-baseline space-x-8">
                     <a routerLink="/" fragment="features"
-                        class="nav-link focus:outline-none focus:text-white focus:underline">Features</a>
+                        class="nav-link focus:outline-none focus:text-white focus:underline">{{ 'NAV.FEATURES' |
+                        translate }}</a>
                     <a routerLink="/" fragment="how-it-works"
-                        class="nav-link focus:outline-none focus:text-white focus:underline">How
-                        it Works</a>
+                        class="nav-link focus:outline-none focus:text-white focus:underline">{{ 'NAV.HOW_IT_WORKS' |
+                        translate }}</a>
                     <a routerLink="/" fragment="pricing"
-                        class="nav-link focus:outline-none focus:text-white focus:underline">Pricing</a>
+                        class="nav-link focus:outline-none focus:text-white focus:underline">{{ 'NAV.PRICING' |
+                        translate }}</a>
                     <a routerLink="/" fragment="testimonials"
-                        class="nav-link focus:outline-none focus:text-white focus:underline">Stories</a>
+                        class="nav-link focus:outline-none focus:text-white focus:underline">{{ 'NAV.STORIES' |
+                        translate }}</a>
                 </div>
             </div>
 
@@ -49,10 +52,13 @@
             </div>
 
             <!-- CTA Button -->
+            <div class="hidden md:block mr-4">
+                <app-language-switcher></app-language-switcher>
+            </div>
             <div class="hidden md:block">
                 <a routerLink="/auth/login"
                     class="px-6 py-2 rounded-full border border-white/20 text-sm font-medium hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">
-                    Sign In
+                    {{ 'NAV.SIGN_IN' | translate }}
                 </a>
             </div>
         </div>
@@ -87,19 +93,26 @@
 
         <nav class="space-y-4">
             <a routerLink="/" fragment="features" (click)="toggleMobileMenu()"
-                class="block text-lg font-semibold text-white hover:text-alien-accent">Features</a>
+                class="block text-lg font-semibold text-white hover:text-alien-accent">{{ 'NAV.FEATURES' | translate
+                }}</a>
             <a routerLink="/" fragment="how-it-works" (click)="toggleMobileMenu()"
-                class="block text-lg font-semibold text-white hover:text-alien-accent">How it Works</a>
+                class="block text-lg font-semibold text-white hover:text-alien-accent">{{ 'NAV.HOW_IT_WORKS' | translate
+                }}</a>
             <a routerLink="/" fragment="pricing" (click)="toggleMobileMenu()"
-                class="block text-lg font-semibold text-white hover:text-alien-accent">Pricing</a>
+                class="block text-lg font-semibold text-white hover:text-alien-accent">{{ 'NAV.PRICING' | translate
+                }}</a>
             <a routerLink="/" fragment="testimonials" (click)="toggleMobileMenu()"
-                class="block text-lg font-semibold text-white hover:text-alien-accent">Stories</a>
+                class="block text-lg font-semibold text-white hover:text-alien-accent">{{ 'NAV.STORIES' | translate
+                }}</a>
         </nav>
 
-        <div class="mt-6">
+        <div class="mt-6 space-y-4">
+            <div class="flex justify-center">
+                <app-language-switcher></app-language-switcher>
+            </div>
             <a routerLink="/auth/login" (click)="toggleMobileMenu()"
-                class="block w-full py-3 rounded-lg text-center bg-alien-accent text-white font-medium hover:opacity-95">Sign
-                In</a>
+                class="block w-full py-3 rounded-lg text-center bg-alien-accent text-white font-medium hover:opacity-95">{{
+                'NAV.SIGN_IN' | translate }}</a>
         </div>
     </div>
 </div>

@@ -11,11 +11,12 @@ import { ChatSessionService } from '../../../../core/services/chat-session.servi
 import { ChatMessageService } from '../../../../core/services/chat-message.service';
 import { QuizService } from '../../../../core/services/quiz.service';
 import { ChatMessage, ChatSession, QuizState } from '../../../../core/models/chat.model';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule, ChatPanelComponent, QuizPanelComponent, NavPanelComponent, DashboardPanelComponent],
+  imports: [CommonModule, ChatPanelComponent, QuizPanelComponent, NavPanelComponent, DashboardPanelComponent, TranslateModule],
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.css']
 })

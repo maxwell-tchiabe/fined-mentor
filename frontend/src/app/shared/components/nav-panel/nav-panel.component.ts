@@ -6,11 +6,13 @@ import { ChatSession } from '../../../core/models/chat.model';
 import { AuthService } from '../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-nav-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, ConfirmDialogComponent],
+  imports: [CommonModule, FormsModule, ConfirmDialogComponent, LanguageSwitcherComponent, TranslateModule],
   templateUrl: './nav-panel.component.html',
   styleUrls: ['./nav-panel.component.css']
 })

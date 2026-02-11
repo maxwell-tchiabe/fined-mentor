@@ -6,11 +6,12 @@ import { finalize } from 'rxjs/operators';
 import { InputOtpModule } from 'primeng/inputotp';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, InputOtpModule, FormsModule, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, InputOtpModule, FormsModule, FooterComponent, TranslateModule],
   templateUrl: './reset-password.component.html',
   styleUrls: ['./reset-password.component.css']
 })
@@ -72,13 +73,13 @@ export class ResetPasswordComponent implements OnInit {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: (response) => {
-          this.successMessage = response.message || 'Password reset successfully.';
+          this.successMessage = response.message || 'AUTH.RESET_PASSWORD.SUCCESS';
           setTimeout(() => {
             this.router.navigate(['/auth/login']);
           }, this.REDIRECT_DELAY_MS);
         },
         error: (error) => {
-          this.errorMessage = error.error?.message || 'Something went wrong. Please try again.';
+          this.errorMessage = error.error?.message || 'AUTH.RESET_PASSWORD.ERROR';
         }
       });
   }

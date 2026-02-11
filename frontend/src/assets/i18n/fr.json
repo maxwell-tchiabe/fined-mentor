@@ -1,0 +1,229 @@
+{
+    "APP_NAME": "Fined Mentor",
+    "NAV": {
+        "HOME": "Accueil",
+        "FEATURES": "Fonctionnalités",
+        "HOW_IT_WORKS": "Comment ça marche",
+        "PRICING": "Tarifs",
+        "STORIES": "Témoignages",
+        "SIGN_IN": "Se connecter",
+        "DASHBOARD": "Tableau de bord",
+        "NEW_CHAT": "Nouveau chat",
+        "SETTINGS": "Paramètres",
+        "LOGOUT": "Se déconnecter",
+        "CHAT_HISTORY": "Historique des chats",
+        "CONTACT": "Contact"
+    },
+    "HERO": {
+        "BADGE": "Développez votre forme financière",
+        "TITLE_PREFIX": "Maîtrisez la finance, l'immobilier et l'investissement avec",
+        "TITLE_SUFFIX": "Fined Mentor",
+        "SUBTITLE": "Notre mentor IA est disponible 24h/24 et 7j/7 pour vous aider à devenir financièrement apte — apprenez la finance, l'immobilier et les stratégies d'investissement grâce à des quiz interactifs et des conseils en temps réel.",
+        "GET_STARTED": "Commencer gratuitement",
+        "LEARN_MORE": "En savoir plus"
+    },
+    "FEATURES": {
+        "TITLE": "Pourquoi choisir Fined Mentor ?",
+        "SUBTITLE": "Tout ce dont vous avez besoin pour accélérer votre croissance professionnelle en un seul endroit.",
+        "MENTORSHIP_TITLE": "Mentorat d'expert",
+        "MENTORSHIP_DESC": "Obtenez des conseils d'un mentor IA spécialisé en finance, immobilier et investissement pour vous aider à bâtir votre richesse et éviter les erreurs courantes.",
+        "QUIZZES_TITLE": "Quiz interactifs",
+        "QUIZZES_DESC": "Testez vos connaissances avec nos quiz conçus pour renforcer votre apprentissage et suivre vos progrès.",
+        "COMMUNITY_TITLE": "Soutien communautaire",
+        "COMMUNITY_DESC": "Rejoignez une communauté dynamique d'apprenants et de professionnels. Partagez des idées, obtenez des retours et grandissez ensemble."
+    },
+    "HOW_IT_WORKS": {
+        "TITLE": "Comment ça marche",
+        "SUBTITLE": "Trois étapes simples pour commencer votre voyage.",
+        "STEP1_TITLE": "Créer un compte",
+        "STEP1_DESC": "Inscrivez-vous en quelques secondes et créez votre profil professionnel.",
+        "STEP2_TITLE": "Trouver un mentor",
+        "STEP2_DESC": "Connectez-vous instantanément avec notre mentor IA spécialisé en finance et immobilier.",
+        "STEP3_TITLE": "Commencer à apprendre",
+        "STEP3_DESC": "Planifiez des sessions, répondez à des quiz et suivez vos progrès."
+    },
+    "PRICING": {
+        "TITLE": "Tarification simple",
+        "SUBTITLE": "Choisissez le plan qui correspond à vos besoins.",
+        "STARTER": {
+            "TITLE": "Démarrage",
+            "PRICE": "0€",
+            "PERIOD": "/mois",
+            "FEATURE_1": "100 jetons par jour",
+            "FEATURE_2": "Accès à la communauté",
+            "FEATURE_3": "Quiz basiques",
+            "FEATURE_4": "1 connexion Mentor",
+            "BUTTON": "Commencer"
+        },
+        "PRO": {
+            "BADGE": "Le plus populaire",
+            "TITLE": "Pro",
+            "FEATURE_1": "Tout ce qu'il y a dans Starter",
+            "FEATURE_2": "Connexions Mentor illimitées",
+            "FEATURE_3": "Quiz avancés & analytiques",
+            "FEATURE_4": "Support prioritaire",
+            "BUTTON": "Contacter les ventes"
+        },
+        "TEAM": {
+            "TITLE": "Équipe",
+            "FEATURE_1": "5 membres d'équipe",
+            "FEATURE_2": "Tableau de bord d'équipe",
+            "FEATURE_3": "Parcours d'apprentissage personnalisés",
+            "BUTTON": "Contacter les ventes"
+        }
+    },
+    "TESTIMONIALS": {
+        "TITLE": "Histoires de succès",
+        "SUBTITLE": "Écoutez notre communauté d'apprenants et de mentors.",
+        "STORY1": {
+            "NAME": "Sarah Jenkins",
+            "ROLE": "Développeuse Frontend",
+            "TEXT": "\"Fined Mentor m'a aidé à combler le fossé entre l'autodidacte et le prêt à l'emploi. Mon mentor était incroyable !\""
+        },
+        "STORY2": {
+            "NAME": "Michael Chen",
+            "ROLE": "Designer Produit",
+            "TEXT": "\"Les quiz sont stimulants et la communauté est très solidaire. J'ai plus appris ici en 2 mois qu'en un an par moi-même.\""
+        },
+        "STORY3": {
+            "NAME": "Jessica Williams",
+            "ROLE": "Data Scientist",
+            "TEXT": "\"Trouver un mentor qui comprend vraiment mes objectifs de carrière a changé la donne. Je recommande vivement !\""
+        }
+    },
+    "FOOTER": {
+        "DESC": "Autonomiser les carrières grâce au mentorat expert et à l'apprentissage interactif.",
+        "PLATFORM": "Plateforme",
+        "BROWSE_MENTORS": "Parcourir les mentors",
+        "HOW_IT_WORKS": "Comment ça marche",
+        "PRICING": "Tarifs",
+        "COMPANY": "Entreprise",
+        "ABOUT_US": "À propos de nous",
+        "BLOG": "Blog",
+        "LEGAL": "Légal",
+        "IMPRESSUM": "Mentions légales",
+        "PRIVACY_POLICY": "Politique de confidentialité",
+        "TERMS_OF_SERVICE": "Conditions d'utilisation",
+        "COPYRIGHT": "© 2026 Fined Mentor. Tous droits réservés."
+    },
+    "SETTINGS": {
+        "TITLE": "Paramètres",
+        "LANGUAGE": "Langue",
+        "THEME": "Thème",
+        "CLOSE": "Fermer"
+    },
+    "AUTH": {
+        "LOGIN": {
+            "TITLE": "Bon retour",
+            "SUBTITLE": "Connectez-vous pour continuer votre voyage",
+            "USERNAME_OR_EMAIL": "Nom d'utilisateur ou Email",
+            "USERNAME_PLACEHOLDER": "Entrez votre nom d'utilisateur ou email",
+            "PASSWORD": "Mot de passe",
+            "FORGOT_PASSWORD": "Mot de passe oublié ?",
+            "PASSWORD_PLACEHOLDER": "Entrez votre mot de passe",
+            "SUBMIT": "Se connecter",
+            "SUBMITTING": "Connexion...",
+            "NO_ACCOUNT": "Pas de compte ?",
+            "CREATE_ACCOUNT": "Créez-en un maintenant"
+        },
+        "REGISTER": {
+            "TITLE": "Créez votre compte",
+            "SUBTITLE": "Rejoignez notre communauté d'apprenants aujourd'hui",
+            "USERNAME": "Nom d'utilisateur",
+            "USERNAME_PLACEHOLDER": "Choisissez un nom d'utilisateur",
+            "EMAIL": "Adresse email",
+            "EMAIL_PLACEHOLDER": "Entrez votre email",
+            "PASSWORD": "Mot de passe",
+            "PASSWORD_PLACEHOLDER": "Créez un mot de passe",
+            "AGREE_TEXT": "En vous inscrivant, vous acceptez nos",
+            "TERMS": "conditions d'utilisation",
+            "AND": "et",
+            "PRIVACY": "politique de confidentialité",
+            "SUBMIT": "Créer un compte",
+            "SUBMITTING": "Création du compte...",
+            "HAVE_ACCOUNT": "Vous avez déjà un compte ?",
+            "SIGN_IN": "Connectez-vous ici"
+        },
+        "ACTIVATE": {
+            "TITLE": "Activer le compte",
+            "SUBTITLE": "Entrez le code envoyé à votre email",
+            "TOKEN_LABEL": "Jeton d'activation",
+            "SUBMIT": "Activer",
+            "SUBMITTING": "Activation...",
+            "NO_CODE": "Code non reçu ?",
+            "RESEND": "Renvoyer l'activation",
+            "RESEND_SUBMIT": "Envoyer",
+            "RESEND_EMAIL_PLACEHOLDER": "Entrez votre email"
+        },
+        "FORGOT_PASSWORD": {
+            "TITLE": "Mot de passe oublié",
+            "SUBTITLE": "Entrez votre adresse email et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+            "EMAIL": "Adresse email",
+            "EMAIL_PLACEHOLDER": "Entrez votre adresse email",
+            "SUBMIT": "Envoyer le lien",
+            "SUBMITTING": "Envoi...",
+            "BACK_TO_LOGIN": "Retour à la connexion"
+        },
+        "RESET_PASSWORD": {
+            "TITLE": "Réinitialiser le mot de passe",
+            "SUBTITLE": "Entrez votre nouveau mot de passe ci-dessous.",
+            "TOKEN": "OTP / Jeton",
+            "TOKEN_REQUIRED": "Le jeton est requis",
+            "NEW_PASSWORD": "Nouveau mot de passe",
+            "NEW_PASSWORD_PLACEHOLDER": "Entrez le nouveau mot de passe",
+            "PASSWORD_REQUIRED": "Le mot de passe est requis",
+            "PASSWORD_MINLENGTH": "Le mot de passe doit contenir au moins 6 caractères",
+            "CONFIRM_PASSWORD": "Confirmer le mot de passe",
+            "CONFIRM_PASSWORD_PLACEHOLDER": "Confirmez le nouveau mot de passe",
+            "CONFIRM_REQUIRED": "La confirmation est requise",
+            "PASSWORD_MISMATCH": "Les mots de passe doivent correspondre",
+            "SUBMIT": "Réinitialiser",
+            "SUBMITTING": "Réinitialisation...",
+            "SUCCESS": "Mot de passe réinitialisé avec succès.",
+            "ERROR": "Une erreur s'est produite. Veuillez réessayer."
+        }
+    },
+    "QUIZ": {
+        "GENERATING": "Génération de votre quiz...",
+        "TITLE_ADAPTIVE": "Évaluation adaptative",
+        "DESC_ADAPTIVE": "Prêt pour un défi ? Demandez au mentor dans le chat de vous tester sur un sujet, par exemple :",
+        "EXAMPLE_PROMPT": "\"Testez-moi sur l'investissement immobilier\"",
+        "COMPLETED_TITLE": "Quiz terminé !",
+        "SCORED": "Vous avez obtenu",
+        "RESTART_BUTTON": "Faire un autre quiz",
+        "RETURN_INSTRUCTION": "Revenez au chat pour commencer un nouveau test.",
+        "TITLE_TOPIC": "Quiz : {{topic}}",
+        "QUESTION_PROGRESS": "Question {{current}} sur {{total}}",
+        "CORRECT": "Correct !",
+        "INCORRECT": "Incorrect",
+        "SUBMIT_BUTTON": "Soumettre la réponse",
+        "PREVIOUS_BUTTON": "Précédent",
+        "NEXT_BUTTON": "Question suivante",
+        "FINISH_BUTTON": "Terminer le quiz"
+    },
+    "DASHBOARD": {
+        "TITLE": "Tableau de bord de progression",
+        "SUBTITLE": "Un aperçu de votre parcours d'apprentissage.",
+        "QUIZZES_TAKEN": "Quiz passés",
+        "TOTAL_SCORE": "Score total",
+        "AVERAGE_SCORE": "Score moyen",
+        "TOPIC_PERFORMANCE": "Performance par sujet",
+        "NO_DATA": "Aucune donnée de quiz.",
+        "NO_DATA_DESC": "Terminez un quiz pour voir votre progression ici.",
+        "NAV_EXPAND": "Développer la navigation",
+        "NAV_COLLAPSE": "Réduire la navigation"
+    },
+    "CHAT": {
+        "TITLE": "Chat FinEd Mentor",
+        "WELCOME_TITLE": "Bienvenue sur FinEd Mentor",
+        "WELCOME_DESC": "Créez un nouveau chat pour commencer.",
+        "INPUT_PLACEHOLDER": "Demandez-moi n'importe quoi...",
+        "QUIZ_PLACEHOLDER": "Entrez un sujet pour générer un quiz...",
+        "QUIZ_BUTTON": "Quiz"
+    },
+    "LANGUAGES": {
+        "en": "Anglais",
+        "fr": "Français",
+        "de": "Allemand"
+    }
+}

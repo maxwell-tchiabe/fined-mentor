@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Quiz, QuizState, QuizQuestion } from '../../../../core/models/chat.model';
 import { LoadingSpinnerComponent } from '../../../../shared/components/loading-spinner/loading-spinner.component';
 
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-quiz-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, LoadingSpinnerComponent, TranslateModule],
   templateUrl: './quiz-panel.component.html',
   styleUrls: ['./quiz-panel.component.css']
 })

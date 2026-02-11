@@ -15,7 +15,7 @@
             <!-- Badge -->
             <div
                 class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm mb-8 animate-fade-in">
-                <span class="text-sm text-gray-300">Build Financial Fitness</span>
+                <span class="text-sm text-gray-300">{{ 'HERO.BADGE' | translate }}</span>
                 <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                     aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -26,13 +26,13 @@
             <!-- Headline -->
             <h1 id="hero-heading"
                 class="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 animate-slide-in-right">
-                Master finance, real estate, and investing with <span class="text-gradient-hero">Fined Mentor</span>
+                {{ 'HERO.TITLE_PREFIX' | translate }} <span class="text-gradient-hero">{{ 'HERO.TITLE_SUFFIX' |
+                    translate }}</span>
             </h1>
 
             <!-- Subtext -->
             <p class="mt-4 text-lg text-gray-400 max-w-2xl mx-auto mb-10 animate-slide-in-left">
-                Our AI mentor is available 24/7 to help you become financially fit — learn finance, real estate, and
-                investment strategies through interactive quizzes and real-time guidance.
+                {{ 'HERO.SUBTITLE' | translate }}
             </p>
 
             <!-- Buttons -->
@@ -41,12 +41,12 @@
                 <a routerLink="/auth/register"
                     class="btn-primary w-full sm:w-auto focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent"
                     aria-label="Get started for free">
-                    Get Started For Free
+                    {{ 'HERO.GET_STARTED' | translate }}
                 </a>
                 <a href="#features"
                     class="btn-secondary w-full sm:w-auto focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent"
                     aria-label="Learn more about features">
-                    Learn More
+                    {{ 'HERO.LEARN_MORE' | translate }}
                 </a>
             </div>
         </section>
@@ -55,10 +55,10 @@
         <section id="features" class="py-20 bg-alien-bg/50 relative" aria-labelledby="features-heading">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 id="features-heading" class="text-3xl font-bold text-white sm:text-4xl">Why Choose Fined Mentor?
+                    <h2 id="features-heading" class="text-3xl font-bold text-white sm:text-4xl">{{ 'FEATURES.TITLE' |
+                        translate }}
                     </h2>
-                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Everything you need to accelerate your professional
-                        growth in one place.</p>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">{{ 'FEATURES.SUBTITLE' | translate }}</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -74,10 +74,9 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold text-white mb-3">Expert Mentorship</h3>
-                        <p class="text-gray-400">Get guidance from an AI-powered mentor specialized in finance, real
-                            estate,
-                            and investing to help you build wealth and avoid common mistakes.</p>
+                        <h3 class="text-xl font-semibold text-white mb-3">{{ 'FEATURES.MENTORSHIP_TITLE' | translate }}
+                        </h3>
+                        <p class="text-gray-400">{{ 'FEATURES.MENTORSHIP_DESC' | translate }}</p>
                     </div>
 
                     <!-- Feature 2 -->
@@ -92,9 +91,9 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold text-white mb-3">Interactive Quizzes</h3>
-                        <p class="text-gray-400">Test your knowledge with our curated quizzes designed to reinforce your
-                            learning and track progress.</p>
+                        <h3 class="text-xl font-semibold text-white mb-3">{{ 'FEATURES.QUIZZES_TITLE' | translate }}
+                        </h3>
+                        <p class="text-gray-400">{{ 'FEATURES.QUIZZES_DESC' | translate }}</p>
                     </div>
 
                     <!-- Feature 3 -->
@@ -109,9 +108,9 @@
                                 </path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold text-white mb-3">Community Support</h3>
-                        <p class="text-gray-400">Join a vibrant community of learners and professionals. Share ideas,
-                            get feedback, and grow together.</p>
+                        <h3 class="text-xl font-semibold text-white mb-3">{{ 'FEATURES.COMMUNITY_TITLE' | translate }}
+                        </h3>
+                        <p class="text-gray-400">{{ 'FEATURES.COMMUNITY_DESC' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -121,8 +120,9 @@
         <section id="how-it-works" class="py-20 relative" aria-labelledby="how-it-works-heading">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 id="how-it-works-heading" class="text-3xl font-bold text-white sm:text-4xl">How It Works</h2>
-                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Three simple steps to start your journey.</p>
+                    <h2 id="how-it-works-heading" class="text-3xl font-bold text-white sm:text-4xl">{{
+                        'HOW_IT_WORKS.TITLE' | translate }}</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">{{ 'HOW_IT_WORKS.SUBTITLE' | translate }}</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
@@ -137,8 +137,9 @@
                             class="w-24 h-24 rounded-full bg-alien-bg border-4 border-blue-500/30 flex items-center justify-center mb-6 z-10">
                             <span class="text-3xl font-bold text-white">1</span>
                         </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Create Account</h3>
-                        <p class="text-gray-400">Sign up in seconds and build your professional profile.</p>
+                        <h3 class="text-xl font-semibold text-white mb-2">{{ 'HOW_IT_WORKS.STEP1_TITLE' | translate }}
+                        </h3>
+                        <p class="text-gray-400">{{ 'HOW_IT_WORKS.STEP1_DESC' | translate }}</p>
                     </div>
 
                     <!-- Step 2 -->
@@ -147,9 +148,9 @@
                             class="w-24 h-24 rounded-full bg-alien-bg border-4 border-purple-500/30 flex items-center justify-center mb-6 z-10">
                             <span class="text-3xl font-bold text-white">2</span>
                         </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Find a Mentor</h3>
-                        <p class="text-gray-400">Connect instantly with our AI mentor specialized in finance and real
-                            estate.</p>
+                        <h3 class="text-xl font-semibold text-white mb-2">{{ 'HOW_IT_WORKS.STEP2_TITLE' | translate }}
+                        </h3>
+                        <p class="text-gray-400">{{ 'HOW_IT_WORKS.STEP2_DESC' | translate }}</p>
                     </div>
 
                     <!-- Step 3 -->
@@ -158,8 +159,9 @@
                             class="w-24 h-24 rounded-full bg-alien-bg border-4 border-pink-500/30 flex items-center justify-center mb-6 z-10">
                             <span class="text-3xl font-bold text-white">3</span>
                         </div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Start Learning</h3>
-                        <p class="text-gray-400">Schedule sessions, take quizzes, and track your progress.</p>
+                        <h3 class="text-xl font-semibold text-white mb-2">{{ 'HOW_IT_WORKS.STEP3_TITLE' | translate }}
+                        </h3>
+                        <p class="text-gray-400">{{ 'HOW_IT_WORKS.STEP3_DESC' | translate }}</p>
                     </div>
                 </div>
             </div>
@@ -169,16 +171,18 @@
         <section id="pricing" class="py-20 bg-alien-bg/50" aria-labelledby="pricing-heading">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 id="pricing-heading" class="text-3xl font-bold text-white sm:text-4xl">Simple Pricing</h2>
-                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Choose the plan that fits your needs.</p>
+                    <h2 id="pricing-heading" class="text-3xl font-bold text-white sm:text-4xl">{{ 'PRICING.TITLE' |
+                        translate }}</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">{{ 'PRICING.SUBTITLE' | translate }}</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Free Plan -->
                     <div class="p-8 rounded-2xl bg-white/5 border border-white/10 flex flex-col">
-                        <h3 class="text-xl font-semibold text-white mb-2">Starter</h3>
-                        <div class="text-4xl font-bold text-white mb-6">$0<span
-                                class="text-lg text-gray-400 font-normal">/mo</span></div>
+                        <h3 class="text-xl font-semibold text-white mb-2">{{ 'PRICING.STARTER.TITLE' | translate }}</h3>
+                        <div class="text-4xl font-bold text-white mb-6">{{ 'PRICING.STARTER.PRICE' | translate }}<span
+                                class="text-lg text-gray-400 font-normal">{{ 'PRICING.STARTER.PERIOD' | translate
+                                }}</span></div>
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -186,7 +190,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                100 tokens per day
+                                {{ 'PRICING.STARTER.FEATURE_1' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -194,7 +198,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Access to community
+                                {{ 'PRICING.STARTER.FEATURE_2' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -202,7 +206,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Basic quizzes
+                                {{ 'PRICING.STARTER.FEATURE_3' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -210,12 +214,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                1 Mentor connection
+                                {{ 'PRICING.STARTER.FEATURE_4' | translate }}
                             </li>
                         </ul>
                         <a routerLink="/auth/register"
-                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">Get
-                            Started</a>
+                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">{{
+                            'PRICING.STARTER.BUTTON' | translate }}</a>
                     </div>
 
                     <!-- Pro Plan -->
@@ -223,8 +227,8 @@
                         class="p-8 rounded-2xl bg-gradient-to-b from-blue-900/20 to-purple-900/20 border border-alien-accent/50 flex flex-col relative transform md:-translate-y-4">
                         <div
                             class="absolute  left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-1 bg-alien-accent rounded-full text-xs font-bold text-white uppercase tracking-wide">
-                            Most Popular</div>
-                        <h3 class="text-xl font-semibold text-white mb-2">Pro</h3>
+                            {{ 'PRICING.PRO.BADGE' | translate }}</div>
+                        <h3 class="text-xl font-semibold text-white mb-2">{{ 'PRICING.PRO.TITLE' | translate }}</h3>
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -232,7 +236,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Everything in Starter
+                                {{ 'PRICING.PRO.FEATURE_1' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -240,7 +244,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Unlimited Mentor connections
+                                {{ 'PRICING.PRO.FEATURE_2' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -248,7 +252,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Advanced quizzes & analytics
+                                {{ 'PRICING.PRO.FEATURE_3' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -256,17 +260,17 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Priority support
+                                {{ 'PRICING.PRO.FEATURE_4' | translate }}
                             </li>
                         </ul>
                         <a href="mailto:sales@finedmentor.com"
-                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent">Contact
-                            Sales</a>
+                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-alien-accent">{{
+                            'PRICING.PRO.BUTTON' | translate }}</a>
                     </div>
 
                     <!-- Team Plan -->
                     <div class="p-8 rounded-2xl bg-white/5 border border-white/10 flex flex-col">
-                        <h3 class="text-xl font-semibold text-white mb-2">Team</h3>
+                        <h3 class="text-xl font-semibold text-white mb-2">{{ 'PRICING.TEAM.TITLE' | translate }}</h3>
                         <ul class="space-y-4 mb-8 flex-grow">
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -274,7 +278,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                5 Team members
+                                {{ 'PRICING.TEAM.FEATURE_1' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -282,7 +286,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Team dashboard
+                                {{ 'PRICING.TEAM.FEATURE_2' | translate }}
                             </li>
                             <li class="flex items-center text-gray-300">
                                 <svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor"
@@ -290,12 +294,12 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M5 13l4 4L19 7"></path>
                                 </svg>
-                                Custom learning paths
+                                {{ 'PRICING.TEAM.FEATURE_3' | translate }}
                             </li>
                         </ul>
                         <a href="mailto:sales@finedmentor.com"
-                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">Contact
-                            Sales</a>
+                            class="w-full py-3 rounded-lg border border-white/20 text-center text-white hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent">{{
+                            'PRICING.TEAM.BUTTON' | translate }}</a>
                     </div>
                 </div>
             </div>
@@ -305,8 +309,9 @@
         <section id="testimonials" class="py-20 relative" aria-labelledby="testimonials-heading">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
-                    <h2 id="testimonials-heading" class="text-3xl font-bold text-white sm:text-4xl">Success Stories</h2>
-                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">Hear from our community of learners and mentors.</p>
+                    <h2 id="testimonials-heading" class="text-3xl font-bold text-white sm:text-4xl">{{
+                        'TESTIMONIALS.TITLE' | translate }}</h2>
+                    <p class="mt-4 text-gray-400 max-w-2xl mx-auto">{{ 'TESTIMONIALS.SUBTITLE' | translate }}</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -315,12 +320,11 @@
                         <div class="flex items-center mb-4">
                             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
                             <div class="ml-3">
-                                <div class="text-white font-medium">Sarah Jenkins</div>
-                                <div class="text-sm text-gray-400">Frontend Developer</div>
+                                <div class="text-white font-medium">{{ 'TESTIMONIALS.STORY1.NAME' | translate }}</div>
+                                <div class="text-sm text-gray-400">{{ 'TESTIMONIALS.STORY1.ROLE' | translate }}</div>
                             </div>
                         </div>
-                        <p class="text-gray-300 italic">"Fined Mentor helped me bridge the gap between self-taught and
-                            job-ready. My mentor was incredible!"</p>
+                        <p class="text-gray-300 italic">{{ 'TESTIMONIALS.STORY1.TEXT' | translate }}</p>
                     </div>
 
                     <!-- Testimonial 2 -->
@@ -328,12 +332,11 @@
                         <div class="flex items-center mb-4">
                             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-purple-600"></div>
                             <div class="ml-3">
-                                <div class="text-white font-medium">Michael Chen</div>
-                                <div class="text-sm text-gray-400">Product Designer</div>
+                                <div class="text-white font-medium">{{ 'TESTIMONIALS.STORY2.NAME' | translate }}</div>
+                                <div class="text-sm text-gray-400">{{ 'TESTIMONIALS.STORY2.ROLE' | translate }}</div>
                             </div>
                         </div>
-                        <p class="text-gray-300 italic">"The quizzes are challenging and the community is so supportive.
-                            I've learned more here in 2 months than a year on my own."</p>
+                        <p class="text-gray-300 italic">{{ 'TESTIMONIALS.STORY2.TEXT' | translate }}</p>
                     </div>
 
                     <!-- Testimonial 3 -->
@@ -341,12 +344,11 @@
                         <div class="flex items-center mb-4">
                             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-pink-600"></div>
                             <div class="ml-3">
-                                <div class="text-white font-medium">Jessica Williams</div>
-                                <div class="text-sm text-gray-400">Data Scientist</div>
+                                <div class="text-white font-medium">{{ 'TESTIMONIALS.STORY3.NAME' | translate }}</div>
+                                <div class="text-sm text-gray-400">{{ 'TESTIMONIALS.STORY3.ROLE' | translate }}</div>
                             </div>
                         </div>
-                        <p class="text-gray-300 italic">"Finding a mentor who actually understands my career goals was a
-                            game changer. Highly recommend!"</p>
+                        <p class="text-gray-300 italic">{{ 'TESTIMONIALS.STORY3.TEXT' | translate }}</p>
                     </div>
                 </div>
             </div>

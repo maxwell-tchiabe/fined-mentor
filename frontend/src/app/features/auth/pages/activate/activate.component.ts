@@ -6,11 +6,12 @@ import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-activate',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, InputOtpModule, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterModule, InputOtpModule, FooterComponent, TranslateModule],
   templateUrl: './activate.component.html',
   styleUrl: './activate.component.css'
 })

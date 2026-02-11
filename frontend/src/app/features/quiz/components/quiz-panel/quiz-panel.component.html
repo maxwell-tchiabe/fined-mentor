@@ -2,41 +2,42 @@
   <!-- Loading State -->
   <div *ngIf="isLoading" class="flex flex-col items-center justify-center h-full">
     <app-loading-spinner size="lg"></app-loading-spinner>
-    <p class="text-content-200 mt-4">Generating your quiz...</p>
+    <p class="text-content-200 mt-4">{{ 'QUIZ.GENERATING' | translate }}</p>
   </div>
 
   <!-- No Quiz State -->
   <div *ngIf="!isLoading && !quiz" class="flex flex-col items-center justify-center h-full text-center">
-    <h3 class="text-2xl font-bold text-content-100 mb-2">Adaptive Assessment</h3>
+    <h3 class="text-2xl font-bold text-content-100 mb-2">{{ 'QUIZ.TITLE_ADAPTIVE' | translate }}</h3>
     <p class="text-content-200">
-      Ready for a challenge? Ask the mentor in the chat to test you on a topic, for example:
+      {{ 'QUIZ.DESC_ADAPTIVE' | translate }}
     </p>
     <p class="mt-4 p-2 bg-base-300 rounded-md text-brand-500 font-mono text-sm">
-      "Test me on real estate investing"
+      {{ 'QUIZ.EXAMPLE_PROMPT' | translate }}
     </p>
   </div>
 
   <!-- Quiz Completed -->
   <div *ngIf="!isLoading && quiz && quizState && quizState.finished"
     class="text-center flex flex-col items-center justify-center h-full p-6">
-    <h3 class="text-2xl font-bold text-content-100 mb-2">Quiz Completed!</h3>
-    <p class="text-lg text-content-200 mb-4">You scored</p>
+    <h3 class="text-2xl font-bold text-content-100 mb-2">{{ 'QUIZ.COMPLETED_TITLE' | translate }}</h3>
+    <p class="text-lg text-content-200 mb-4">{{ 'QUIZ.SCORED' | translate }}</p>
     <div class="text-6xl font-extrabold text-brand-500 mb-6">
       {{ quizState.score }}<span class="text-4xl text-content-200">/{{ quiz.questions.length }}</span>
     </div>
     <button (click)="onRestart()" class="btn btn-primary">
-      Take Another Quiz
+      {{ 'QUIZ.RESTART_BUTTON' | translate }}
     </button>
-    <p class="text-sm text-gray-500 mt-4">Return to the chat to start a new test.</p>
+    <p class="text-sm text-gray-500 mt-4">{{ 'QUIZ.RETURN_INSTRUCTION' | translate }}</p>
   </div>
 
   <!-- Active Quiz -->
   <div *ngIf="!isLoading && quiz && quizState && !quizState.finished" class="flex flex-col h-full">
     <header class="mb-6">
-      <h2 class="text-2xl font-bold text-content-100 mb-2">Quiz: {{ quiz.topic }}</h2>
+      <h2 class="text-2xl font-bold text-content-100 mb-2">{{ 'QUIZ.TITLE_TOPIC' | translate:{topic: quiz.topic} }}</h2>
       <div>
         <p class="text-sm text-content-200 mb-2">
-          Question {{ quizState.currentQuestionIndex + 1 }} of {{ quiz.questions.length }}
+          {{ 'QUIZ.QUESTION_PROGRESS' | translate:{current: quizState.currentQuestionIndex + 1, total:
+          quiz.questions.length} }}
         </p>
         <div class="w-full bg-base-300 rounded-full h-2.5">
           <div class="bg-brand-500 h-2.5 rounded-full transition-all duration-500"
@@ -64,7 +65,8 @@
         'bg-red-500/10 text-red-300': userAnswer !== currentQuestion?.correctAnswer
       }">
       <h4 class="font-bold mb-1">
-        {{ userAnswer === currentQuestion?.correctAnswer ? 'Correct!' : 'Incorrect' }}
+        {{ userAnswer === currentQuestion?.correctAnswer ? ('QUIZ.CORRECT' | translate) : ('QUIZ.INCORRECT' | translate)
+        }}
       </h4>
       <p class="text-sm">{{ currentQuestion?.explanation }}</p>
     </div>
@@ -72,22 +74,22 @@
     <!-- Actions -->
     <div class="mt-6">
       <button *ngIf="!isSubmitted" (click)="onSubmit()" [disabled]="!selectedOption" class="btn btn-primary w-full">
-        Submit Answer
+        {{ 'QUIZ.SUBMIT_BUTTON' | translate }}
       </button>
 
       <div *ngIf="isSubmitted" class="flex gap-2">
         <button *ngIf="quizState.currentQuestionIndex > 0" (click)="onPrevious()" class="btn btn-secondary flex-1">
-          Previous
+          {{ 'QUIZ.PREVIOUS_BUTTON' | translate }}
         </button>
 
         <button *ngIf="quizState.currentQuestionIndex < quiz.questions.length - 1" (click)="onNext()"
           class="btn btn-primary flex-1">
-          Next Question
+          {{ 'QUIZ.NEXT_BUTTON' | translate }}
         </button>
 
         <button *ngIf="quizState.currentQuestionIndex === quiz.questions.length - 1" (click)="onFinish()"
           class="btn btn-primary flex-1">
-          Finish Quiz
+          {{ 'QUIZ.FINISH_BUTTON' | translate }}
         </button>
       </div>
     </div>

@@ -5,11 +5,12 @@ import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FooterComponent, TranslateModule],
   templateUrl: './register.component.html'
 })
 export class RegisterComponent {

@@ -11,18 +11,18 @@
                     class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                     <div class="w-5 h-5 bg-alien-bg rounded-full"></div>
                 </div>
-                <span class="font-bold text-2xl tracking-tight text-white">Fined Mentor</span>
+                <span class="font-bold text-2xl tracking-tight text-white">{{ 'APP_NAME' | translate }}</span>
             </a>
-            <h2 class="mt-2 text-center text-3xl font-bold text-white">Activate Account</h2>
+            <h2 class="mt-2 text-center text-3xl font-bold text-white">{{ 'AUTH.ACTIVATE.TITLE' | translate }}</h2>
             <p class="mt-2 text-center text-sm text-gray-400">
-                Enter the code sent to your email
+                {{ 'AUTH.ACTIVATE.SUBTITLE' | translate }}
             </p>
         </div>
 
         <form class="mt-8 space-y-6" [formGroup]="activateForm" (ngSubmit)="onSubmit()">
             <div class="space-y-4">
                 <div>
-                    <label for="token" class="sr-only">Activation Token</label>
+                    <label for="token" class="sr-only">{{ 'AUTH.ACTIVATE.TOKEN_LABEL' | translate }}</label>
                     <div class="flex justify-center">
                         <!-- Custom styling for PrimeNG OTP input via global styles or deep selector might be needed, 
                              but wrapping it in a light container or ensuring text contrast is key. 
@@ -58,25 +58,27 @@
                             </path>
                         </svg>
                     </span>
-                    <span *ngIf="!loading">Activate</span>
-                    <span *ngIf="loading">Activating...</span>
+                    <span *ngIf="!loading">{{ 'AUTH.ACTIVATE.SUBMIT' | translate }}</span>
+                    <span *ngIf="loading">{{ 'AUTH.ACTIVATE.SUBMITTING' | translate }}</span>
                 </button>
             </div>
         </form>
 
         <div class="text-center border-t border-white/10 pt-6">
             <button (click)="showResend = !showResend" class="text-sm text-gray-400 hover:text-white transition-colors">
-                Didn't receive a code? <span class="text-alien-accent hover:underline">Resend Activation</span>
+                {{ 'AUTH.ACTIVATE.NO_CODE' | translate }} <span class="text-alien-accent hover:underline">{{
+                    'AUTH.ACTIVATE.RESEND' | translate }}</span>
             </button>
         </div>
 
         <div *ngIf="showResend" class="mt-4 animate-fade-in">
             <div class="flex gap-2">
-                <input type="email" [(ngModel)]="resendEmail" placeholder="Enter your email"
+                <input type="email" [(ngModel)]="resendEmail"
+                    [placeholder]="'AUTH.ACTIVATE.RESEND_EMAIL_PLACEHOLDER' | translate"
                     class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm">
                 <button (click)="onResend()" [disabled]="!resendEmail || resendLoading"
                     class="inline-flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-white/10 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-alien-bg focus:ring-white disabled:opacity-50 transition-all duration-200">
-                    <span *ngIf="!resendLoading">Send</span>
+                    <span *ngIf="!resendLoading">{{ 'AUTH.ACTIVATE.RESEND_SUBMIT' | translate }}</span>
                     <span *ngIf="resendLoading">...</span>
                 </button>
             </div>

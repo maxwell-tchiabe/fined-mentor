@@ -6,11 +6,12 @@ import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, FooterComponent, TranslateModule],
   templateUrl: './login.component.html'
 })
 export class LoginComponent {

@@ -1,6 +1,6 @@
 <div class="bg-base-200 flex flex-col h-full max-h-screen rounded-lg overflow-hidden">
   <header class="bg-base-300/50 p-4 border-b border-base-300">
-    <h2 class="text-xl font-bold text-content-100">FinEd Mentor Chat</h2>
+    <h2 class="text-xl font-bold text-content-100">{{ 'CHAT.TITLE' | translate }}</h2>
   </header>
 
   <div #messagesContainer class="flex-1 overflow-y-auto p-4 space-y-4">
@@ -30,7 +30,7 @@
       <form (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
         <!-- Text Input -->
         <textarea [(ngModel)]="messageInput" (keypress)="onKeyPress($event)" name="messageInput"
-          [placeholder]="isQuizMode ? 'Enter a topic to generate a quiz...' : 'Ask me anything...'"
+          [placeholder]="isQuizMode ? ('CHAT.QUIZ_PLACEHOLDER' | translate) : ('CHAT.INPUT_PLACEHOLDER' | translate)"
           class="w-full bg-transparent border-none p-0 text-content-100 placeholder-gray-500 focus:ring-0 text-base resize-none overflow-y-auto"
           [disabled]="isLoading" autocomplete="off" rows="1" (input)="autoResize($event)"></textarea>
 
@@ -44,7 +44,7 @@
             [class.text-content-200]="!isQuizMode" [class.hover:border-brand-400]="!isQuizMode"
             [class.hover:text-brand-500]="!isQuizMode">
             <i class="pi" [class.pi-bolt]="!isQuizMode" [class.pi-times]="isQuizMode"></i>
-            <span>Quiz</span>
+            <span>{{ 'CHAT.QUIZ_BUTTON' | translate }}</span>
           </button>
 
           <!-- Send Button (Bottom Right) -->

@@ -7,6 +7,7 @@ import { ChatSessionService } from './core/services/chat-session.service';
 import { ChatMessageService } from './core/services/chat-message.service';
 import { QuizService } from './core/services/quiz.service';
 import { ChatSession, ChatMessage } from './core/models/chat.model';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ToastModule } from 'primeng/toast';
 
@@ -24,9 +25,13 @@ export class AppComponent implements OnInit, OnDestroy {
     private chatSessionService: ChatSessionService,
     private chatMessageService: ChatMessageService,
     private quizService: QuizService,
-    private router: Router
-    , private authService: AuthService
-  ) { }
+    private router: Router,
+    private authService: AuthService,
+    private translate: TranslateService
+  ) {
+    this.translate.setDefaultLang('en');
+    this.translate.use('en');
+  }
 
   ngOnInit(): void {
     this.initializeApp();

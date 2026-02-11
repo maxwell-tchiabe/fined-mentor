@@ -10,7 +10,7 @@
       </div>
       <button (click)="toggleNav()"
         class="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 w-6 h-6 bg-base-300 rounded-full flex items-center justify-center text-content-200 hover:bg-brand-primary hover:text-white transition-colors shadow-lg"
-        [attr.aria-label]="isNavOpen() ? 'Collapse navigation' : 'Expand navigation'">
+        [attr.aria-label]="isNavOpen() ? ('DASHBOARD.NAV_COLLAPSE' | translate) : ('DASHBOARD.NAV_EXPAND' | translate)">
         <svg *ngIf="isNavOpen()" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -62,8 +62,8 @@
       <div *ngIf="currentView() === 'chat' && !activeSession()"
         class="col-span-1 lg:col-span-2 h-full flex items-center justify-center text-center bg-base-200 rounded-lg">
         <div>
-          <h2 class="text-2xl font-bold">Welcome to FinEd Mentor</h2>
-          <p class="text-content-200 mt-2">Create a new chat to get started.</p>
+          <h2 class="text-2xl font-bold">{{ 'CHAT.WELCOME_TITLE' | translate }}</h2>
+          <p class="text-content-200 mt-2">{{ 'CHAT.WELCOME_DESC' | translate }}</p>
         </div>
       </div>
     </div>
