@@ -124,7 +124,10 @@
             "SUBMIT": "Anmelden",
             "SUBMITTING": "Anmelden...",
             "NO_ACCOUNT": "Kein Konto?",
-            "CREATE_ACCOUNT": "Jetzt erstellen"
+            "CREATE_ACCOUNT": "Jetzt erstellen",
+            "USERNAME_OR_EMAIL_REQUIRED": "Benutzername oder E-Mail ist erforderlich",
+            "PASSWORD_REQUIRED": "Passwort ist erforderlich",
+            "PASSWORD_MINLENGTH": "Das Passwort muss mindestens 6 Zeichen lang sein"
         },
         "REGISTER": {
             "TITLE": "Konto erstellen",
@@ -142,7 +145,14 @@
             "SUBMIT": "Konto erstellen",
             "SUBMITTING": "Konto wird erstellt...",
             "HAVE_ACCOUNT": "Bereits ein Konto?",
-            "SIGN_IN": "Hier anmelden"
+            "SIGN_IN": "Hier anmelden",
+            "USERNAME_REQUIRED": "Benutzername ist erforderlich",
+            "USERNAME_MINLENGTH": "Benutzername muss mindestens 3 Zeichen lang sein",
+            "USERNAME_MAXLENGTH": "Benutzername darf maximal 50 Zeichen lang sein",
+            "EMAIL_REQUIRED": "E-Mail-Adresse ist erforderlich",
+            "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+            "PASSWORD_REQUIRED": "Passwort ist erforderlich",
+            "PASSWORD_MINLENGTH": "Passwort muss mindestens 6 Zeichen lang sein"
         },
         "ACTIVATE": {
             "TITLE": "Konto aktivieren",
@@ -153,7 +163,11 @@
             "NO_CODE": "Kein Code erhalten?",
             "RESEND": "Aktivierung erneut senden",
             "RESEND_SUBMIT": "Senden",
-            "RESEND_EMAIL_PLACEHOLDER": "E-Mail eingeben"
+            "RESEND_EMAIL_PLACEHOLDER": "E-Mail eingeben",
+            "TOKEN_REQUIRED": "Aktivierungscode ist erforderlich",
+            "TOKEN_MINLENGTH": "Der Aktivierungscode muss 6 Stellen haben",
+            "EMAIL_REQUIRED": "E-Mail ist erforderlich",
+            "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
         },
         "FORGOT_PASSWORD": {
             "TITLE": "Passwort vergessen",
@@ -162,13 +176,16 @@
             "EMAIL_PLACEHOLDER": "E-Mail-Adresse eingeben",
             "SUBMIT": "Link senden",
             "SUBMITTING": "Senden...",
-            "BACK_TO_LOGIN": "Zurück zur Anmeldung"
+            "BACK_TO_LOGIN": "Zurück zur Anmeldung",
+            "EMAIL_REQUIRED": "E-Mail-Adresse ist erforderlich",
+            "EMAIL_INVALID": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
         },
         "RESET_PASSWORD": {
             "TITLE": "Passwort zurücksetzen",
             "SUBTITLE": "Geben Sie unten Ihr neues Passwort ein.",
             "TOKEN": "OTP / Token",
             "TOKEN_REQUIRED": "Token ist erforderlich",
+            "TOKEN_MINLENGTH": "Token muss 6-stellig sein",
             "NEW_PASSWORD": "Neues Passwort",
             "NEW_PASSWORD_PLACEHOLDER": "Neues Passwort eingeben",
             "PASSWORD_REQUIRED": "Passwort ist erforderlich",
@@ -225,5 +242,8 @@
         "en": "Englisch",
         "fr": "Französisch",
         "de": "Deutsch"
+    },
+    "COMMON": {
+        "AI_DISCLAIMER": "KI-generierte Inhalte können ungenau sein. Bitte überprüfen Sie wichtige Informationen."
     }
 }

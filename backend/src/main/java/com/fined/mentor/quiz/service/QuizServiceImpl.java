@@ -45,6 +45,11 @@ public class QuizServiceImpl implements QuizService {
 
             return savedQuiz;
 
+        } catch (QuizValidationException e) {
+            // Re-throw validation exceptions so they can be handled properly by the
+            // controller
+            log.warn("Quiz validation failed for topic: {}", topic);
+            throw e;
         } catch (Exception e) {
             log.error("Failed to generate quiz for topic: {} and session: {}", topic, chatSessionId, e);
             throw new QuizGenerationException("Failed to generate quiz. Please try again.", e);
@@ -186,13 +191,39 @@ public class QuizServiceImpl implements QuizService {
             return "";
 
         String normalized = answer.trim().toLowerCase();
-        if (normalized.startsWith("t") || normalized.equals("yes") || normalized.equals("y")
-                || normalized.equals("1")) {
+
+        // English: true, false, yes, no, y, n, 1, 0
+        // French: vrai, faux
+        // German: wahr, falsch
+
+        // Check for "true" variants
+        if (normalized.equals("true") ||
+                normalized.equals("vrai") ||
+                normalized.equals("wahr") ||
+                normalized.equals("yes") ||
+                normalized.equals("y") ||
+                normalized.equals("1")) {
             return "true";
-        } else if (normalized.startsWith("f") || normalized.equals("no") || normalized.equals("n")
-                || normalized.equals("0")) {
+        }
+        // Check for "false" variants
+        else if (normalized.equals("false") ||
+                normalized.equals("faux") ||
+                normalized.equals("falsch") ||
+                normalized.equals("no") ||
+                normalized.equals("n") ||
+                normalized.equals("0")) {
             return "false";
         }
+
+        // If it starts with 't', 'v', or 'w' (for true/vrai/wahr), consider it true
+        if (normalized.startsWith("t") || normalized.startsWith("v") || normalized.startsWith("w")) {
+            return "true";
+        }
+        // If it starts with 'f' (for false/faux/falsch), consider it false
+        else if (normalized.startsWith("f")) {
+            return "false";
+        }
+
         return normalized;
     }
 
@@ -200,6 +231,7 @@ public class QuizServiceImpl implements QuizService {
 
     private void validateQuiz(Quiz quiz) {
         if (quiz.getQuestions() == null || quiz.getQuestions().isEmpty()) {
+            log.info("quiz{}", quiz);
             throw new QuizValidationException("Quiz must have at least one question");
         }
 
@@ -239,9 +271,14 @@ public class QuizServiceImpl implements QuizService {
             }
         } else if (question.getType() == QuizQuestion.QuestionType.TRUE_FALSE) {
             if (!"true".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                    !"false".equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+                    !"false".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
+                    !"vrai".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
+                    !"faux".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
+                    !"wahr".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
+                    !"falsch".equalsIgnoreCase(question.getCorrectAnswer().trim())) {
                 throw new QuizValidationException(
-                        "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question " + (index + 1));
+                        "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question "
+                                + (index + 1));
             }
 
             // Ensure correct answer matches one of the TRUE_FALSE options
@@ -281,38 +318,6 @@ public class QuizServiceImpl implements QuizService {
             if (!normalizedAnswer.equals("true") && !normalizedAnswer.equals("false")) {
                 throw new QuizValidationException("Answer must be 'true' or 'false' for true/false questions");
             }
-        }
-    }
-
-    // ========== HELPER METHODS ==========
-
-    private void updateCurrentQuestionIndex(QuizState quizState) {
-        int nextIndex = quizState.getCurrentQuestionIndex() + 1;
-        // Use quiz question count to determine bounds
-        Quiz quiz = quizRepository.findById(quizState.getQuizId())
-                .orElseThrow(() -> new QuizNotFoundException("Quiz not found"));
-        int total = quiz.getQuestions().size();
-        if (nextIndex < total) {
-            quizState.setCurrentQuestionIndex(nextIndex);
-        }
-    }
-
-    private void checkAndMarkQuizFinished(QuizState quizState) {
-        Quiz quiz = quizRepository.findById(quizState.getQuizId())
-                .orElseThrow(() -> new QuizNotFoundException("Quiz not found"));
-        int total = quiz.getQuestions().size();
-
-        boolean allAnswered = true;
-        for (int i = 0; i < total; i++) {
-            if (quizState.getUserAnswers().get(i) == null) {
-                allAnswered = false;
-                break;
-            }
-        }
-
-        if (allAnswered) {
-            quizState.setFinished(true);
-            log.debug("All questions answered, marking quiz as finished: {}", quizState.getId());
         }
     }
 

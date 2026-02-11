@@ -32,7 +32,7 @@ export class ResetPasswordComponent implements OnInit {
     private router: Router
   ) {
     this.resetForm = this.formBuilder.group({
-      token: ['', Validators.required],
+      token: ['', [Validators.required, Validators.minLength(6)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', Validators.required]
     }, {

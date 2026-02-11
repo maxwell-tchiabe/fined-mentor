@@ -7,10 +7,7 @@
             <a routerLink="/"
                 class="flex-shrink-0 flex items-center gap-3 cursor-pointer focus:outline-none focus:ring-2 focus:ring-alien-accent rounded-lg p-1"
                 aria-label="Fined Mentor Home">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center"
-                    aria-hidden="true">
-                    <div class="w-4 h-4 bg-alien-bg rounded-full"></div>
-                </div>
+                <img src="assets/logo.svg" alt="" class="w-10 h-10" aria-hidden="true">
                 <span class="font-bold text-xl tracking-tight">Fined Mentor</span>
             </a>
 
@@ -75,11 +72,9 @@
         class="relative mt-20 w-11/12 max-w-sm bg-alien-bg/95 border border-white/10 rounded-xl shadow-2xl p-6 transform transition-all">
         <div class="flex items-center justify-between mb-6">
             <a routerLink="/" class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center"
-                    aria-hidden="true">
-                    <div class="w-4 h-4 bg-alien-bg rounded-full"></div>
-                </div>
-                <span class="font-bold text-lg text-white">Fined Mentor</span>
+                <img src="assets/logo.svg" alt=""
+                    class="w-12 h-12 group-hover:scale-110 transition-transform duration-300" aria-hidden="true">
+                <span class="font-bold text-lg text-white">{{ 'APP_NAME' | translate }}</span>
             </a>
             <button (click)="toggleMobileMenu()" aria-label="Close menu"
                 class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-alien-accent">

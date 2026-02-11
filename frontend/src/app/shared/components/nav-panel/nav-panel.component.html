@@ -1,9 +1,7 @@
 <div class="bg-base-200 flex flex-col h-full rounded-lg overflow-hidden text-content-200">
   <div class="p-4 flex items-center justify-between border-b border-base-300">
     <div class="flex items-center gap-2">
-      <div class="w-8 h-8 flex-shrink-0 bg-brand-primary rounded-full flex items-center justify-center">
-        <i class="pi pi-comment text-xl text-brand-500"></i>
-      </div>
+      <img src="assets/logo.svg" alt="" class="w-10 h-10" aria-hidden="true">
       <h1 class="text-xl font-bold text-content-100">{{ 'APP_NAME' | translate }}</h1>
     </div>
   </div>
@@ -71,46 +69,55 @@
   </div>
 
   <!-- User Info Section -->
-  <div class="p-4 border-t border-base-300 flex items-center justify-between">
+  <div
+    class="p-3 border-t border-base-300 flex items-center justify-between hover:bg-base-300/30 transition-all cursor-pointer rounded-b-lg group"
+    (click)="toggleMenu()">
     <div class="flex items-center gap-3">
-      <div class="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold">
+      <div
+        class="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full flex items-center justify-center text-white font-bold shadow-md transform group-hover:scale-105 transition-transform">
         <span>{{ userName.charAt(0).toUpperCase() }}</span>
       </div>
-      <div>
-        <p class="text-sm font-medium text-content-100">{{ userName }}</p>
+      <div class="flex flex-col">
+        <p
+          class="text-sm font-semibold text-content-100 group-hover:text-brand-400 transition-colors truncate max-w-[140px]">
+          {{ userName }}</p>
+        <p class="text-[10px] text-content-300 uppercase tracking-wider font-bold opacity-60">Verified Member</p>
       </div>
     </div>
-    <button class="p-2 rounded-full hover:bg-base-300 transition-colors relative" aria-label="User options"
-      (click)="toggleMenu()">
-      <i class="pi pi-ellipsis-v text-xl text-content-200"></i>
+    <div class="p-2 rounded-full hover:bg-base-300 transition-colors relative" aria-label="User options">
+      <i class="pi pi-ellipsis-v text-xl text-content-200 group-hover:text-content-100"></i>
 
       <!-- Popup Menu -->
-      <div *ngIf="isMenuOpen"
-        class="absolute top-0 right-0 transform -translate-y-full mt-2 w-48 bg-base-200 rounded-lg shadow-lg z-10 border border-base-300">
-        <ul class="py-2">
-          <li class="px-4 py-2 hover:bg-base-300 cursor-pointer flex items-center gap-2" (click)="closeMenu()">
-            <i class="pi pi-cog text-content-100"></i> <span class="text-sm font-medium text-content-100">{{
+      <div *ngIf="isMenuOpen" (click)="$event.stopPropagation()"
+        class="absolute bottom-full right-0 mb-2 w-48 bg-base-200 rounded-lg shadow-xl z-20 border border-base-300 overflow-hidden">
+        <ul class="py-1">
+          <li class="px-4 py-2.5 hover:bg-base-300 cursor-pointer flex items-center gap-3 transition-colors"
+            (click)="closeMenu()">
+            <i class="pi pi-cog text-content-200"></i> <span class="text-sm font-medium text-content-100">{{
               'NAV.SETTINGS' | translate }}</span>
           </li>
-          <li class="px-4 py-2 hover:bg-base-300 flex items-center justify-between gap-2">
-            <div class="flex items-center gap-2">
-              <i class="pi pi-globe text-content-100"></i>
+          <li class="px-4 py-2.5 hover:bg-base-300 flex items-center justify-between gap-3 transition-colors">
+            <div class="flex items-center gap-3">
+              <i class="pi pi-globe text-content-200"></i>
               <span class="text-sm font-medium text-content-100">{{ 'SETTINGS.LANGUAGE' | translate }}</span>
             </div>
             <app-language-switcher></app-language-switcher>
           </li>
-          <li class="px-4 py-2 hover:bg-base-300 cursor-pointer flex items-center gap-2" (click)="closeMenu()">
-            <i class="pi pi-envelope text-content-100"></i> <span class="text-sm font-medium text-content-100">{{
+          <li class="px-4 py-2.5 hover:bg-base-300 cursor-pointer flex items-center gap-3 transition-colors"
+            (click)="closeMenu()">
+            <i class="pi pi-envelope text-content-200"></i> <span class="text-sm font-medium text-content-100">{{
               'NAV.CONTACT' | translate }}</span>
           </li>
-          <li class="px-4 py-2 hover:bg-red-500/20 text-red-500 cursor-pointer flex items-center gap-2"
+          <div class="border-t border-base-300 my-1"></div>
+          <li
+            class="px-4 py-2.5 hover:bg-red-500/10 text-red-500 cursor-pointer flex items-center gap-3 transition-colors"
             (click)="onLogout()">
-            <i class="pi pi-sign-out text-red-500"></i> <span class="text-sm font-medium">{{ 'NAV.LOGOUT' | translate
+            <i class="pi pi-sign-out"></i> <span class="text-sm font-medium">{{ 'NAV.LOGOUT' | translate
               }}</span>
           </li>
         </ul>
       </div>
-    </button>
+    </div>
   </div>
 </div>
 

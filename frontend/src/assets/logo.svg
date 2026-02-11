@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="#0f172a"/>
+  
+  <!-- Abstract 'M' and Trend Line -->
+  <path d="M128 352L208 240L288 304L384 128" 
+        stroke="#14b8a6" 
+        stroke-width="48" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none"/>
+  
+  <!-- Arrow Head -->
+  <path d="M304 128H384V208" 
+        stroke="#14b8a6" 
+        stroke-width="48" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        fill="none"/>
+        
+  <!-- Academic/Mentor Touch (Stylized Graduation Cap Corner) -->
+  <path d="M384 320V384M320 384H448" 
+        stroke="#ffffff" 
+        stroke-width="32" 
+        stroke-linecap="round" 
+        opacity="0.8"/>
+</svg>

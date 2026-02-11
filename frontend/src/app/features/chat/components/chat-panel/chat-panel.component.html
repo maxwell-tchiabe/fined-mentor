@@ -29,7 +29,7 @@
       <!-- Input Area -->
       <form (ngSubmit)="onSubmit()" class="flex flex-col gap-3">
         <!-- Text Input -->
-        <textarea [(ngModel)]="messageInput" (keypress)="onKeyPress($event)" name="messageInput"
+        <textarea #messageTextInput [(ngModel)]="messageInput" (keypress)="onKeyPress($event)" name="messageInput"
           [placeholder]="isQuizMode ? ('CHAT.QUIZ_PLACEHOLDER' | translate) : ('CHAT.INPUT_PLACEHOLDER' | translate)"
           class="w-full bg-transparent border-none p-0 text-content-100 placeholder-gray-500 focus:ring-0 text-base resize-none overflow-y-auto"
           [disabled]="isLoading" autocomplete="off" rows="1" (input)="autoResize($event)"></textarea>
@@ -57,5 +57,8 @@
         </div>
       </form>
     </div>
+    <p class="text-[10px] text-content-300/50 text-center mt-2 font-medium tracking-tight">
+      {{ 'COMMON.AI_DISCLAIMER' | translate }}
+    </p>
   </div>
 </div>

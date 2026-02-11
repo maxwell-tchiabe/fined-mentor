@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, switchMap, tap, catchError, of, EMPTY } from 'rxjs';
 import { ChatPanelComponent } from '../../components/chat-panel/chat-panel.component';
@@ -72,7 +73,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public setErrorMessage(message: string): void {
     this.errorMessage.set(message);
-    setTimeout(() => this.errorMessage.set(null), 3000);
+    // Increased timeout to 5 seconds for longer validation messages
+    setTimeout(() => this.errorMessage.set(null), 5000);
   }
 
   public onSendMessage(message: string): void {
@@ -132,9 +134,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           this.chatSessionService.setActiveSession(updatedSession);
         })
       )),
-      catchError(error => {
+      catchError((error: any) => {
         console.error('Failed to generate or start quiz:', error);
-        this.setErrorMessage('Failed to generate quiz. Please try again.');
+
+        // The ErrorInterceptor transforms HttpErrorResponse into a standard Error object
+        // The string we want is in error.message
+        const displayMessage = error?.message || 'Failed to generate quiz. Please try again.';
+
+        this.setErrorMessage(displayMessage);
         return of(null);
       })
     ).subscribe(() => this.isQuizLoading.set(false));

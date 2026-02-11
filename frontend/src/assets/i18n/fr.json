@@ -124,7 +124,10 @@
             "SUBMIT": "Se connecter",
             "SUBMITTING": "Connexion...",
             "NO_ACCOUNT": "Pas de compte ?",
-            "CREATE_ACCOUNT": "Créez-en un maintenant"
+            "CREATE_ACCOUNT": "Créez-en un maintenant",
+            "USERNAME_OR_EMAIL_REQUIRED": "Le nom d'utilisateur ou l'email est requis",
+            "PASSWORD_REQUIRED": "Le mot de passe est requis",
+            "PASSWORD_MINLENGTH": "Le mot de passe doit comporter au moins 6 caractères"
         },
         "REGISTER": {
             "TITLE": "Créez votre compte",
@@ -142,7 +145,14 @@
             "SUBMIT": "Créer un compte",
             "SUBMITTING": "Création du compte...",
             "HAVE_ACCOUNT": "Vous avez déjà un compte ?",
-            "SIGN_IN": "Connectez-vous ici"
+            "SIGN_IN": "Connectez-vous ici",
+            "USERNAME_REQUIRED": "Le nom d'utilisateur est requis",
+            "USERNAME_MINLENGTH": "Le nom d'utilisateur doit contenir au moins 3 caractères",
+            "USERNAME_MAXLENGTH": "Le nom d'utilisateur ne peut pas dépasser 50 caractères",
+            "EMAIL_REQUIRED": "L'adresse email est requise",
+            "EMAIL_INVALID": "Veuillez entrer une adresse email valide",
+            "PASSWORD_REQUIRED": "Le mot de passe est requis",
+            "PASSWORD_MINLENGTH": "Le mot de passe doit contenir au moins 6 caractères"
         },
         "ACTIVATE": {
             "TITLE": "Activer le compte",
@@ -153,7 +163,11 @@
             "NO_CODE": "Code non reçu ?",
             "RESEND": "Renvoyer l'activation",
             "RESEND_SUBMIT": "Envoyer",
-            "RESEND_EMAIL_PLACEHOLDER": "Entrez votre email"
+            "RESEND_EMAIL_PLACEHOLDER": "Entrez votre email",
+            "TOKEN_REQUIRED": "Le jeton d'activation est requis",
+            "TOKEN_MINLENGTH": "Le code d'activation doit comporter 6 chiffres",
+            "EMAIL_REQUIRED": "L'email est requis",
+            "EMAIL_INVALID": "Veuillez entrer une adresse email valide"
         },
         "FORGOT_PASSWORD": {
             "TITLE": "Mot de passe oublié",
@@ -162,13 +176,16 @@
             "EMAIL_PLACEHOLDER": "Entrez votre adresse email",
             "SUBMIT": "Envoyer le lien",
             "SUBMITTING": "Envoi...",
-            "BACK_TO_LOGIN": "Retour à la connexion"
+            "BACK_TO_LOGIN": "Retour à la connexion",
+            "EMAIL_REQUIRED": "L'adresse email est requise",
+            "EMAIL_INVALID": "Veuillez entrer une adresse email valide"
         },
         "RESET_PASSWORD": {
             "TITLE": "Réinitialiser le mot de passe",
             "SUBTITLE": "Entrez votre nouveau mot de passe ci-dessous.",
             "TOKEN": "OTP / Jeton",
             "TOKEN_REQUIRED": "Le jeton est requis",
+            "TOKEN_MINLENGTH": "Le jeton doit comporter 6 chiffres",
             "NEW_PASSWORD": "Nouveau mot de passe",
             "NEW_PASSWORD_PLACEHOLDER": "Entrez le nouveau mot de passe",
             "PASSWORD_REQUIRED": "Le mot de passe est requis",
@@ -225,5 +242,8 @@
         "en": "Anglais",
         "fr": "Français",
         "de": "Allemand"
+    },
+    "COMMON": {
+        "AI_DISCLAIMER": "Le contenu généré par l'IA peut être inexact. Veuillez vérifier les informations importantes."
     }
 }

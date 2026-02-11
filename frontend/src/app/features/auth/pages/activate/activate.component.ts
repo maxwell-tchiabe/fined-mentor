@@ -17,12 +17,12 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class ActivateComponent {
   public activateForm: FormGroup;
+  public resendForm: FormGroup;
   public loading: boolean = false;
   public error: string = '';
   public successMessage: string = '';
 
   public showResend: boolean = false;
-  public resendEmail: string = '';
   public resendLoading: boolean = false;
   public resendMessage: string = '';
   public resendSuccess: boolean = false;
@@ -35,7 +35,11 @@ export class ActivateComponent {
     private router: Router
   ) {
     this.activateForm = this.formBuilder.group({
-      token: ['', Validators.required]
+      token: ['', [Validators.required, Validators.minLength(6)]]
+    });
+
+    this.resendForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]]
     });
   }
 
@@ -66,12 +70,13 @@ export class ActivateComponent {
   }
 
   public onResend(): void {
-    if (!this.resendEmail) return;
+    if (this.resendForm.invalid) return;
 
     this.resendLoading = true;
     this.resendMessage = '';
 
-    this.authService.resendActivation(this.resendEmail)
+    const email = this.resendForm.get('email')?.value;
+    this.authService.resendActivation(email)
       .pipe(finalize(() => this.resendLoading = false))
       .subscribe({
         next: (response) => {

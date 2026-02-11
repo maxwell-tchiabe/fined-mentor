@@ -124,7 +124,10 @@
             "SUBMIT": "Sign in",
             "SUBMITTING": "Signing in...",
             "NO_ACCOUNT": "Don't have an account?",
-            "CREATE_ACCOUNT": "Create one now"
+            "CREATE_ACCOUNT": "Create one now",
+            "USERNAME_OR_EMAIL_REQUIRED": "Username or Email is required",
+            "PASSWORD_REQUIRED": "Password is required",
+            "PASSWORD_MINLENGTH": "Password must be at least 6 characters"
         },
         "REGISTER": {
             "TITLE": "Create your account",
@@ -142,7 +145,14 @@
             "SUBMIT": "Create Account",
             "SUBMITTING": "Creating account...",
             "HAVE_ACCOUNT": "Already have an account?",
-            "SIGN_IN": "Sign in here"
+            "SIGN_IN": "Sign in here",
+            "USERNAME_REQUIRED": "Username is required",
+            "USERNAME_MINLENGTH": "Username must be at least 3 characters",
+            "USERNAME_MAXLENGTH": "Username cannot exceed 50 characters",
+            "EMAIL_REQUIRED": "Email is required",
+            "EMAIL_INVALID": "Please enter a valid email address",
+            "PASSWORD_REQUIRED": "Password is required",
+            "PASSWORD_MINLENGTH": "Password must be at least 6 characters"
         },
         "ACTIVATE": {
             "TITLE": "Activate Account",
@@ -153,7 +163,11 @@
             "NO_CODE": "Didn't receive a code?",
             "RESEND": "Resend Activation",
             "RESEND_SUBMIT": "Send",
-            "RESEND_EMAIL_PLACEHOLDER": "Enter your email"
+            "RESEND_EMAIL_PLACEHOLDER": "Enter your email",
+            "TOKEN_REQUIRED": "Activation token is required",
+            "TOKEN_MINLENGTH": "Activation code must be 6 digits",
+            "EMAIL_REQUIRED": "Email is required",
+            "EMAIL_INVALID": "Please enter a valid email address"
         },
         "FORGOT_PASSWORD": {
             "TITLE": "Forgot Password",
@@ -162,13 +176,16 @@
             "EMAIL_PLACEHOLDER": "Enter your email address",
             "SUBMIT": "Send Reset Link",
             "SUBMITTING": "Sending...",
-            "BACK_TO_LOGIN": "Back to Sign In"
+            "BACK_TO_LOGIN": "Back to Sign In",
+            "EMAIL_REQUIRED": "Email is required",
+            "EMAIL_INVALID": "Please enter a valid email address"
         },
         "RESET_PASSWORD": {
             "TITLE": "Reset Password",
             "SUBTITLE": "Enter your new password below.",
             "TOKEN": "OTP / Token",
             "TOKEN_REQUIRED": "Token is required",
+            "TOKEN_MINLENGTH": "Token must be 6 digits",
             "NEW_PASSWORD": "New Password",
             "NEW_PASSWORD_PLACEHOLDER": "Enter new password",
             "PASSWORD_REQUIRED": "Password is required",
@@ -225,5 +242,8 @@
         "en": "English",
         "fr": "French",
         "de": "German"
+    },
+    "COMMON": {
+        "AI_DISCLAIMER": "AI-generated content may be inaccurate. Please verify important information."
     }
 }

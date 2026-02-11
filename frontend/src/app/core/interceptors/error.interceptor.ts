@@ -27,7 +27,8 @@ export class ErrorInterceptor implements HttpInterceptor {
           errorMessage = `Error: ${error.error.message}`;
         } else {
           // Server-side error
-          errorMessage = error.error?.message || error.message || errorMessage;
+          // Handle both 'error' field (our ApiResponse) and 'message' field (default Spring)
+          errorMessage = error.error?.error || error.error?.message || error.message || errorMessage;
         }
 
         console.error('HTTP Error:', errorMessage);

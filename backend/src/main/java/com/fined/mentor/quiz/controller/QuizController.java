@@ -7,6 +7,7 @@ import com.fined.mentor.quiz.dto.QuizResponse;
 import com.fined.mentor.quiz.dto.QuizStateResponse;
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.entity.QuizState;
+import com.fined.mentor.quiz.exception.QuizValidationException;
 import com.fined.mentor.quiz.service.QuizService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,9 +44,15 @@ public class QuizController {
                     .build();
 
             return ResponseEntity.ok(ApiResponse.success(response));
-        } catch (Exception e) {
-            log.error("Error generating quiz for topic: {}", request.getTopic(), e);
+        } catch (QuizValidationException e) {
+            // Topic validation failed - return user-friendly error message
+            log.warn("Quiz generation failed - invalid topic: {}", request.getTopic());
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        } catch (Exception e) {
+            // Other errors during quiz generation
+            log.error("Error generating quiz for topic: {}", request.getTopic(), e);
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponse.error("Failed to generate quiz. Please try again later."));
         }
     }
 

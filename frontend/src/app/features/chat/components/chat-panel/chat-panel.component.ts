@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatMessage } from '../../../../core/models/chat.model';
@@ -13,26 +13,45 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './chat-panel.component.html',
   styleUrls: ['./chat-panel.component.css']
 })
-export class ChatPanelComponent implements OnChanges {
+export class ChatPanelComponent implements OnChanges, AfterViewInit {
   @Input() public messages: ChatMessage[] = [];
   @Input() public isLoading = false;
   @Output() public sendMessage = new EventEmitter<string>();
   @Output() public generateQuiz = new EventEmitter<string>();
 
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
+  @ViewChild('messageTextInput') private messageTextInput!: ElementRef<HTMLTextAreaElement>;
 
   public messageInput = '';
   public isQuizMode = false;
+
+  public ngAfterViewInit(): void {
+    this.focusInput();
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes['messages']) {
       this.scrollToBottom();
     }
+
+    // Focus the input when loading finishes
+    if (changes['isLoading'] && !changes['isLoading'].currentValue && !changes['isLoading'].firstChange) {
+      this.focusInput();
+    }
+  }
+
+  public focusInput(): void {
+    setTimeout(() => {
+      if (this.messageTextInput) {
+        this.messageTextInput.nativeElement.focus();
+      }
+    }, 100);
   }
 
   public toggleQuizMode(): void {
     this.isQuizMode = !this.isQuizMode;
     this.messageInput = ''; // Clear input when switching modes
+    this.focusInput();
   }
 
   public onSubmit(): void {

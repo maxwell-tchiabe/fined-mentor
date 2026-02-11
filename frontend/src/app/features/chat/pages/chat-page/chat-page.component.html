@@ -1,7 +1,13 @@
 <main class="min-h-screen text-content-100 p-2 md:p-4 h-screen">
   <div class="container mx-auto flex gap-4 h-full">
+    <!-- Backdrop for mobile -->
+    <div *ngIf="isNavOpen()" (click)="toggleNav()"
+      class="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 backdrop-blur-sm">
+    </div>
+
     <!-- Navigation Panel -->
-    <div [class]="'relative h-full transition-all duration-300 ease-in-out ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
+    <div [class]="'fixed lg:relative top-0 left-0 h-full z-40 transition-all duration-300 ease-in-out ' + 
+               (isNavOpen() ? 'w-[300px] translate-x-0' : 'w-0 -translate-x-full lg:translate-x-0 lg:w-0')">
       <div [class]="'h-full overflow-hidden ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
         <app-nav-panel [sessions]="sessions()" [activeSessionId]="activeSession()?.id || null"
           [currentView]="currentView()" (newChat)="onNewChat()" (selectSession)="onSelectSession($event)"
@@ -9,7 +15,7 @@
           (showDashboard)="onShowDashboard()" />
       </div>
       <button (click)="toggleNav()"
-        class="absolute top-1/2 -right-3 transform -translate-y-1/2 z-10 w-6 h-6 bg-base-300 rounded-full flex items-center justify-center text-content-200 hover:bg-brand-primary hover:text-white transition-colors shadow-lg"
+        class="absolute top-1/2 -right-3 transform -translate-y-1/2 z-50 w-6 h-6 bg-base-300 rounded-full flex items-center justify-center text-content-200 hover:bg-brand-primary hover:text-white transition-colors shadow-lg"
         [attr.aria-label]="isNavOpen() ? ('DASHBOARD.NAV_COLLAPSE' | translate) : ('DASHBOARD.NAV_EXPAND' | translate)">
         <svg *ngIf="isNavOpen()" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
