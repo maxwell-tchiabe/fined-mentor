@@ -1,5 +1,5 @@
 <div
-    class="min-h-screen flex items-center justify-center bg-alien-bg py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    class="min-h-screen flex items-center justify-center bg-base-100 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
     <!-- Background Glow -->
     <div class="absolute top-0 right-1/2 translate-x-1/2 w-[800px] h-[500px] bg-purple-500/20 opacity-20 blur-[100px] -z-10 rounded-full pointer-events-none"
         aria-hidden="true"></div>
@@ -23,7 +23,7 @@
                     <label for="username" class="block text-sm font-medium text-gray-300 mb-1">{{
                         'AUTH.REGISTER.USERNAME' | translate }}</label>
                     <input id="username" type="text" formControlName="username" required
-                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
+                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 sm:text-sm"
                         [ngClass]="{'border-red-500/50 focus:ring-red-500': registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)}"
                         [placeholder]="'AUTH.REGISTER.USERNAME_PLACEHOLDER' | translate">
                     <div *ngIf="registerForm.get('username')?.invalid && (registerForm.get('username')?.dirty || registerForm.get('username')?.touched)"
@@ -40,7 +40,7 @@
                     <label for="email" class="block text-sm font-medium text-gray-300 mb-1">{{ 'AUTH.REGISTER.EMAIL' |
                         translate }}</label>
                     <input id="email" type="email" formControlName="email" required
-                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
+                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 sm:text-sm"
                         [ngClass]="{'border-red-500/50 focus:ring-red-500': registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)}"
                         [placeholder]="'AUTH.REGISTER.EMAIL_PLACEHOLDER' | translate">
                     <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)"
@@ -55,7 +55,7 @@
                     <label for="password" class="block text-sm font-medium text-gray-300 mb-1">{{
                         'AUTH.REGISTER.PASSWORD' | translate }}</label>
                     <input id="password" type="password" formControlName="password" required
-                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-alien-accent focus:border-transparent transition-all duration-200 sm:text-sm"
+                        class="appearance-none block w-full px-3 py-2 border border-white/10 rounded-lg bg-white/5 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200 sm:text-sm"
                         [ngClass]="{'border-red-500/50 focus:ring-red-500': registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)}"
                         [placeholder]="'AUTH.REGISTER.PASSWORD_PLACEHOLDER' | translate">
                     <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)"
@@ -81,17 +81,17 @@
             <div class="mt-4 text-center">
                 <p class="text-xs text-gray-500">
                     {{ 'AUTH.REGISTER.AGREE_TEXT' | translate }}
-                    <a routerLink="/terms-of-service" class="text-alien-accent hover:underline">{{ 'AUTH.REGISTER.TERMS'
+                    <a routerLink="/terms-of-service" class="text-brand-500 hover:underline">{{ 'AUTH.REGISTER.TERMS'
                         | translate }}</a>
                     {{ 'AUTH.REGISTER.AND' | translate }}
-                    <a routerLink="/privacy" class="text-alien-accent hover:underline">{{ 'AUTH.REGISTER.PRIVACY' |
+                    <a routerLink="/privacy" class="text-brand-500 hover:underline">{{ 'AUTH.REGISTER.PRIVACY' |
                         translate }}</a>.
                 </p>
             </div>
 
             <div>
                 <button type="submit" [disabled]="registerForm.invalid || loading"
-                    class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-alien-accent hover:bg-alien-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-alien-bg focus:ring-alien-accent disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-glow hover:shadow-glow-md">
+                    class="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-brand-500 hover:bg-brand-500/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-base-100 focus:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-glow hover:shadow-glow-md">
                     <span *ngIf="loading" class="absolute left-0 inset-y-0 flex items-center pl-3">
                         <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24">
@@ -111,7 +111,7 @@
                 <p class="text-sm text-gray-400">
                     {{ 'AUTH.REGISTER.HAVE_ACCOUNT' | translate }}
                     <a routerLink="/auth/login"
-                        class="font-medium text-alien-accent hover:text-alien-accent/80 transition-colors">
+                        class="font-medium text-brand-500 hover:text-brand-500/80 transition-colors">
                         {{ 'AUTH.REGISTER.SIGN_IN' | translate }}
                     </a>
                 </p>

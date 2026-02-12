@@ -62,60 +62,23 @@
     @apply bg-white/10 backdrop-blur-md border border-white/20;
   }
 
-  .glass-dark {
-    @apply backdrop-blur-md border;
-    background-color: rgba(51, 65, 85, 0.8);
-    border-color: rgba(71, 85, 105, 0.5);
-  }
-
-  /* Card component */
-  .card {
-    @apply rounded-lg border shadow-soft;
-    background-color: #1e293b;
-    border-color: #334155;
-  }
-
-  .card-hover {
-    @apply card transition-all duration-200 hover:shadow-medium;
-  }
-
-  .card-hover:hover {
-    border-color: #475569;
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
   }
 
   /* Button components */
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
     ring-offset-color: #0f172a;
   }
 
   .btn-primary {
-    @apply btn bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-500 active:bg-brand-700;
+    @apply btn px-6 py-3 rounded-full bg-brand-500 text-white font-medium hover:bg-brand-600 shadow-lg hover:shadow-xl active:bg-brand-700;
   }
 
   .btn-secondary {
-    @apply btn text-content-200 focus:ring-brand-500;
-    background-color: #334155;
-  }
-
-  .btn-secondary:hover {
-    background-color: #475569;
-  }
-
-  .btn-secondary:active {
-    background-color: #64748b;
-  }
-
-  .btn-ghost {
-    @apply btn text-content-200;
-  }
-
-  .btn-ghost:hover {
-    background-color: rgba(51, 65, 85, 0.5);
-  }
-
-  .btn-danger {
-    @apply btn bg-error-500 text-white hover:bg-error-600 focus:ring-error-500 active:bg-error-700;
+    @apply btn px-6 py-3 rounded-full border border-white/20 text-white font-medium hover:bg-white/10;
   }
 
   /* Input components */
@@ -125,112 +88,7 @@
     border: 1px solid #334155;
   }
 
-  .input-error {
-    @apply input focus:ring-error-500;
-    border-color: #ef4444;
-  }
-
-  /* Badge components */
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
-  }
-
-  .badge-primary {
-    @apply badge;
-    background-color: rgba(20, 184, 166, 0.2);
-    color: #5eead4;
-  }
-
-  .badge-success {
-    @apply badge;
-    background-color: rgba(34, 197, 94, 0.2);
-    color: #86efac;
-  }
-
-  .badge-warning {
-    @apply badge;
-    background-color: rgba(245, 158, 11, 0.2);
-    color: #fcd34d;
-  }
-
-  .badge-error {
-    @apply badge;
-    background-color: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-  }
-
-  /* Loading spinner */
-  .spinner {
-    @apply animate-spin rounded-full border-2 border-current border-t-transparent;
-  }
-
-  /* Message bubbles */
-  .message-user {
-    @apply bg-brand-500 text-white rounded-2xl rounded-br-none;
-  }
-
-  .message-bot {
-    @apply text-content-200 rounded-2xl rounded-bl-none;
-    background-color: #334155;
-  }
-
-  /* Progress bar */
-  .progress-bar {
-    @apply w-full rounded-full overflow-hidden;
-    background-color: #334155;
-  }
-
-  .progress-fill {
-    @apply h-2 bg-brand-500 rounded-full transition-all duration-500;
-  }
-
-  /* Quiz option styles */
-  .quiz-option {
-    @apply flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all hover:border-brand-500;
-    border-color: #334155;
-  }
-
-  .quiz-option-correct {
-    @apply border-success-500;
-    background-color: rgba(34, 197, 94, 0.1);
-  }
-
-  .quiz-option-incorrect {
-    @apply border-error-500;
-    background-color: rgba(239, 68, 68, 0.1);
-  }
-
-  /* Navigation styles */
-  .nav-item {
-    @apply flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors;
-  }
-
-  .nav-item-active {
-    @apply nav-item text-content-100;
-    background-color: #334155;
-  }
-
-  .nav-item-inactive {
-    @apply nav-item text-content-200 hover:text-content-100;
-  }
-
-  .nav-item-inactive:hover {
-    background-color: rgba(51, 65, 85, 0.5);
-  }
-
   /* Landing page specific styles */
-  .nav-link {
-    @apply text-gray-400 hover:text-white transition-colors;
-  }
-
-  .btn-primary {
-    @apply px-6 py-3 rounded-full bg-alien-accent text-white font-medium hover:bg-opacity-90 transition-all shadow-lg hover:shadow-xl;
-  }
-
-  .btn-secondary {
-    @apply px-6 py-3 rounded-full border border-white/20 text-white font-medium hover:bg-white/10 transition-all;
-  }
-
   .text-gradient-hero {
     @apply bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent;
   }
@@ -238,20 +96,6 @@
 
 /* Custom utility styles */
 @layer utilities {
-
-  /* Text gradients */
-  .text-gradient {
-    @apply bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent;
-  }
-
-  /* Background gradients */
-  .bg-gradient-brand {
-    @apply bg-gradient-to-br from-brand-500 to-brand-700;
-  }
-
-  .bg-gradient-dark {
-    background: linear-gradient(to bottom right, #0f172a, #1e293b);
-  }
 
   /* Animation delays */
   .animation-delay-100 {
@@ -264,31 +108,6 @@
 
   .animation-delay-300 {
     animation-delay: 300ms;
-  }
-
-  /* Height utilities */
-  .h-screen-safe {
-    height: 100vh;
-    height: 100dvh;
-  }
-
-  .min-h-screen-safe {
-    min-height: 100vh;
-    min-height: 100dvh;
-  }
-
-  /* Scroll snap */
-  .snap-y-mandatory {
-    scroll-snap-type: y mandatory;
-  }
-
-  .snap-align-start {
-    scroll-snap-align: start;
-  }
-
-  /* Backdrop filters */
-  .backdrop-blur-xs {
-    backdrop-filter: blur(2px);
   }
 }
 
