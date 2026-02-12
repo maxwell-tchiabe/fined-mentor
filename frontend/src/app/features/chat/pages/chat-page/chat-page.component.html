@@ -15,12 +15,12 @@
           (showDashboard)="onShowDashboard()" />
       </div>
       <button (click)="toggleNav()"
-        class="absolute top-1/2 -right-5 lg:-right-3 transform -translate-y-1/2 z-50 w-10 h-10 lg:w-6 lg:h-6 bg-brand-500 lg:bg-base-300 rounded-full flex items-center justify-center text-white lg:text-content-200 hover:bg-brand-600 transition-all shadow-xl"
+        class="absolute top-1/2 -right-5 lg:-right-4 transform -translate-y-1/2 z-50 w-10 h-10 lg:w-8 lg:h-8 bg-brand-500 rounded-full flex items-center justify-center text-white hover:bg-brand-600 transition-all shadow-xl shadow-brand-500/20"
         [attr.aria-label]="isNavOpen() ? ('DASHBOARD.NAV_COLLAPSE' | translate) : ('DASHBOARD.NAV_EXPAND' | translate)">
-        <svg *ngIf="isNavOpen()" class="w-6 h-6 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg *ngIf="isNavOpen()" class="w-6 h-6 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
-        <svg *ngIf="!isNavOpen()" class="w-6 h-6 lg:w-4 lg:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg *ngIf="!isNavOpen()" class="w-6 h-6 lg:w-5 lg:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
         </svg>
       </button>
