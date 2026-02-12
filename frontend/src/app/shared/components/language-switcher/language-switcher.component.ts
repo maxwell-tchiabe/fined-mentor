@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
@@ -7,48 +7,38 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   standalone: true,
   imports: [CommonModule, TranslateModule],
   template: `
-    <div class="relative">
-      <button (click)="toggleDropdown($event)"
-              class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-alien-accent"
-              aria-label="Select Language">
-        <i class="pi pi-globe text-xl text-alien-primary"></i>
-        <span class="uppercase font-medium text-sm text-alien-primary">{{ currentLang }}</span>
-        <i class="pi pi-chevron-down text-xs text-gray-400"></i>
+    <div class="flex bg-base-300/40 rounded-full p-0.5 gap-0.5 border border-base-300/50">
+      <button *ngFor="let lang of languages" 
+              (click)="switchLanguage(lang.code, $event)"
+              [class]="currentLang === lang.code ? 
+                       'bg-brand-500 text-white shadow-sm' : 
+                       'text-content-300 hover:text-content-100 hover:bg-base-300/50'"
+              class="w-8 h-7 text-[10px] font-bold rounded-full transition-all uppercase flex items-center justify-center focus:outline-none">
+        {{ lang.code }}
       </button>
-
-      <div *ngIf="isOpen"
-           class="absolute right-0 mt-2 w-48 bg-alien-bg border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
-        <button *ngFor="let lang of languages"
-                (click)="switchLanguage(lang.code)"
-                class="w-full text-left px-4 py-3 text-sm text-gray-300 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-between">
-          <span>{{ lang.label }}</span>
-          <i *ngIf="currentLang === lang.code" class="pi pi-check text-green-400"></i>
-        </button>
-      </div>
     </div>
   `
 })
-export class LanguageSwitcherComponent {
+export class LanguageSwitcherComponent implements OnInit {
   currentLang: string = 'en';
-  isOpen: boolean = false;
   languages = [
     { code: 'en', label: 'English' },
     { code: 'fr', label: 'Français' },
     { code: 'de', label: 'Deutsch' }
   ];
 
-  constructor(private translate: TranslateService) {
+  constructor(private translate: TranslateService) { }
+
+  ngOnInit() {
     this.currentLang = this.translate.currentLang || this.translate.getDefaultLang() || 'en';
   }
 
-  toggleDropdown(event: Event) {
-    event.stopPropagation();
-    this.isOpen = !this.isOpen;
-  }
-
-  switchLanguage(lang: string) {
+  switchLanguage(lang: string, event: Event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
     this.translate.use(lang);
     this.currentLang = lang;
-    this.isOpen = false;
   }
 }

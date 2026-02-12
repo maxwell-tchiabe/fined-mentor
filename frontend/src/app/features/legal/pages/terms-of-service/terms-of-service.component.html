@@ -5,10 +5,11 @@
         <!-- Hero Section -->
         <div class="text-center mb-16 animate-fade-in">
             <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">
-                Terms of Service <span class="text-gradient-hero">(Nutzungsbedingungen)</span>
+                {{ 'LEGAL.TERMS.TITLE' | translate }} <span class="text-gradient-hero">{{ 'LEGAL.TERMS.SUBTITLE' |
+                    translate }}</span>
             </h1>
             <p class="text-content-200 text-lg">
-                Last updated: February 5, 2026
+                {{ 'LEGAL.LAST_UPDATED' | translate }}: February 5, 2026
             </p>
         </div>
 
@@ -19,20 +20,20 @@
                 <h2 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 text-sm">1</span>
-                    Service Provider & Contact
+                    {{ 'LEGAL.IMPRESSUM.SERVICE_PROVIDER' | translate }} & {{ 'LEGAL.IMPRESSUM.CONTACT' | translate }}
                 </h2>
                 <div class="glass p-8 rounded-2xl">
-                    <p class="text-content-200 mb-4">FinedMentor is operated by:</p>
+                    <p class="text-content-200 mb-4">{{ 'LEGAL.TERMS.OPERATOR_DESC' | translate }}</p>
                     <div class="space-y-2 text-content-100 font-medium">
                         <p>FinedMentor</p>
                         <p><span class="text-content-400 font-normal">Email:</span> <a
-                                href="mailto:contact@finedmentor.com"
-                                class="text-brand-400 hover:text-brand-300 transition-colors">contact</a>
+                                href="mailto:maxwelltb4@gmail.com"
+                                class="text-brand-400 hover:text-brand-300 transition-colors">{{'LEGAL.IMPRESSUM.EMAIL'
+                                | translate}}</a>
                         </p>
                     </div>
                     <p class="mt-6 text-sm text-content-400 italic">
-                        For complete contact information and legal details, please see our <a routerLink="/impressum"
-                            class="underline hover:text-white transition-colors">Impressum</a> page.
+                        {{ 'LEGAL.TERMS.CONTACT_NOTE' | translate }}
                     </p>
                 </div>
             </section>
@@ -42,13 +43,11 @@
                 <h2 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 text-sm">2</span>
-                    Acceptance of Terms
+                    {{ 'LEGAL.TERMS.ACCEPTANCE_TITLE' | translate }}
                 </h2>
                 <div class="glass p-8 rounded-2xl">
                     <p class="text-content-100 leading-relaxed">
-                        By accessing and using FinedMentor ("the Service"), you agree to be bound by these Terms of
-                        Service. If you do not agree to these terms, please do not use the Service. These terms
-                        constitute a legally binding agreement between you and FinedMentor.
+                        {{ 'LEGAL.TERMS.ACCEPTANCE_DESC' | translate }}
                     </p>
                 </div>
             </section>
@@ -58,25 +57,27 @@
                 <h2 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 text-sm">3</span>
-                    Description of Service
+                    {{ 'LEGAL.TERMS.SERVICE_TITLE' | translate }}
                 </h2>
                 <div class="glass p-8 rounded-2xl">
-                    <p class="text-content-200 mb-6">FinedMentor is an AI-powered mentorship platform that provides:</p>
+                    <p class="text-content-200 mb-6">{{ 'LEGAL.TERMS.SERVICE_DESC' | translate }}</p>
                     <ul class="grid sm:grid-cols-2 gap-4">
                         <li class="flex items-start gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
                             <i class="pi pi-bolt text-brand-400 mt-1"></i>
                             <div>
-                                <h4 class="text-white font-medium text-sm">AI Mentorship</h4>
-                                <p class="text-xs text-content-400">Personalized chat sessions with advanced AI models.
+                                <h4 class="text-white font-medium text-sm">{{ 'LEGAL.TERMS.SERVICE_AI_TITLE' | translate
+                                    }}</h4>
+                                <p class="text-xs text-content-400">{{ 'LEGAL.TERMS.SERVICE_AI_DESC' | translate }}
                                 </p>
                             </div>
                         </li>
                         <li class="flex items-start gap-3 p-4 bg-white/5 rounded-xl border border-white/5">
                             <i class="pi pi-question-circle text-brand-400 mt-1"></i>
                             <div>
-                                <h4 class="text-white font-medium text-sm">Interactive Quizzes</h4>
-                                <p class="text-xs text-content-400">Generated assessments to help track your learning
-                                    progress.</p>
+                                <h4 class="text-white font-medium text-sm">{{ 'LEGAL.TERMS.SERVICE_QUIZ_TITLE' |
+                                    translate }}</h4>
+                                <p class="text-xs text-content-400">{{ 'LEGAL.TERMS.SERVICE_QUIZ_DESC' | translate }}
+                                </p>
                             </div>
                         </li>
                     </ul>
@@ -88,23 +89,22 @@
                 <h2 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 text-sm">4</span>
-                    User Accounts
+                    {{ 'LEGAL.TERMS.ACCOUNTS_TITLE' | translate }}
                 </h2>
                 <div class="glass p-8 rounded-2xl">
-                    <p class="text-content-200 mb-4">To use certain features, you must create an account. You are
-                        responsible for:</p>
+                    <p class="text-content-200 mb-4">{{ 'LEGAL.TERMS.ACCOUNTS_DESC' | translate }}</p>
                     <div class="grid gap-3">
                         <div class="flex items-center gap-3 text-sm text-content-100">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
-                            <span>Maintaining the security of your account credentials.</span>
+                            <span>{{ 'LEGAL.TERMS.ACCOUNTS_SECURITY' | translate }}</span>
                         </div>
                         <div class="flex items-center gap-3 text-sm text-content-100">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
-                            <span>All activities that occur under your account.</span>
+                            <span>{{ 'LEGAL.TERMS.ACCOUNTS_ACTIVITIES' | translate }}</span>
                         </div>
                         <div class="flex items-center gap-3 text-sm text-content-100">
                             <div class="w-1.5 h-1.5 rounded-full bg-brand-500"></div>
-                            <span>Ensuring your content complies with these terms.</span>
+                            <span>{{ 'LEGAL.TERMS.ACCOUNTS_COMPLIANCE' | translate }}</span>
                         </div>
                     </div>
                 </div>
@@ -115,19 +115,17 @@
                 <h2 class="text-2xl font-semibold text-white mb-6 flex items-center gap-3">
                     <span
                         class="flex items-center justify-center w-8 h-8 rounded-full bg-brand-500/20 text-brand-400 text-sm">5</span>
-                    User Content
+                    {{ 'LEGAL.TERMS.CONTENT_TITLE' | translate }}
                 </h2>
                 <div class="glass p-8 rounded-2xl">
                     <p class="text-content-100 leading-relaxed mb-6">
-                        You retain ownership of all content you upload to the Service. By uploading content, you grant
-                        FinedMentor a license to store and transmit your content solely for the purpose of providing the
-                        service.
+                        {{ 'LEGAL.TERMS.CONTENT_DESC' | translate }}
                     </p>
                     <div class="p-4 bg-red-500/5 border border-red-500/10 rounded-xl">
-                        <h4 class="text-red-400 text-sm font-medium mb-2">Prohibited Content</h4>
+                        <h4 class="text-red-400 text-sm font-medium mb-2">{{ 'LEGAL.TERMS.CONTENT_PROHIBITED_TITLE' |
+                            translate }}</h4>
                         <p class="text-xs text-content-400">
-                            You agree not to upload content that violates laws, infringes on intellectual property,
-                            contains malware, or is harmful/defamatory.
+                            {{ 'LEGAL.TERMS.CONTENT_PROHIBITED_DESC' | translate }}
                         </p>
                     </div>
                 </div>
@@ -136,28 +134,26 @@
             <!-- Legal Disclaimers (6-13) -->
             <div class="space-y-8 border-t border-white/5 pt-12">
                 <section>
-                    <h3 class="text-xl font-semibold text-white mb-4">6. Service Limitations & Disclaimer</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">{{ 'LEGAL.TERMS.LIMITATIONS_TITLE' | translate }}
+                    </h3>
                     <p class="text-sm text-content-200 leading-relaxed">
-                        The Service is provided "as is" without warranties of any kind. We do not guarantee
-                        uninterrupted or error-free service, specific uptime, or performance levels. This does not
-                        affect your statutory rights as a consumer.
+                        {{ 'LEGAL.TERMS.LIMITATIONS_DESC' | translate }}
                     </p>
                 </section>
 
                 <section>
-                    <h3 class="text-xl font-semibold text-white mb-4">7. Limitation of Liability</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">{{ 'LEGAL.TERMS.LIABILITY_TITLE' | translate }}
+                    </h3>
                     <p class="text-sm text-content-200 leading-relaxed">
-                        To the maximum extent permitted by law, FinedMentor shall not be liable for any indirect,
-                        incidental, or consequential damages. This does not apply to cases of intent, gross negligence,
-                        or injury to life/health.
+                        {{ 'LEGAL.TERMS.LIABILITY_DESC' | translate }}
                     </p>
                 </section>
 
                 <section>
-                    <h3 class="text-xl font-semibold text-white mb-4">11. Governing Law & Jurisdiction</h3>
+                    <h3 class="text-xl font-semibold text-white mb-4">{{ 'LEGAL.TERMS.GOVERNING_LAW_TITLE' | translate
+                        }}</h3>
                     <p class="text-sm text-content-200 leading-relaxed">
-                        These Terms are governed by the laws of Germany. For consumers in the EU/EEA, this choice of law
-                        does not deprive you of protection from mandatory laws in your country of residence.
+                        {{ 'LEGAL.TERMS.GOVERNING_LAW_DESC' | translate }}
                     </p>
                 </section>
             </div>
@@ -166,18 +162,18 @@
         <!-- Contact & Footer -->
         <div class="mt-20 pt-12 border-t border-white/5 space-y-8 text-center">
             <div class="space-y-4">
-                <h2 class="text-2xl font-semibold text-white">Questions?</h2>
+                <h2 class="text-2xl font-semibold text-white">{{ 'LEGAL.PRIVACY.QUESTIONS' | translate }}</h2>
                 <p class="text-content-200 max-w-md mx-auto text-sm">
-                    If you have questions about these terms, please contact our support team.
+                    {{ 'LEGAL.TERMS.QUESTIONS_DESC' | translate }}
                 </p>
-                <a href="mailto:contact@finedmentor.com" class="btn-primary inline-flex items-center gap-2">
-                    <i class="pi pi-envelope"></i> Contact Support
+                <a href="mailto:maxwelltb4@gmail.com" class="btn-primary inline-flex items-center gap-2">
+                    <i class="pi pi-envelope"></i> {{ 'LEGAL.PRIVACY.CONTACT_SUPPORT' | translate }}
                 </a>
             </div>
 
             <div class="pt-8">
                 <a routerLink="/" class="btn-secondary inline-flex items-center gap-2">
-                    <i class="pi pi-arrow-left"></i> Back to Home
+                    <i class="pi pi-arrow-left"></i> {{ 'LEGAL.BACK_TO_HOME' | translate }}
                 </a>
             </div>
         </div>
