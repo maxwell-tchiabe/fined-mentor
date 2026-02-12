@@ -25,6 +25,11 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private final UserDetailsServiceImpl userDetailsService;
 
     @Override
+    protected boolean shouldNotFilterAsyncDispatch() {
+        return false;
+    }
+
+    @Override
     protected boolean shouldNotFilter(@NotNull HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.startsWith("/actuator");

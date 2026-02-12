@@ -11,6 +11,7 @@ import { NavPanelComponent } from '../../../../shared/components/nav-panel/nav-p
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
 import { ChatMessageService } from '../../../../core/services/chat-message.service';
 import { QuizService } from '../../../../core/services/quiz.service';
+import { StreamingService } from '../../../../core/services/streaming.service';
 import { ChatMessage, ChatSession, QuizState } from '../../../../core/models/chat.model';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -37,6 +38,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private chatSessionService: ChatSessionService,
     private chatMessageService: ChatMessageService,
     private quizService: QuizService,
+    private streamingService: StreamingService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
@@ -81,41 +83,70 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const activeSession = this.activeSession();
     if (!activeSession) return;
 
-    const tempMessage: ChatMessage = {
-      id: `tmp-${Date.now()}`,
+    const tempUserMessage: ChatMessage = {
+      id: `tmp-user-${Date.now()}`,
       role: 'USER',
       text: message,
       timestamp: new Date()
     };
 
+    const tempAiMessage: ChatMessage = {
+      id: `tmp-ai-${Date.now()}`,
+      role: 'MODEL',
+      text: '', // Start empty, no dots as requested
+      timestamp: new Date()
+    };
+
     const optimisticSession: ChatSession = {
       ...activeSession,
-      messages: [...(activeSession.messages || []), tempMessage]
+      messages: [...(activeSession.messages || []), tempUserMessage, tempAiMessage]
     };
 
     this.chatSessionService.setActiveSession(optimisticSession);
     this.isChatLoading.set(true);
     this.errorMessage.set(null);
 
-    this.chatMessageService.sendMessage(activeSession.id, message).pipe(
-      tap(response => {
+    let accumulatedText = '';
+
+    this.streamingService.getStream('/chat/stream', { message, chatSessionId: activeSession.id }).pipe(
+      tap(char => {
+        accumulatedText += char;
         const current = this.activeSession();
         if (!current) return;
 
-        let updatedMessages = [...(current.messages || [])];
+        const updatedMessages = [...(current.messages || [])];
+        const lastMessageIdx = updatedMessages.length - 1;
 
-        // Append the model response. We keep the temporary user message.
-        updatedMessages.push(response);
+        if (lastMessageIdx >= 0 && updatedMessages[lastMessageIdx].role === 'MODEL') {
+          updatedMessages[lastMessageIdx] = {
+            ...updatedMessages[lastMessageIdx],
+            text: accumulatedText
+          };
+        }
 
         const updatedSession = { ...current, messages: updatedMessages };
         this.chatSessionService.setActiveSession(updatedSession);
+
+        // Hide global loading as soon as we start seeing the stream
+        if (this.isChatLoading()) {
+          this.isChatLoading.set(false);
+        }
       }),
       catchError(error => {
-        console.error('Failed to send message:', error);
-        this.setErrorMessage('Failed to send message. Please try again.');
-        return of(null);
+        console.error('Streaming failed:', error);
+        this.setErrorMessage('Failed to get response. Please try again.');
+        this.isChatLoading.set(false);
+        return EMPTY;
       })
-    ).subscribe(() => this.isChatLoading.set(false));
+    ).subscribe({
+      complete: () => {
+        this.isChatLoading.set(false);
+        // Refresh session to get actual IDs and persistence
+        this.chatSessionService.getSession(activeSession.id).subscribe(finalSession => {
+          this.chatSessionService.setActiveSession(finalSession);
+        });
+      }
+    });
   }
 
   public generateQuiz(topic: string): void {

@@ -33,7 +33,13 @@ public class RateLimitFilter extends OncePerRequestFilter {
     ProxyManager<String> proxyManager;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws IOException, ServletException {
+    protected boolean shouldNotFilterAsyncDispatch() {
+        return false;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, @NotNull HttpServletResponse response,
+            @NotNull FilterChain filterChain) throws IOException, ServletException {
         if (request.getRequestURI().startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;

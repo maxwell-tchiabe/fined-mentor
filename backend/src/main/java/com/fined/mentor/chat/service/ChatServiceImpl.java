@@ -12,6 +12,8 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -198,6 +200,56 @@ public class ChatServiceImpl implements ChatService {
         } catch (Exception e) {
             log.error("Failed to get chat response for session: {}", chatSessionId, e);
             throw new ChatException("Failed to get chat response. Please try again.", e);
+        }
+    }
+
+    @Override
+    public Flux<String> streamChatResponse(String chatSessionId, String userMessage) {
+        try {
+            log.debug("Streaming chat response for session: {}", chatSessionId);
+
+            chatSessionService.findById(chatSessionId);
+
+            // Save user message
+            chatMessageService.saveMessage(
+                    ChatMessage.builder()
+                            .chatSessionId(chatSessionId)
+                            .role(ChatMessage.Role.USER)
+                            .text(userMessage)
+                            .build());
+
+            List<Message> history = chatMessageService.getMessagesBySessionId(chatSessionId)
+                    .stream()
+                    .map(msg -> (Message) new UserMessage(msg.getText()))
+                    .collect(Collectors.toList());
+
+            SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(SYSTEM_PROMPT);
+            Message systemMessage = systemPromptTemplate.createMessage();
+            history.add(0, systemMessage);
+
+            Prompt prompt = new Prompt(history);
+
+            StringBuilder fullResponse = new StringBuilder();
+
+            return chatClient.prompt(prompt)
+                    .tools(tavilySearchTool)
+                    .stream()
+                    .content()
+                    .doOnNext(fullResponse::append)
+                    .doOnComplete(() -> {
+                        chatMessageService.saveMessage(
+                                ChatMessage.builder()
+                                        .chatSessionId(chatSessionId)
+                                        .role(ChatMessage.Role.MODEL)
+                                        .text(fullResponse.toString())
+                                        .build());
+                        log.debug("Successfully streamed and saved chat response");
+                    })
+                    .doOnError(e -> log.error("Error during chat streaming", e));
+
+        } catch (Exception e) {
+            log.error("Failed to start chat streaming for session: {}", chatSessionId, e);
+            throw new ChatException("Failed to start chat streaming. Please try again.", e);
         }
     }
 

@@ -9,7 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 @Component({
   selector: 'app-chat-panel',
   standalone: true,
-  imports: [CommonModule, FormsModule, MarkdownPipe, LoadingSpinnerComponent, TranslateModule],
+  imports: [CommonModule, FormsModule, MarkdownPipe, TranslateModule],
   templateUrl: './chat-panel.component.html',
   styleUrls: ['./chat-panel.component.css']
 })

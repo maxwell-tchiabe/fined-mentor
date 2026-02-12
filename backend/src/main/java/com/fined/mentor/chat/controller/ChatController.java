@@ -17,6 +17,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import reactor.core.publisher.Flux;
+
 import java.util.List;
 
 @Slf4j
@@ -80,6 +82,17 @@ public class ChatController {
         } catch (Exception e) {
             log.error("Error processing chat message", e);
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PostMapping(value = "/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> streamMessage(@Valid @RequestBody ChatMessageRequest request) {
+        try {
+            log.debug("Streaming chat message for session: {}", request.getChatSessionId());
+            return chatService.streamChatResponse(request.getChatSessionId(), request.getMessage());
+        } catch (Exception e) {
+            log.error("Error starting chat stream", e);
+            return Flux.error(e);
         }
     }
 
