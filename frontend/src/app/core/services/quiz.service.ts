@@ -52,4 +52,11 @@ export class QuizService extends ApiService {
       {}
     ).pipe(map(response => response.data));
   }
+
+  updateCurrentQuestionIndex(quizStateId: string, index: number): Observable<QuizState> {
+    return this.http.put<ApiResponse<QuizState>>(
+      `${this.apiUrl}/quiz/state/${quizStateId}/index`,
+      { index }
+    ).pipe(map(response => response.data));
+  }
 }

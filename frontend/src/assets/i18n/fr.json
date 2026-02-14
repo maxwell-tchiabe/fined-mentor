@@ -228,7 +228,11 @@
         "NO_DATA": "Aucune donnée de quiz.",
         "NO_DATA_DESC": "Terminez un quiz pour voir votre progression ici.",
         "NAV_EXPAND": "Développer la navigation",
-        "NAV_COLLAPSE": "Réduire la navigation"
+        "NAV_COLLAPSE": "Réduire la navigation",
+        "UNFINISHED_QUIZZES": "Quiz non terminés",
+        "RESUME_QUIZ": "Reprendre le quiz",
+        "NO_UNFINISHED_QUIZZES": "Aucun quiz non terminé",
+        "QUESTIONS_REMAINING": "{{count}} questions restantes"
     },
     "CHAT": {
         "TITLE": "Chat FinEd Mentor",
@@ -347,5 +351,15 @@
             "GOVERNING_LAW_DESC": "Ces conditions sont régies par les lois de l'Allemagne. Pour les consommateurs de l'UE/EEE, ce choix de loi ne vous prive pas de la protection des lois obligatoires de votre pays de résidence.",
             "QUESTIONS_DESC": "Si vous avez des questions sur ces conditions, veuillez contacter notre équipe d'assistance."
         }
+    },
+    "TOAST": {
+        "SUCCESS": "Succès",
+        "ERROR": "Erreur",
+        "SESSION_DELETED": "Session de chat supprimée avec succès",
+        "SESSION_DELETE_FAILED": "Échec de la suppression de la session.",
+        "TITLE_UPDATED": "Titre mis à jour avec succès",
+        "TITLE_UPDATE_FAILED": "Échec de la mise à jour du titre. Veuillez réessayer.",
+        "RESPONSE_FAILED": "Échec de la récupération de la réponse. Veuillez réessayer.",
+        "QUIZ_GEN_FAILED": "Échec de la génération du quiz. Veuillez réessayer."
     }
 }

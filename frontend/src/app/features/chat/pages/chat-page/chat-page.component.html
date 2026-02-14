@@ -38,16 +38,33 @@
 
         <div class="h-full lg:col-start-auto">
           <!-- Mobile: Show either Chat or Quiz -->
-          <div class="lg:hidden h-full">
-            <app-quiz-panel *ngIf="session.quiz || isQuizLoading(); else mobileChat" [quiz]="session.quiz"
-              [quizState]="session.quizState" [isLoading]="isQuizLoading()" (answerSubmit)="onAnswerSubmit($event)"
-              (nextQuestion)="onNextQuestion()" (previousQuestion)="onPreviousQuestion()"
-              (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
+          <div class="lg:hidden h-full flex flex-col">
+            <!-- Mobile Toggle -->
+            <div class="flex p-1 bg-base-200 rounded-lg mb-2 shrink-0" *ngIf="session.quiz">
+              <button (click)="mobileTab.set('chat')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all"
+                [class.bg-white]="mobileTab() === 'chat'" [class.text-brand-500]="mobileTab() === 'chat'"
+                [class.shadow-sm]="mobileTab() === 'chat'" [class.text-content-300]="mobileTab() !== 'chat'">
+                Chat
+              </button>
+              <button (click)="mobileTab.set('quiz')" class="flex-1 py-2 text-sm font-medium rounded-md transition-all"
+                [class.bg-white]="mobileTab() === 'quiz'" [class.text-brand-500]="mobileTab() === 'quiz'"
+                [class.shadow-sm]="mobileTab() === 'quiz'" [class.text-content-300]="mobileTab() !== 'quiz'">
+                Quiz
+              </button>
+            </div>
 
-            <ng-template #mobileChat>
-              <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
-                (sendMessage)="onSendMessage($event)" (generateQuiz)="generateQuiz($event)" />
-            </ng-template>
+            <div class="flex-1 min-h-0">
+              <app-quiz-panel *ngIf="(session.quiz && mobileTab() === 'quiz') || isQuizLoading(); else mobileChat"
+                [quiz]="session.quiz" [quizState]="session.quizState" [isLoading]="isQuizLoading()"
+                (answerSubmit)="onAnswerSubmit($event)" (nextQuestion)="onNextQuestion()"
+                (previousQuestion)="onPreviousQuestion()" (restartQuiz)="onRestartQuiz()"
+                (finishQuiz)="onFinishQuiz()" />
+
+              <ng-template #mobileChat>
+                <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
+                  (sendMessage)="onSendMessage($event)" (generateQuiz)="generateQuiz($event)" />
+              </ng-template>
+            </div>
           </div>
 
           <!-- Desktop: Always show Quiz panel -->
@@ -74,10 +91,6 @@
       </div>
     </div>
 
-    <!-- Error Message Display -->
-    <div *ngIf="errorMessage()"
-      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded shadow-lg">
-      {{ errorMessage() }}
-    </div>
+    <!-- Error Message Display replaced by Global Toast -->
   </div>
 </main>

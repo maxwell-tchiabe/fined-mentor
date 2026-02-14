@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatSession } from '../../../../core/models/chat.model';
 import { TranslateModule } from '@ngx-translate/core';
+import { UnfinishedQuizListComponent } from '../unfinished-quiz-list/unfinished-quiz-list.component';
 
 interface TopicStats {
   scores: number[];
@@ -11,7 +12,7 @@ interface TopicStats {
 @Component({
   selector: 'app-dashboard-panel',
   standalone: true,
-  imports: [CommonModule, TranslateModule],
+  imports: [CommonModule, TranslateModule, UnfinishedQuizListComponent],
   templateUrl: './dashboard-panel.component.html',
   styleUrls: ['./dashboard-panel.component.css']
 })

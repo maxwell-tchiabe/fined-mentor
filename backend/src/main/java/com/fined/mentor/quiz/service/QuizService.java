@@ -11,8 +11,14 @@ public interface QuizService {
     QuizState finishQuiz(String quizStateId);
 
     QuizState startQuiz(String quizId, String chatSessionId);
+
     QuizState submitAnswer(String quizStateId, int questionIndex, String answer);
+
     Quiz getQuizBySessionId(String sessionId);
+
     QuizState getQuizState(String quizStateId);
+
     QuizState getQuizStateBySessionId(String sessionId);
+
+    QuizState updateCurrentQuestionIndex(String quizStateId, int index);
 }

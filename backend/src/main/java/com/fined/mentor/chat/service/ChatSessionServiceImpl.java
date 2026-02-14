@@ -80,7 +80,16 @@ public class ChatSessionServiceImpl implements ChatSessionService {
             session.setQuiz(quiz);
 
             Optional<QuizState> quizStateOpt = quizStateRepository.findByQuizId(quiz.getId());
-            quizStateOpt.ifPresent(session::setQuizState);
+            if (quizStateOpt.isPresent()) {
+                QuizState qs = quizStateOpt.get();
+                log.info("Populating quiz details for session {}: quizId={}, stateId={}, index={}",
+                        sessionId, quiz.getId(), qs.getId(), qs.getCurrentQuestionIndex());
+                session.setQuizState(qs);
+            } else {
+                log.warn("No quiz state found for quiz: {}", quiz.getId());
+            }
+        } else {
+            log.debug("No quiz found for session: {}", sessionId);
         }
 
         return session;
@@ -89,7 +98,30 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     @Override
     public List<ChatSession> getActiveSessions(String userId) {
         log.debug("Retrieving all active chat sessions for user: {}", userId);
-        return chatSessionRepository.findByUserIdAndActiveTrueOrderByCreatedAtDesc(userId);
+        List<ChatSession> sessions = chatSessionRepository.findByUserIdAndActiveTrueOrderByCreatedAtDesc(userId);
+
+        // Populate quiz details for each session
+        sessions.forEach(this::populateQuizDetails);
+
+        return sessions;
+    }
+
+    private void populateQuizDetails(ChatSession session) {
+        // Fetch and set quiz and quiz state
+        Optional<Quiz> quizOpt = quizRepository.findFirstByChatSessionIdOrderByCreatedAtDesc(session.getId());
+        if (quizOpt.isPresent()) {
+            Quiz quiz = quizOpt.get();
+            session.setQuiz(quiz);
+
+            Optional<QuizState> quizStateOpt = quizStateRepository.findByQuizId(quiz.getId());
+            if (quizStateOpt.isPresent()) {
+                QuizState qs = quizStateOpt.get();
+                // Only log at debug level for list view to avoid spam
+                log.debug("Populating quiz details for session {}: quizId={}, stateId={}, index={}",
+                        session.getId(), quiz.getId(), qs.getId(), qs.getCurrentQuestionIndex());
+                session.setQuizState(qs);
+            }
+        }
     }
 
     @Override

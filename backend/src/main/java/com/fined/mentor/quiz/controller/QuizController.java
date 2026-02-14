@@ -13,13 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -201,6 +195,34 @@ public class QuizController {
             return ResponseEntity.ok(ApiResponse.success(response));
         } catch (Exception e) {
             log.error("Error finishing quiz state: {}", quizStateId, e);
+            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+        }
+    }
+
+    @PutMapping("/state/{quizStateId}/index")
+    public ResponseEntity<ApiResponse<QuizStateResponse>> updateCurrentQuestionIndex(
+            @PathVariable String quizStateId,
+            @RequestBody java.util.Map<String, Integer> request) {
+        try {
+            int index = request.get("index");
+            log.debug("Updating question index to {} for quiz state: {}", index, quizStateId);
+
+            QuizState quizState = quizService.updateCurrentQuestionIndex(quizStateId, index);
+
+            QuizStateResponse response = QuizStateResponse.builder()
+                    .id(quizState.getId())
+                    .quizId(quizState.getQuizId())
+                    .chatSessionId(quizState.getChatSessionId())
+                    .currentQuestionIndex(quizState.getCurrentQuestionIndex())
+                    .userAnswers(quizState.getUserAnswers())
+                    .isSubmitted(quizState.getIsSubmitted())
+                    .score(quizState.getScore())
+                    .isFinished(quizState.isFinished())
+                    .build();
+
+            return ResponseEntity.ok(ApiResponse.success(response));
+        } catch (Exception e) {
+            log.error("Error updating question index for quiz state: {}", quizStateId, e);
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
         }
     }

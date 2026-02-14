@@ -228,7 +228,11 @@
         "NO_DATA": "No quiz data yet.",
         "NO_DATA_DESC": "Complete a quiz to see your progress here.",
         "NAV_EXPAND": "Expand navigation",
-        "NAV_COLLAPSE": "Collapse navigation"
+        "NAV_COLLAPSE": "Collapse navigation",
+        "UNFINISHED_QUIZZES": "Unfinished Quizzes",
+        "RESUME_QUIZ": "Resume Quiz",
+        "NO_UNFINISHED_QUIZZES": "No unfinished quizzes",
+        "QUESTIONS_REMAINING": "{{count}} questions remaining"
     },
     "CHAT": {
         "TITLE": "FinEd Mentor Chat",
@@ -347,5 +351,15 @@
             "GOVERNING_LAW_DESC": "These Terms are governed by the laws of Germany. For consumers in the EU/EEA, this choice of law does not deprive you of protection from mandatory laws in your country of residence.",
             "QUESTIONS_DESC": "If you have questions about these terms, please contact our support team."
         }
+    },
+    "TOAST": {
+        "SUCCESS": "Success",
+        "ERROR": "Error",
+        "SESSION_DELETED": "Chat session deleted successfully",
+        "SESSION_DELETE_FAILED": "Failed to delete session.",
+        "TITLE_UPDATED": "Title updated successfully",
+        "TITLE_UPDATE_FAILED": "Failed to update title. Please try again.",
+        "RESPONSE_FAILED": "Failed to get response. Please try again.",
+        "QUIZ_GEN_FAILED": "Failed to generate quiz. Please try again."
     }
 }

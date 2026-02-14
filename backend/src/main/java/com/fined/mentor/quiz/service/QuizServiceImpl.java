@@ -359,4 +359,14 @@ public class QuizServiceImpl implements QuizService {
         return quizStateRepository.findFirstByChatSessionIdOrderByIdDesc(sessionId)
                 .orElseThrow(() -> new RuntimeException("Quiz state not found for this session"));
     }
+
+    @Override
+    @Transactional
+    public QuizState updateCurrentQuestionIndex(String quizStateId, int index) {
+        QuizState quizState = quizStateRepository.findById(quizStateId)
+                .orElseThrow(() -> new QuizStateNotFoundException("Quiz state not found with id: " + quizStateId));
+
+        quizState.setCurrentQuestionIndex(index);
+        return quizStateRepository.save(quizState);
+    }
 }

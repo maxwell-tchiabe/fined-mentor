@@ -1,0 +1,51 @@
+<div class="bg-base-200 rounded-lg p-6 flex flex-col h-fit mt-4" *ngIf="unfinishedSessions.length > 0">
+    <header class="mb-4 flex justify-between items-center">
+        <h3 class="text-xl font-bold text-content-100 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-brand-500" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            {{ 'DASHBOARD.UNFINISHED_QUIZZES' | translate }}
+        </h3>
+        <span class="badge badge-primary">{{ unfinishedSessions.length }}</span>
+    </header>
+
+    <div class="space-y-4">
+        <div *ngFor="let session of unfinishedSessions"
+            class="bg-base-300/50 p-4 rounded-xl border border-base-300 hover:border-brand-500/50 transition-all duration-300 shadow-sm hover:shadow-md group">
+
+            <div class="flex justify-between items-start mb-3">
+                <div>
+                    <h4 class="font-bold text-content-100 text-lg capitalize mb-1">{{ session.quiz?.topic }}</h4>
+                    <p class="text-xs text-content-300 flex items-center gap-1">
+                        <span class="opacity-70">{{ session.title }}</span>
+                    </p>
+                </div>
+                <button (click)="resumeQuiz(session.id)"
+                    class="btn btn-sm btn-primary bg-brand-500 hover:bg-brand-600 border-none text-white shadow-lg shadow-brand-500/20 group-hover:scale-105 transition-transform duration-200">
+                    {{ 'DASHBOARD.RESUME_QUIZ' | translate }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs font-medium">
+                    <span class="text-content-200">
+                        {{ 'DASHBOARD.QUESTIONS_REMAINING' | translate:{count: getRemainingQuestions(session)} }}
+                    </span>
+                    <span class="text-brand-500">{{ getProgress(session) | number:'1.0-0' }}%</span>
+                </div>
+                <div class="w-full bg-base-100 rounded-full h-2 overflow-hidden">
+                    <div class="bg-gradient-to-r from-brand-500 to-brand-400 h-2 rounded-full transition-all duration-500 ease-out"
+                        [style.width.%]="getProgress(session)"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

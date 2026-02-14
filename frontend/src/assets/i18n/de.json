@@ -228,7 +228,11 @@
         "NO_DATA": "Noch keine Quizdaten.",
         "NO_DATA_DESC": "Schließen Sie ein Quiz ab, um hier Ihren Fortschritt zu sehen.",
         "NAV_EXPAND": "Navigation erweitern",
-        "NAV_COLLAPSE": "Navigation einklappen"
+        "NAV_COLLAPSE": "Navigation einklappen",
+        "UNFINISHED_QUIZZES": "Unbeendete Quizze",
+        "RESUME_QUIZ": "Quiz fortsetzen",
+        "NO_UNFINISHED_QUIZZES": "Keine unbeendeten Quizze",
+        "QUESTIONS_REMAINING": "{{count}} Fragen verbleibend"
     },
     "CHAT": {
         "TITLE": "FinEd Mentor Chat",
@@ -347,5 +351,15 @@
             "GOVERNING_LAW_DESC": "Diese Bedingungen unterliegen dem Recht der Bundesrepublik Deutschland. Für Verbraucher in der EU/EWR entzieht Ihnen diese Rechtswahl nicht den Schutz durch zwingende Gesetze in Ihrem Wohnsitzland.",
             "QUESTIONS_DESC": "Wenn Sie Fragen zu diesen Bedingungen haben, wenden Sie sich bitte an unser Support-Team."
         }
+    },
+    "TOAST": {
+        "SUCCESS": "Erfolg",
+        "ERROR": "Fehler",
+        "SESSION_DELETED": "Chat-Sitzung erfolgreich gelöscht",
+        "SESSION_DELETE_FAILED": "Löschen der Sitzung fehlgeschlagen.",
+        "TITLE_UPDATED": "Titel erfolgreich aktualisiert",
+        "TITLE_UPDATE_FAILED": "Titelaktualisierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+        "RESPONSE_FAILED": "Antwort konnte nicht abgerufen werden. Bitte versuchen Sie es erneut.",
+        "QUIZ_GEN_FAILED": "Quiz konnte nicht generiert werden. Bitte versuchen Sie es erneut."
     }
 }

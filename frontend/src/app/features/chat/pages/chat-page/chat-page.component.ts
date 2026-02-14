@@ -15,6 +15,10 @@ import { StreamingService } from '../../../../core/services/streaming.service';
 import { ChatMessage, ChatSession, QuizState } from '../../../../core/models/chat.model';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { MessageService } from 'primeng/api';
+
+import { TranslateService } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-chat-page',
   standalone: true,
@@ -25,12 +29,13 @@ import { TranslateModule } from '@ngx-translate/core';
 export class ChatPageComponent implements OnInit, OnDestroy {
   public isNavOpen = signal(true);
   public currentView = signal<'chat' | 'dashboard'>('chat');
+  public mobileTab = signal<'chat' | 'quiz'>('chat');
   public isChatLoading = signal(false);
   public isQuizLoading = signal(false);
 
   public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
   public activeSession = toSignal(this.chatSessionService.activeSession$, { initialValue: null });
-  public errorMessage = signal<string | null>(null);
+  // errorMessage signal removed in favor of MessageService
 
   private sessionSubscription: Subscription | undefined;
 
@@ -40,7 +45,9 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private quizService: QuizService,
     private streamingService: StreamingService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService,
+    private translate: TranslateService
   ) { }
 
   public ngOnInit(): void {
@@ -48,11 +55,13 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       switchMap(params => {
         const sessionId = params['sessionId'];
         if (sessionId) {
-          // If the session is already active, don't re-fetch
-          if (this.activeSession()?.id === sessionId) {
-            return of(this.activeSession());
-          }
+          console.log('ChatPage: Fetching session', sessionId);
           return this.chatSessionService.getSession(sessionId).pipe(
+            tap(session => {
+              if (session.quizState) {
+                console.log('ChatPage: Loaded session with quiz state test:', session.quizState.currentQuestionIndex);
+              }
+            }),
             catchError(err => {
               console.error('Failed to get session:', err);
               this.router.navigate(['/chat']);
@@ -73,10 +82,22 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.sessionSubscription?.unsubscribe();
   }
 
-  public setErrorMessage(message: string): void {
-    this.errorMessage.set(message);
-    // Increased timeout to 5 seconds for longer validation messages
-    setTimeout(() => this.errorMessage.set(null), 5000);
+  public setErrorMessage(messageKey: string | null = null, fallbackMessage: string = ''): void {
+    // If a key is provided (starts with 'TOAST.'), translate it. Otherwise use the message as is (if it's a backend error)
+    // For consistency, we'll try to use keys where possible.
+    let detail = fallbackMessage;
+    if (messageKey && messageKey.startsWith('TOAST.')) {
+      detail = this.translate.instant(messageKey);
+    } else if (messageKey) {
+      detail = messageKey;
+    }
+
+    this.messageService.add({
+      severity: 'error',
+      summary: this.translate.instant('TOAST.ERROR'),
+      detail: detail,
+      life: 5000
+    });
   }
 
   public onSendMessage(message: string): void {
@@ -104,7 +125,6 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     this.chatSessionService.setActiveSession(optimisticSession);
     this.isChatLoading.set(true);
-    this.errorMessage.set(null);
 
     let accumulatedText = '';
 
@@ -134,7 +154,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       }),
       catchError(error => {
         console.error('Streaming failed:', error);
-        this.setErrorMessage('Failed to get response. Please try again.');
+        this.setErrorMessage('TOAST.RESPONSE_FAILED');
         this.isChatLoading.set(false);
         return EMPTY;
       })
@@ -154,7 +174,6 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!activeSession) return;
 
     this.isQuizLoading.set(true);
-    this.errorMessage.set(null); // Clear previous error
 
     this.quizService.generateQuiz(topic, activeSession.id).pipe(
       switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
@@ -163,16 +182,12 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           if (!current) return;
           const updatedSession = { ...current, quiz, quizState };
           this.chatSessionService.setActiveSession(updatedSession);
+          this.mobileTab.set('quiz');
         })
       )),
       catchError((error: any) => {
         console.error('Failed to generate or start quiz:', error);
-
-        // The ErrorInterceptor transforms HttpErrorResponse into a standard Error object
-        // The string we want is in error.message
-        const displayMessage = error?.message || 'Failed to generate quiz. Please try again.';
-
-        this.setErrorMessage(displayMessage);
+        this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
         return of(null);
       })
     ).subscribe(() => this.isQuizLoading.set(false));
@@ -225,6 +240,13 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       }
     };
     this.chatSessionService.setActiveSession(updatedSession);
+
+    // Persist to backend
+    if (quizState.id) {
+      this.quizService.updateCurrentQuestionIndex(quizState.id, newIndex).subscribe({
+        error: (err) => console.error('Failed to update question index:', err)
+      });
+    }
   }
 
   public onPreviousQuestion(): void {
@@ -308,8 +330,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public onDeleteSession(sessionId: string): void {
     this.chatSessionService.deactivateSession(sessionId).pipe(
+      tap(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: this.translate.instant('TOAST.SUCCESS'),
+          detail: this.translate.instant('TOAST.SESSION_DELETED')
+        });
+      }),
       catchError(err => {
         console.error('Failed to delete session:', err);
+        this.setErrorMessage('TOAST.SESSION_DELETE_FAILED');
         return of(null);
       })
     ).subscribe();
@@ -317,9 +347,16 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public onUpdateSessionTitle(event: { sessionId: string, newTitle: string }): void {
     this.chatSessionService.updateSessionTitle(event.sessionId, event.newTitle).pipe(
+      tap(() => {
+        this.messageService.add({
+          severity: 'success',
+          summary: this.translate.instant('TOAST.SUCCESS'),
+          detail: this.translate.instant('TOAST.TITLE_UPDATED')
+        });
+      }),
       catchError(err => {
         console.error('Failed to update session title:', err);
-        this.setErrorMessage('Failed to update title. Please try again.');
+        this.setErrorMessage('TOAST.TITLE_UPDATE_FAILED');
         return of(null);
       })
     ).subscribe();

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -15,7 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './dashboard-page.component.html',
   styleUrls: ['./dashboard-page.component.css']
 })
-export class DashboardPageComponent {
+export class DashboardPageComponent implements OnInit {
   public isNavOpen = signal(true);
   public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
 
@@ -23,6 +23,14 @@ export class DashboardPageComponent {
     private chatSessionService: ChatSessionService,
     private router: Router
   ) { }
+
+  public ngOnInit(): void {
+    console.log('DashboardPageComponent initialized');
+    this.chatSessionService.loadSessions().subscribe({
+      next: (sessions) => console.log('Dashboard loaded sessions:', sessions?.length),
+      error: (err) => console.error('Dashboard failed to load sessions:', err)
+    });
+  }
 
   public toggleNav(): void {
     this.isNavOpen.update(open => !open);
