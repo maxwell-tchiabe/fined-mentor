@@ -42,6 +42,15 @@ export interface QuizState {
   score: number;
   finished: boolean;
 }
+
+export interface QuizStreamingProgress {
+  elapsedTime: number;
+  status: 'GENERATING' | 'SAVING';
+  charsReceived: number;
+  isGenerating: boolean;
+  startedAt: number | null;
+  firstChunkAt: number | null;
+}
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;

@@ -5,6 +5,7 @@ import com.fined.mentor.quiz.dto.QuizAnswerRequest;
 import com.fined.mentor.quiz.dto.QuizRequest;
 import com.fined.mentor.quiz.dto.QuizResponse;
 import com.fined.mentor.quiz.dto.QuizStateResponse;
+import com.fined.mentor.quiz.dto.SaveQuizRequest;
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.entity.QuizState;
 import com.fined.mentor.quiz.exception.QuizValidationException;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 @Slf4j
 @RestController
@@ -39,14 +41,46 @@ public class QuizController {
 
             return ResponseEntity.ok(ApiResponse.success(response));
         } catch (QuizValidationException e) {
-            // Topic validation failed - return user-friendly error message
             log.warn("Quiz generation failed - invalid topic: {}", request.getTopic());
             return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
         } catch (Exception e) {
-            // Other errors during quiz generation
             log.error("Error generating quiz for topic: {}", request.getTopic(), e);
             return ResponseEntity.internalServerError()
                     .body(ApiResponse.error("Failed to generate quiz. Please try again later."));
+        }
+    }
+
+    @PostMapping(value = "/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> streamQuizGeneration(@Valid @RequestBody QuizRequest request) {
+        try {
+            log.info("Streaming quiz for topic: {}", request.getTopic());
+            return quizService.streamQuizGeneration(request.getTopic());
+        } catch (Exception e) {
+            log.error("Error starting quiz stream", e);
+            return Flux.error(e);
+        }
+    }
+
+    @PostMapping("/save")
+    public ResponseEntity<ApiResponse<QuizResponse>> saveStreamedQuiz(
+            @Valid @RequestBody SaveQuizRequest request) {
+        try {
+            log.info("Saving streamed quiz for topic: {}", request.getTopic());
+            Quiz quiz = quizService.saveStreamedQuiz(request.getTopic(), request.getChatSessionId(),
+                    request.getQuizJson());
+
+            QuizResponse response = QuizResponse.builder()
+                    .id(quiz.getId())
+                    .topic(quiz.getTopic())
+                    .questions(quiz.getQuestions())
+                    .createdAt(quiz.getCreatedAt())
+                    .build();
+
+            return ResponseEntity.ok(ApiResponse.success(response));
+        } catch (Exception e) {
+            log.error("Error saving streamed quiz for topic: {}", request.getTopic(), e);
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponse.error("Failed to save quiz. Please try again later."));
         }
     }
 
@@ -178,7 +212,6 @@ public class QuizController {
             @PathVariable String quizStateId) {
         try {
             log.info("Finishing quiz state: {}", quizStateId);
-            // Use service method to perform final scoring and persist changes
             QuizState quizState = quizService.finishQuiz(quizStateId);
 
             QuizStateResponse response = QuizStateResponse.builder()

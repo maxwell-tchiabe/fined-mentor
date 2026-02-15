@@ -202,6 +202,10 @@
     },
     "QUIZ": {
         "GENERATING": "Generating your quiz...",
+        "GENERATING_DESC": "Building high-quality questions for you.",
+        "SAVING": "Saving your quiz...",
+        "SAVING_DESC": "Securely persisting questions to the database.",
+        "QUESTIONS": "Questions",
         "TITLE_ADAPTIVE": "Adaptive Assessment",
         "DESC_ADAPTIVE": "Ready for a challenge? Ask the mentor in the chat to test you on a topic, for example:",
         "EXAMPLE_PROMPT": "\"Test me on real estate investing\"",

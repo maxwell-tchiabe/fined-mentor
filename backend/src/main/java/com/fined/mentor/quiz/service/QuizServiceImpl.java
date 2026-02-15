@@ -1,6 +1,7 @@
 package com.fined.mentor.quiz.service;
 
 import com.fined.mentor.chat.service.ChatSessionService;
+import com.fined.mentor.quiz.dto.GeneratedQuizDTO;
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.entity.QuizQuestion;
 import com.fined.mentor.quiz.entity.QuizState;
@@ -9,8 +10,10 @@ import com.fined.mentor.quiz.repository.QuizRepository;
 import com.fined.mentor.quiz.repository.QuizStateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -54,6 +57,63 @@ public class QuizServiceImpl implements QuizService {
             log.error("Failed to generate quiz for topic: {} and session: {}", topic, chatSessionId, e);
             throw new QuizGenerationException("Failed to generate quiz. Please try again.", e);
         }
+    }
+
+    @Override
+    public Flux<String> streamQuizGeneration(String topic) {
+        return quizGenerationService.streamQuizGeneration(topic);
+    }
+
+    @Override
+    @Transactional
+    public Quiz saveStreamedQuiz(String topic, String chatSessionId, String quizJson) {
+        try {
+            log.info("Saving streamed quiz for topic: {} and session: {}", topic, chatSessionId);
+
+            // Extract raw JSON if it's wrapped in markdown or has "json" prefix
+            String cleanedJson = extractJson(quizJson);
+
+            // Parse JSON using BeanOutputConverter or similar
+            BeanOutputConverter<GeneratedQuizDTO> outputConverter = new BeanOutputConverter<>(
+                    GeneratedQuizDTO.class);
+            GeneratedQuizDTO generatedQuiz = outputConverter.convert(cleanedJson);
+
+            Quiz quiz = Quiz.builder()
+                    .topic(generatedQuiz.getTopic())
+                    .questions(generatedQuiz.getQuestions())
+                    .chatSessionId(chatSessionId)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+
+            // Validate quiz structure
+            validateQuiz(quiz);
+
+            Quiz savedQuiz = quizRepository.save(quiz);
+            log.debug("Successfully saved streamed quiz with id: {} and {} questions",
+                    savedQuiz.getId(), savedQuiz.getQuestions().size());
+
+            return savedQuiz;
+
+        } catch (Exception e) {
+            log.error("Failed to save streamed quiz for topic: {} and session: {}. Content: {}",
+                    topic, chatSessionId, quizJson, e);
+            throw new QuizGenerationException("Failed to save streamed quiz. Please try again.", e);
+        }
+    }
+
+    private String extractJson(String text) {
+        if (text == null || text.isBlank())
+            return text;
+        String trimmed = text.trim();
+
+        // Find the first '{' and last '}'
+        int firstOpen = trimmed.indexOf('{');
+        int lastClose = trimmed.lastIndexOf('}');
+
+        if (firstOpen != -1 && lastClose != -1 && lastClose > firstOpen) {
+            return trimmed.substring(firstOpen, lastClose + 1);
+        }
+        return trimmed;
     }
 
     @Override
@@ -249,41 +309,50 @@ public class QuizServiceImpl implements QuizService {
             throw new QuizValidationException("Correct answer is required for question " + (index + 1));
         }
 
+        // Normalize correctAnswer for comparison (remove all whitespace and lowercase)
+        String normalizedCorrect = normalizeForComparison(question.getCorrectAnswer());
+
         if (question.getType() == QuizQuestion.QuestionType.MULTIPLE_CHOICE) {
             if (question.getOptions() == null || question.getOptions().length < 2) {
                 throw new QuizValidationException(
                         "Multiple choice questions must have at least 2 options for question " + (index + 1));
             }
 
-            // Verify correct answer is among options
+            // Verify correct answer is among options (whitespace-insensitive)
             boolean correctAnswerFound = false;
-            for (String option : question.getOptions()) {
-                if (option != null && option.trim().equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+            for (int i = 0; i < question.getOptions().length; i++) {
+                String option = question.getOptions()[i];
+                if (option != null && normalizeForComparison(option).equals(normalizedCorrect)) {
+                    // Update correct answer to match the EXACT string in options for later
+                    // consistency
+                    question.setCorrectAnswer(option);
                     correctAnswerFound = true;
                     break;
                 }
             }
 
             if (!correctAnswerFound) {
+                log.warn("Validation failed for question {}. Normalized Correct: '{}', Options: {}",
+                        index + 1, normalizedCorrect, java.util.Arrays.toString(question.getOptions()));
                 throw new QuizValidationException(
                         "Correct answer must be one of the provided options for question " + (index + 1));
             }
         } else if (question.getType() == QuizQuestion.QuestionType.TRUE_FALSE) {
-            if (!"true".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                    !"false".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                    !"vrai".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                    !"faux".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                    !"wahr".equalsIgnoreCase(question.getCorrectAnswer().trim()) &&
-                    !"falsch".equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+            String lowercaseCorrect = question.getCorrectAnswer().trim().toLowerCase();
+            if (!"true".equals(lowercaseCorrect) && !"false".equals(lowercaseCorrect) &&
+                    !"vrai".equals(lowercaseCorrect) && !"faux".equals(lowercaseCorrect) &&
+                    !"wahr".equals(lowercaseCorrect) && !"falsch".equals(lowercaseCorrect)) {
                 throw new QuizValidationException(
                         "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question "
                                 + (index + 1));
             }
 
-            // Ensure correct answer matches one of the TRUE_FALSE options
+            // Verify correct answer matches one of the options (whitespace-insensitive)
             boolean correctAnswerFound = false;
-            for (String option : question.getOptions()) {
-                if (option != null && option.trim().equalsIgnoreCase(question.getCorrectAnswer().trim())) {
+            for (int i = 0; i < question.getOptions().length; i++) {
+                String option = question.getOptions()[i];
+                if (option != null && normalizeForComparison(option).equals(normalizedCorrect)) {
+                    question.setCorrectAnswer(option);
                     correctAnswerFound = true;
                     break;
                 }
@@ -294,6 +363,12 @@ public class QuizServiceImpl implements QuizService {
                         "Correct answer must match one of the TRUE_FALSE options for question " + (index + 1));
             }
         }
+    }
+
+    private String normalizeForComparison(String s) {
+        if (s == null)
+            return "";
+        return s.toLowerCase().replaceAll("\\s+", "");
     }
 
     private void validateAnswerSubmission(QuizState quizState, int questionIndex, String answer) {

@@ -2,10 +2,17 @@ package com.fined.mentor.quiz.service;
 
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.entity.QuizState;
+
+import reactor.core.publisher.Flux;
+
 import org.springframework.transaction.annotation.Transactional;
 
 public interface QuizService {
     Quiz generateQuiz(String topic, String chatSessionId);
+
+    Flux<String> streamQuizGeneration(String topic);
+
+    Quiz saveStreamedQuiz(String topic, String chatSessionId, String quizJson);
 
     @Transactional
     QuizState finishQuiz(String quizStateId);

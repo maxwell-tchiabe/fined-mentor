@@ -202,6 +202,10 @@
     },
     "QUIZ": {
         "GENERATING": "Génération de votre quiz...",
+        "GENERATING_DESC": "Création de questions de haute qualité pour vous.",
+        "SAVING": "Sauvegarde de votre quiz...",
+        "SAVING_DESC": "Enregistrement sécurisé des questions dans la base de données.",
+        "QUESTIONS": "Questions",
         "TITLE_ADAPTIVE": "Évaluation adaptative",
         "DESC_ADAPTIVE": "Prêt pour un défi ? Demandez au mentor dans le chat de vous tester sur un sujet, par exemple :",
         "EXAMPLE_PROMPT": "\"Testez-moi sur l'investissement immobilier\"",

@@ -1,1 +1,30 @@
 /* Placeholder styles for quiz panel component */
+
+/* Modern Progress UI Animations */
+@keyframes loading-bar {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.animate-loading-bar {
+    animation: loading-bar 1.5s infinite linear;
+    width: 50%;
+}
+
+/* Ensure smooth transition for SVG stroke */
+circle {
+    transition: stroke-dashoffset 0.3s ease-out;
+}
+
+.tabular-nums {
+    font-variant-numeric: tabular-nums;
+}
+
+.font-black {
+    font-weight: 900;
+}

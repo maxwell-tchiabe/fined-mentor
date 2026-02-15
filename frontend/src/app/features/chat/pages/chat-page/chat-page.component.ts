@@ -12,7 +12,8 @@ import { ChatSessionService } from '../../../../core/services/chat-session.servi
 import { ChatMessageService } from '../../../../core/services/chat-message.service';
 import { QuizService } from '../../../../core/services/quiz.service';
 import { StreamingService } from '../../../../core/services/streaming.service';
-import { ChatMessage, ChatSession, QuizState } from '../../../../core/models/chat.model';
+import { QuizStreamingService } from '../../../../core/services/quiz-streaming.service';
+import { ChatMessage, ChatSession, Quiz, QuizState, QuizStreamingProgress } from '../../../../core/models/chat.model';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { MessageService } from 'primeng/api';
@@ -32,6 +33,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   public mobileTab = signal<'chat' | 'quiz'>('chat');
   public isChatLoading = signal(false);
   public isQuizLoading = signal(false);
+  public quizStreamingProgress = signal<QuizStreamingProgress>({
+    elapsedTime: 0,
+    status: 'GENERATING',
+    charsReceived: 0,
+    isGenerating: false,
+    startedAt: null,
+    firstChunkAt: null
+  });
 
   public sessions = toSignal(this.chatSessionService.sessions$, { initialValue: [] });
   public activeSession = toSignal(this.chatSessionService.activeSession$, { initialValue: null });
@@ -44,6 +53,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private chatMessageService: ChatMessageService,
     private quizService: QuizService,
     private streamingService: StreamingService,
+    private quizStreamingService: QuizStreamingService,
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
@@ -174,23 +184,73 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!activeSession) return;
 
     this.isQuizLoading.set(true);
+    this.quizStreamingProgress.set({
+      elapsedTime: 0,
+      status: 'GENERATING',
+      charsReceived: 0,
+      isGenerating: true,
+      startedAt: Date.now(),
+      firstChunkAt: null
+    });
+    let accumulatedJson = '';
 
-    this.quizService.generateQuiz(topic, activeSession.id).pipe(
-      switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
-        tap(quizState => {
-          const current = this.activeSession();
-          if (!current) return;
-          const updatedSession = { ...current, quiz, quizState };
-          this.chatSessionService.setActiveSession(updatedSession);
-          this.mobileTab.set('quiz');
-        })
-      )),
-      catchError((error: any) => {
-        console.error('Failed to generate or start quiz:', error);
+    // Start timer
+    const startTime = Date.now();
+    const timerId = setInterval(() => {
+      this.quizStreamingProgress.update(p => ({
+        ...p,
+        elapsedTime: Math.floor((Date.now() - startTime) / 1000)
+      }));
+    }, 1000);
+
+    // Use the specialized QuizStreamingService for robust JSON accumulation
+    this.quizStreamingService.getJsonStream('/quiz/stream', { topic, chatSessionId: activeSession.id }).pipe(
+      tap(chunk => {
+        accumulatedJson += chunk;
+
+        // Track first chunk time
+        if (!this.quizStreamingProgress().firstChunkAt && chunk.trim()) {
+          this.quizStreamingProgress.update(p => ({ ...p, firstChunkAt: Date.now() }));
+        }
+
+        this.quizStreamingProgress.update(p => ({
+          ...p,
+          charsReceived: accumulatedJson.length
+        }));
+      }),
+      catchError(error => {
+        console.error('Quiz streaming failed:', error);
+        clearInterval(timerId);
         this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
-        return of(null);
+        this.isQuizLoading.set(false);
+        return EMPTY;
       })
-    ).subscribe(() => this.isQuizLoading.set(false));
+    ).subscribe({
+      complete: () => {
+        clearInterval(timerId);
+        this.quizStreamingProgress.update(p => ({ ...p, status: 'SAVING' }));
+
+        // Now save the complete quiz
+        this.quizService.saveStreamedQuiz(topic, activeSession.id, accumulatedJson).pipe(
+          switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
+            tap(quizState => {
+              const current = this.activeSession();
+              if (!current) return;
+              const updatedSession = { ...current, quiz, quizState };
+              this.chatSessionService.setActiveSession(updatedSession);
+              this.mobileTab.set('quiz');
+              this.isQuizLoading.set(false);
+            })
+          )),
+          catchError(err => {
+            console.error('Failed to save or start streamed quiz:', err);
+            this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
+            this.isQuizLoading.set(false);
+            return of(null);
+          })
+        ).subscribe();
+      }
+    });
   }
 
   public onAnswerSubmit(answer: string): void {

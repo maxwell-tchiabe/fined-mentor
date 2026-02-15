@@ -201,7 +201,11 @@
         }
     },
     "QUIZ": {
-        "GENERATING": "Quiz wird erstellt...",
+        "GENERATING": "Dein Quiz wird erstellt...",
+        "GENERATING_DESC": "Hochwertige Fragen werden für dich erstellt.",
+        "SAVING": "Dein Quiz wird gespeichert...",
+        "SAVING_DESC": "Fragen werden sicher in der Datenbank gespeichert.",
+        "QUESTIONS": "Fragen",
         "TITLE_ADAPTIVE": "Adaptive Bewertung",
         "DESC_ADAPTIVE": "Bereit für eine Herausforderung? Bitten Sie den Mentor im Chat, Sie zu einem Thema zu testen, zum Beispiel:",
         "EXAMPLE_PROMPT": "\"Teste mich zum Thema Immobilieninvestitionen\"",

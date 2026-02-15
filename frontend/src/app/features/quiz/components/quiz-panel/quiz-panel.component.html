@@ -1,8 +1,56 @@
 <div class="bg-base-200 rounded-lg p-6 flex flex-col h-full">
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="flex flex-col items-center justify-center h-full">
-    <app-loading-spinner size="lg"></app-loading-spinner>
-    <p class="text-content-200 mt-4">{{ 'QUIZ.GENERATING' | translate }}</p>
+  <!-- Loading State: Modern Circular Progress -->
+  <div *ngIf="isLoading"
+    class="flex flex-col items-center justify-center h-full p-4 animate-in fade-in zoom-in duration-500">
+    <div class="relative w-48 h-48 md:w-64 md:h-64 flex items-center justify-center">
+      <!-- Progress Circle SVG -->
+      <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        <!-- Static background circle -->
+        <circle class="text-base-300 stroke-current" stroke-width="6" fill="transparent" r="42" cx="50" cy="50" />
+
+        <!-- Dynamic progress circle -->
+        <circle class="text-brand-500 stroke-current transition-all duration-300 ease-out" stroke-width="6"
+          stroke-linecap="round" fill="transparent" r="42" cx="50" cy="50" [attr.stroke-dasharray]="263.89"
+          [attr.stroke-dashoffset]="263.89 * (1 - displayProgress / 100)" />
+      </svg>
+
+      <!-- Center text content -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center">
+        <!-- Time elapsed -->
+        <span class="text-xs md:text-sm font-medium text-content-300 mb-1">
+          {{ formatTime(streamingProgress.elapsedTime) }}
+        </span>
+
+        <!-- Percentage Progress -->
+        <div class="flex items-baseline gap-0.5">
+          <span class="text-5xl md:text-7xl font-black text-content-100 tabular-nums">
+            {{ displayProgress | number:'1.0-0' }}
+          </span>
+          <span class="text-2xl md:text-3xl font-bold text-brand-500">%</span>
+        </div>
+
+        <!-- Label -->
+        <span class="text-[10px] md:text-xs font-bold text-content-300 tracking-[0.2em] uppercase mt-2">
+          {{ (streamingProgress.status === 'SAVING' ? 'QUIZ.SAVING' : 'QUIZ.GENERATING') | translate }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Status Messages -->
+    <div class="mt-10 text-center max-w-sm">
+      <h3 class="text-lg md:text-xl font-bold text-content-100 mb-2">
+        {{ (streamingProgress.status === 'SAVING' ? 'QUIZ.SAVING' : 'QUIZ.GENERATING') | translate }}
+      </h3>
+      <p class="text-sm text-content-200">
+        {{ (streamingProgress.status === 'SAVING' ? 'QUIZ.SAVING_DESC' : 'QUIZ.GENERATING_DESC') | translate }}
+      </p>
+
+      <!-- Subtle indeterminate progress bar for 'Saving' state -->
+      <div class="mt-4 h-1 w-32 mx-auto bg-base-300 rounded-full overflow-hidden"
+        *ngIf="streamingProgress.status === 'SAVING'">
+        <div class="h-full bg-brand-500 animate-loading-bar rounded-full"></div>
+      </div>
+    </div>
   </div>
 
   <!-- No Quiz State -->

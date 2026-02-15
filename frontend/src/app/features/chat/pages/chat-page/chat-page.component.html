@@ -56,9 +56,9 @@
             <div class="flex-1 min-h-0">
               <app-quiz-panel *ngIf="(session.quiz && mobileTab() === 'quiz') || isQuizLoading(); else mobileChat"
                 [quiz]="session.quiz" [quizState]="session.quizState" [isLoading]="isQuizLoading()"
-                (answerSubmit)="onAnswerSubmit($event)" (nextQuestion)="onNextQuestion()"
-                (previousQuestion)="onPreviousQuestion()" (restartQuiz)="onRestartQuiz()"
-                (finishQuiz)="onFinishQuiz()" />
+                [streamingProgress]="quizStreamingProgress()" (answerSubmit)="onAnswerSubmit($event)"
+                (nextQuestion)="onNextQuestion()" (previousQuestion)="onPreviousQuestion()"
+                (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
 
               <ng-template #mobileChat>
                 <app-chat-panel [messages]="session.messages" [isLoading]="isChatLoading()"
@@ -70,8 +70,9 @@
           <!-- Desktop: Always show Quiz panel -->
           <div class="hidden lg:block h-full">
             <app-quiz-panel [quiz]="session.quiz" [quizState]="session.quizState" [isLoading]="isQuizLoading()"
-              (answerSubmit)="onAnswerSubmit($event)" (nextQuestion)="onNextQuestion()"
-              (previousQuestion)="onPreviousQuestion()" (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
+              [streamingProgress]="quizStreamingProgress()" (answerSubmit)="onAnswerSubmit($event)"
+              (nextQuestion)="onNextQuestion()" (previousQuestion)="onPreviousQuestion()"
+              (restartQuiz)="onRestartQuiz()" (finishQuiz)="onFinishQuiz()" />
           </div>
         </div>
       </ng-container>

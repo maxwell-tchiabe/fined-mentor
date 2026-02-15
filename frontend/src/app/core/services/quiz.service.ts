@@ -20,6 +20,13 @@ export class QuizService extends ApiService {
     ).pipe(map(response => response.data));
   }
 
+  saveStreamedQuiz(topic: string, chatSessionId: string, quizJson: string): Observable<Quiz> {
+    return this.http.post<ApiResponse<Quiz>>(
+      `${this.apiUrl}/quiz/save`,
+      { topic, chatSessionId, quizJson }
+    ).pipe(map(response => response.data));
+  }
+
   startQuiz(quizId: string, chatSessionId: string): Observable<QuizState> {
     return this.http.post<ApiResponse<QuizState>>(
       `${this.apiUrl}/quiz/${quizId}/start?chatSessionId=${chatSessionId}`,
