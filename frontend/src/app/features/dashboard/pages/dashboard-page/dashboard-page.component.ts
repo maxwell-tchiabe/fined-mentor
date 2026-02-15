@@ -6,6 +6,7 @@ import { catchError, of, tap } from 'rxjs';
 import { DashboardPanelComponent } from '../../components/dashboard-panel/dashboard-panel.component';
 import { NavPanelComponent } from '../../../../shared/components/nav-panel/nav-panel.component';
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
+import { LoggerService } from '../../../../core/services/logger.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -21,14 +22,15 @@ export class DashboardPageComponent implements OnInit {
 
   constructor(
     private chatSessionService: ChatSessionService,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService
   ) { }
 
   public ngOnInit(): void {
-    console.log('DashboardPageComponent initialized');
+    this.logger.log('DashboardPageComponent initialized');
     this.chatSessionService.loadSessions().subscribe({
-      next: (sessions) => console.log('Dashboard loaded sessions:', sessions?.length),
-      error: (err) => console.error('Dashboard failed to load sessions:', err)
+      next: (sessions) => this.logger.log('Dashboard loaded sessions:', sessions?.length),
+      error: (err) => this.logger.error('Dashboard failed to load sessions:', err)
     });
   }
 
@@ -42,7 +44,7 @@ export class DashboardPageComponent implements OnInit {
         this.router.navigate(['/chat', session.id]);
       }),
       catchError(err => {
-        console.error('Failed to create new chat:', err);
+        this.logger.error('Failed to create new chat:', err);
         return of(null);
       })
     ).subscribe();
@@ -55,7 +57,7 @@ export class DashboardPageComponent implements OnInit {
   public onDeleteSession(sessionId: string): void {
     this.chatSessionService.deactivateSession(sessionId).pipe(
       catchError(err => {
-        console.error('Failed to delete session:', err);
+        this.logger.error('Failed to delete session:', err);
         return of(null);
       })
     ).subscribe();
@@ -64,7 +66,7 @@ export class DashboardPageComponent implements OnInit {
   public onUpdateSessionTitle(event: { sessionId: string, newTitle: string }): void {
     this.chatSessionService.updateSessionTitle(event.sessionId, event.newTitle).pipe(
       catchError(err => {
-        console.error('Failed to update session title:', err);
+        this.logger.error('Failed to update session title:', err);
         return of(null);
       })
     ).subscribe();

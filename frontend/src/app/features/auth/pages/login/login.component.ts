@@ -6,6 +6,7 @@ import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ChatSessionService } from '../../../../core/services/chat-session.service';
 import { FooterComponent } from '../../../../shared/components/footer/footer.component';
+import { LoggerService } from '../../../../core/services/logger.service';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -23,7 +24,8 @@ export class LoginComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private chatSessionService: ChatSessionService,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService
   ) {
     this.loginForm = this.formBuilder.group({
       usernameOrEmail: ['', Validators.required],
@@ -48,7 +50,7 @@ export class LoginComponent {
                 this.router.navigate(['/chat']);
               },
               error: (err) => {
-                console.error('Failed to load sessions after login:', err);
+                this.logger.error('Failed to load sessions after login:', err);
                 this.router.navigate(['/chat']);
               }
             });

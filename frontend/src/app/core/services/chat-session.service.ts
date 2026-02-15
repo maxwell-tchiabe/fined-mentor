@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, map, tap } from 'rxjs';
 import { ApiService } from './api.service';
 import { ChatSession, ChatMessage, ApiResponse } from '../models/chat.model';
+import { LoggerService } from './logger.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,10 @@ export class ChatSessionService extends ApiService {
   private activeSessionSubject = new BehaviorSubject<ChatSession | null>(null);
   public activeSession$ = this.activeSessionSubject.asObservable();
 
-  constructor(http: HttpClient) {
+  constructor(
+    http: HttpClient,
+    private logger: LoggerService
+  ) {
     super(http);
   }
 
@@ -44,7 +48,7 @@ export class ChatSessionService extends ApiService {
     ).pipe(
       map(response => response.data),
       tap(sessions => {
-        console.log('getActiveSessions: received sessions', sessions);
+        this.logger.log('getActiveSessions: received sessions', sessions);
         this.sessionsSubject.next(sessions);
       })
     );
@@ -107,7 +111,7 @@ export class ChatSessionService extends ApiService {
   loadSessions(): Observable<ChatSession[]> {
     return this.getActiveSessions().pipe(
       tap(() => {
-        console.log('Sessions loaded successfully');
+        this.logger.log('Sessions loaded successfully');
       })
     );
   }

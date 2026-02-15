@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { Router } from '@angular/router';
 import { ApiResponse } from '../models/chat.model';
 import { LoginRequest, RegisterRequest, ActivateRequest, JwtResponse } from '../models/auth.model';
+import { LoggerService } from './logger.service';
 
 
 @Injectable({
@@ -12,26 +13,19 @@ import { LoginRequest, RegisterRequest, ActivateRequest, JwtResponse } from '../
 })
 export class AuthService {
     private readonly apiUrl = `${environment.apiUrl}/auth`;
-    private readonly USER_KEY = 'currentUser';
 
     private currentUserSubject = new BehaviorSubject<JwtResponse | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();
 
-    constructor(private http: HttpClient, private router: Router) {
-        this.loadUserFromStorage();
+    constructor(
+        private http: HttpClient,
+        private router: Router,
+        private logger: LoggerService
+    ) {
+
     }
 
-    private loadUserFromStorage(): void {
-        const storedUser = localStorage.getItem(this.USER_KEY);
-        if (storedUser) {
-            try {
-                this.currentUserSubject.next(JSON.parse(storedUser));
-            } catch (e) {
-                console.error('Error parsing stored user', e);
-                this.logout();
-            }
-        }
-    }
+
 
     register(request: RegisterRequest): Observable<ApiResponse<any>> {
         return this.http.post<ApiResponse<any>>(`${this.apiUrl}/register`, request);
@@ -65,20 +59,11 @@ export class AuthService {
 
     logout(): void {
         this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
-            next: () => {
-                this.clearLocalData();
-            },
-            error: () => {
-                this.clearLocalData();
-            }
+
         });
     }
 
-    private clearLocalData(): void {
-        localStorage.removeItem(this.USER_KEY);
-        this.currentUserSubject.next(null);
-        this.router.navigate(['/auth/login']);
-    }
+
 
     private handleLoginSuccess(data: JwtResponse): void {
         // Store minimal user info (token is now in HttpOnly cookie)
@@ -90,7 +75,6 @@ export class AuthService {
             email: data.email,
             roles: data.roles
         };
-        localStorage.setItem(this.USER_KEY, JSON.stringify(user));
         this.currentUserSubject.next(user);
     }
 

@@ -3,11 +3,15 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
+import { LoggerService } from '../services/logger.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
 
-  constructor(private messageService: MessageService) { }
+  constructor(
+    private messageService: MessageService,
+    private logger: LoggerService
+  ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
@@ -31,7 +35,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           errorMessage = error.error?.error || error.error?.message || error.message || errorMessage;
         }
 
-        console.error('HTTP Error:', errorMessage);
+        this.logger.error('HTTP Error:', errorMessage);
         return throwError(() => new Error(errorMessage));
       })
     );

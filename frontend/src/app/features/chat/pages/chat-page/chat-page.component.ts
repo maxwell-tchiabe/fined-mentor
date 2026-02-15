@@ -13,6 +13,7 @@ import { ChatMessageService } from '../../../../core/services/chat-message.servi
 import { QuizService } from '../../../../core/services/quiz.service';
 import { StreamingService } from '../../../../core/services/streaming.service';
 import { QuizStreamingService } from '../../../../core/services/quiz-streaming.service';
+import { LoggerService } from '../../../../core/services/logger.service';
 import { ChatMessage, ChatSession, Quiz, QuizState, QuizStreamingProgress } from '../../../../core/models/chat.model';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -57,7 +58,8 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private messageService: MessageService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private logger: LoggerService
   ) { }
 
   public ngOnInit(): void {
@@ -65,15 +67,15 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       switchMap(params => {
         const sessionId = params['sessionId'];
         if (sessionId) {
-          console.log('ChatPage: Fetching session', sessionId);
+          this.logger.log('ChatPage: Fetching session', sessionId);
           return this.chatSessionService.getSession(sessionId).pipe(
             tap(session => {
               if (session.quizState) {
-                console.log('ChatPage: Loaded session with quiz state test:', session.quizState.currentQuestionIndex);
+                this.logger.log('ChatPage: Loaded session with quiz state test:', session.quizState.currentQuestionIndex);
               }
             }),
             catchError(err => {
-              console.error('Failed to get session:', err);
+              this.logger.error('Failed to get session:', err);
               this.router.navigate(['/chat']);
               return EMPTY;
             })
@@ -163,7 +165,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         }
       }),
       catchError(error => {
-        console.error('Streaming failed:', error);
+        this.logger.error('Streaming failed:', error);
         this.setErrorMessage('TOAST.RESPONSE_FAILED');
         this.isChatLoading.set(false);
         return EMPTY;
@@ -219,7 +221,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         }));
       }),
       catchError(error => {
-        console.error('Quiz streaming failed:', error);
+        this.logger.error('Quiz streaming failed:', error);
         clearInterval(timerId);
         this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
         this.isQuizLoading.set(false);
@@ -243,7 +245,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
             })
           )),
           catchError(err => {
-            console.error('Failed to save or start streamed quiz:', err);
+            this.logger.error('Failed to save or start streamed quiz:', err);
             this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
             this.isQuizLoading.set(false);
             return of(null);
@@ -257,11 +259,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const activeSession = this.activeSession();
     if (!activeSession?.quizState?.id) return;
 
-    console.log(`Submitting answer for question index: ${activeSession.quizState.currentQuestionIndex}`);
+    this.logger.log(`Submitting answer for question index: ${activeSession.quizState.currentQuestionIndex}`);
 
     this.quizService.submitAnswer(activeSession.quizState.id, activeSession.quizState.currentQuestionIndex, answer).pipe(
       tap(updatedQuizState => {
-        console.log('Received updated quiz state from backend:', updatedQuizState);
+        this.logger.log('Received updated quiz state from backend:', updatedQuizState);
         const current = this.activeSession();
         if (!current || !current.quizState) return;
 
@@ -274,11 +276,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         };
 
         const updatedSession = { ...current, quizState: newQuizState };
-        console.log('Setting new active session:', updatedSession);
+        this.logger.log('Setting new active session:', updatedSession);
         this.chatSessionService.setActiveSession(updatedSession);
       }),
       catchError(err => {
-        console.error('Failed to submit answer:', err);
+        this.logger.error('Failed to submit answer:', err);
         return of(null);
       })
     ).subscribe();
@@ -290,7 +292,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!activeSession || !quizState) return;
 
     const newIndex = quizState.currentQuestionIndex + 1;
-    console.log(`Moving to next question index: ${newIndex}`);
+    this.logger.log(`Moving to next question index: ${newIndex}`);
 
     const updatedSession: ChatSession = {
       ...activeSession,
@@ -304,7 +306,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     // Persist to backend
     if (quizState.id) {
       this.quizService.updateCurrentQuestionIndex(quizState.id, newIndex).subscribe({
-        error: (err) => console.error('Failed to update question index:', err)
+        error: (err) => this.logger.error('Failed to update question index:', err)
       });
     }
   }
@@ -315,7 +317,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     if (!activeSession || !quizState) return;
 
     const newIndex = quizState.currentQuestionIndex - 1;
-    console.log(`Moving to previous question index: ${newIndex}`);
+    this.logger.log(`Moving to previous question index: ${newIndex}`);
 
     const updatedSession: ChatSession = {
       ...activeSession,
@@ -332,17 +334,17 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const quizState = activeSession?.quizState;
     if (!quizState?.id) return;
 
-    console.log('Finishing quiz...');
+    this.logger.log('Finishing quiz...');
 
     this.quizService.finishQuiz(quizState.id).pipe(
       tap(finishedQuizState => {
-        console.log('Received finished quiz state:', finishedQuizState);
+        this.logger.log('Received finished quiz state:', finishedQuizState);
         const current = this.activeSession();
         if (!current || !current.quizState) return;
 
         // Defensive merge to prevent state loss, explicitly preserving the isFinished flag
         const preservedIsFinished = finishedQuizState.finished;
-        console.log('Preserved isFinished:', preservedIsFinished);
+        this.logger.log('Preserved isFinished:', preservedIsFinished);
         const newQuizState: QuizState = {
           ...current.quizState,
           ...finishedQuizState,
@@ -350,11 +352,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         };
 
         const updatedSession = { ...current, quizState: newQuizState };
-        console.log('Setting new active session:', updatedSession);
+        this.logger.log('Setting new active session:', updatedSession);
         this.chatSessionService.setActiveSession(updatedSession);
       }),
       catchError(err => {
-        console.error('Failed to finish quiz:', err);
+        this.logger.error('Failed to finish quiz:', err);
         return of(null);
       })
     ).subscribe();
@@ -378,7 +380,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['/chat', session.id]);
       }),
       catchError(err => {
-        console.error('Failed to create new chat:', err);
+        this.logger.error('Failed to create new chat:', err);
         return of(null);
       })
     ).subscribe();
@@ -398,7 +400,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         });
       }),
       catchError(err => {
-        console.error('Failed to delete session:', err);
+        this.logger.error('Failed to delete session:', err);
         this.setErrorMessage('TOAST.SESSION_DELETE_FAILED');
         return of(null);
       })
@@ -415,7 +417,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         });
       }),
       catchError(err => {
-        console.error('Failed to update session title:', err);
+        this.logger.error('Failed to update session title:', err);
         this.setErrorMessage('TOAST.TITLE_UPDATE_FAILED');
         return of(null);
       })
