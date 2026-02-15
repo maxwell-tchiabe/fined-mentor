@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -28,9 +28,9 @@ public class Token {
 
     private TokenType type;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime expiresAt;
-    private LocalDateTime usedAt;
+    private Instant createdAt;
+    private Instant expiresAt;
+    private Instant usedAt;
 
     public enum TokenType {
         ACTIVATION,
@@ -39,7 +39,7 @@ public class Token {
     }
 
     public boolean isExpired() {
-        return LocalDateTime.now().isAfter(expiresAt);
+        return Instant.now().isAfter(expiresAt);
     }
 
     public boolean isValid() {

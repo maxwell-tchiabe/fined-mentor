@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -21,5 +21,5 @@ public class Quiz {
     private String topic;
     private List<QuizQuestion> questions;
     private String chatSessionId;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Collections;
 
 @Slf4j
@@ -48,8 +48,8 @@ public class AuthService {
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .activated(false)
                 .enabled(true)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
                 .build();
 
         // Assign ROLE_USER by default
@@ -72,7 +72,7 @@ public class AuthService {
 
         User user = token.getUser();
         user.setActivated(true);
-        user.setUpdatedAt(LocalDateTime.now());
+        user.setUpdatedAt(Instant.now());
 
         userRepository.save(user);
         tokenService.markTokenAsUsed(token);
@@ -112,7 +112,7 @@ public class AuthService {
 
         User user = token.getUser();
         user.setPassword(passwordEncoder.encode(newPassword));
-        user.setUpdatedAt(LocalDateTime.now());
+        user.setUpdatedAt(Instant.now());
 
         userRepository.save(user);
         tokenService.markTokenAsUsed(token);

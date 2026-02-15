@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Slf4j
@@ -35,7 +35,7 @@ public class ChatMessageServiceImpl implements ChatMessageService {
 
             // Set timestamp if not already set
             if (message.getTimestamp() == null) {
-                message.setTimestamp(LocalDateTime.now());
+                message.setTimestamp(Instant.now());
             }
 
             ChatMessage savedMessage = chatMessageRepository.save(message);

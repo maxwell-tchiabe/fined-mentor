@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,7 +7,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { LanguageSwitcherComponent } from '../language-switcher/language-switcher.component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+
+interface SessionGroup {
+  label: string;
+  sessions: ChatSession[];
+}
 
 @Component({
   selector: 'app-nav-panel',
@@ -16,7 +21,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './nav-panel.component.html',
   styleUrls: ['./nav-panel.component.css']
 })
-export class NavPanelComponent implements OnDestroy {
+export class NavPanelComponent implements OnInit, OnChanges, OnDestroy {
   @Input() public sessions: ChatSession[] | null = [];
   @Input() public activeSessionId: string | null = null;
   @Input() public currentView: 'chat' | 'dashboard' = 'chat';
@@ -28,6 +33,7 @@ export class NavPanelComponent implements OnDestroy {
 
   public userName: string = 'User';
   public isMenuOpen: boolean = false;
+  public sessionGroups: SessionGroup[] = [];
 
   // Confirm Dialog State
   public isDeleteModalOpen = false;
@@ -40,21 +46,64 @@ export class NavPanelComponent implements OnDestroy {
   public editedTitle: string = '';
 
   private userSubscription: Subscription | undefined;
+  private langSubscription: Subscription | undefined;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private translate: TranslateService
+  ) {
     this.userSubscription = this.authService.currentUser$.subscribe(user => {
       this.userName = user?.username || 'User';
     });
   }
 
-  ngOnDestroy(): void {
-    this.userSubscription?.unsubscribe();
+  ngOnInit(): void {
+    this.updateGroups();
+    // Re-group when language changes to update month names
+    this.langSubscription = this.translate.onLangChange.subscribe(() => {
+      this.updateGroups();
+    });
   }
 
-  public get sortedSessions(): ChatSession[] {
-    return [...(this.sessions || [])].sort((a, b) =>
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['sessions']) {
+      this.updateGroups();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription?.unsubscribe();
+    this.langSubscription?.unsubscribe();
+  }
+
+  private updateGroups(): void {
+    const rawSessions = this.sessions || [];
+    if (rawSessions.length === 0) {
+      this.sessionGroups = [];
+      return;
+    }
+
+    const sorted = [...rawSessions].sort((a, b) =>
       new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
+
+    const groups: SessionGroup[] = [];
+    const locale = this.translate.currentLang || localStorage.getItem('language') || 'en';
+
+    sorted.forEach(session => {
+      const date = new Date(session.createdAt);
+      const monthYear = new Intl.DateTimeFormat(locale, { month: 'long', year: 'numeric' }).format(date);
+
+      let group = groups.find(g => g.label === monthYear);
+      if (!group) {
+        group = { label: monthYear, sessions: [] };
+        groups.push(group);
+      }
+      group.sessions.push(session);
+    });
+
+    this.sessionGroups = groups;
   }
 
   public onNewChat(): void {

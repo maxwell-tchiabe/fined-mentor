@@ -31,7 +31,7 @@ public class EmailService {
                 "Hello %s,\n\n" +
                         "Welcome to FinEd Mentor! Please use the following OTP to activate your account:\n\n" +
                         "OTP: %s\n\n" +
-                        "This OTP will expire in 24 hours.\n\n" +
+                        "This OTP will expire in 15 minutes.\n\n" +
                         "If you didn't create an account, please ignore this email.\n\n" +
                         "Best regards,\n" +
                         "FinEd Mentor Team",
@@ -47,7 +47,7 @@ public class EmailService {
                 "Hello %s,\n\n" +
                         "We received a request to reset your password. Please use the following OTP to reset it:\n\n" +
                         "OTP: %s\n\n" +
-                        "This OTP will expire in 1 hour.\n\n" +
+                        "This OTP will expire in 15 minutes.\n\n" +
                         "If you didn't request a password reset, please ignore this email.\n\n" +
                         "Best regards,\n" +
                         "FinEd Mentor Team",

@@ -44,12 +44,22 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   private initializeApp(): void {
-    // Load initial sessions only if already authenticated
-    if (this.authService.isAuthenticated()) {
-      this.chatSessionService.loadSessions().subscribe({
-        next: () => this.logger.log('App initialized with sessions loaded'),
-        error: (err) => this.logger.error('Failed to load sessions during app initialization:', err)
-      });
-    }
+    // Check authentication from cookie on startup
+    this.authService.checkAuth().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.logger.log('Session restored successfully');
+          this.chatSessionService.loadSessions().subscribe({
+            next: () => this.logger.log('App initialized with sessions loaded'),
+            error: (err) => this.logger.error('Failed to load sessions during app initialization:', err)
+          });
+        } else {
+          this.logger.log('No active session found');
+        }
+      },
+      error: () => {
+        this.logger.log('Session check completed (no session or error)');
+      }
+    });
   }
 }

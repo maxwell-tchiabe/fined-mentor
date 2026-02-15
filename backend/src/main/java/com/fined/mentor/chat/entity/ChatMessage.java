@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -20,7 +20,7 @@ public class ChatMessage {
     private String chatSessionId;
     private Role role;
     private String text;
-    private LocalDateTime timestamp;
+    private Instant timestamp;
 
     public enum Role {
         USER, MODEL

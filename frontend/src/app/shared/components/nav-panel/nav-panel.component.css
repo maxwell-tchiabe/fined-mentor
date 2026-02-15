@@ -1,1 +1,54 @@
-/* Placeholder styles for nav panel component */
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+h3 {
+    letter-spacing: 0.12em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-active {
+    position: relative;
+    box-shadow: 0 0 15px -5px var(--brand-500);
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% {
+        border-color: rgba(var(--brand-500-rgb), 0.1);
+    }
+
+    50% {
+        border-color: rgba(var(--brand-500-rgb), 0.5);
+    }
+
+    100% {
+        border-color: rgba(var(--brand-500-rgb), 0.1);
+    }
+}
+
+.pi-history {
+    animation: rotate-once 1s ease-out;
+}
+
+@keyframes rotate-once {
+    from {
+        transform: rotate(-90deg);
+        opacity: 0;
+    }
+
+    to {
+        transform: rotate(0);
+        opacity: 1;
+    }
+}
+
+.group:hover .pi {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}

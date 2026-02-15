@@ -13,7 +13,7 @@ import org.springframework.ai.converter.BeanOutputConverter;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Map;
 
 @Slf4j
@@ -52,7 +52,7 @@ class QuizGenerationServiceImpl implements QuizGenerationService {
       Quiz quiz = Quiz.builder()
           .topic(generatedQuiz.getTopic())
           .questions(generatedQuiz.getQuestions())
-          .createdAt(LocalDateTime.now())
+          .createdAt(Instant.now())
           .build();
 
       log.debug("Successfully generated quiz with {} questions", quiz.getQuestions().size());

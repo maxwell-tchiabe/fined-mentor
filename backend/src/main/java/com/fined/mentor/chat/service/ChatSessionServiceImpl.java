@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class ChatSessionServiceImpl implements ChatSessionService {
 
             ChatSession session = ChatSession.builder()
                     .title(title != null ? title : "New Chat Session")
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(Instant.now())
                     .active(true)
                     .userId(userId)
                     .build();

@@ -3,6 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --brand-500: #14b8a6;
+  --brand-500-rgb: 20, 184, 166;
+}
+
 /* Custom base styles */
 @layer base {
   html {

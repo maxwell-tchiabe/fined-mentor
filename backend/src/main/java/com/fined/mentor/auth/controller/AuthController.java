@@ -107,4 +107,21 @@ public class AuthController {
 
         return ResponseEntity.ok(ApiResponse.success("Password reset successfully"));
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse> getAuthenticatedUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || authentication.getPrincipal().equals("anonymousUser")) {
+            return ResponseEntity.status(401).body(ApiResponse.error("Not authenticated"));
+        }
+
+        User user = (User) authentication.getPrincipal();
+        List<String> roles = user.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
+
+        JwtResponse jwtResponse = new JwtResponse(null, user.getId(), user.getUsername(), user.getEmail(), roles);
+
+        return ResponseEntity.ok(ApiResponse.success("User profile retrieved", jwtResponse));
+    }
 }

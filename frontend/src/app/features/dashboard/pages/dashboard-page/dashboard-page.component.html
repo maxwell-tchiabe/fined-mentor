@@ -9,9 +9,9 @@
     <div [class]="'fixed lg:relative top-0 left-0 h-full z-40 transition-all duration-300 ease-in-out ' + 
                (isNavOpen() ? 'w-[300px] translate-x-0' : 'w-0 -translate-x-full lg:translate-x-0 lg:w-0')">
       <div [class]="'h-full overflow-hidden ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
-        <app-nav-panel [sessions]="sessions()" (newChat)="onNewChat()" (selectSession)="onSelectSession($event)"
-          (deleteSession)="onDeleteSession($event)" (updateSessionTitle)="onUpdateSessionTitle($event)"
-          (showDashboard)="onShowDashboard()" />
+        <app-nav-panel [sessions]="sessions()" [currentView]="'dashboard'" (newChat)="onNewChat()"
+          (selectSession)="onSelectSession($event)" (deleteSession)="onDeleteSession($event)"
+          (updateSessionTitle)="onUpdateSessionTitle($event)" (showDashboard)="onShowDashboard()" />
       </div>
       <button (click)="toggleNav()"
         class="absolute top-1/2 -right-5 lg:-right-4 transform -translate-y-1/2 z-50 w-10 h-10 lg:w-8 lg:h-8 bg-brand-500 rounded-full flex items-center justify-center text-white hover:bg-brand-600 transition-all shadow-xl shadow-brand-500/20"

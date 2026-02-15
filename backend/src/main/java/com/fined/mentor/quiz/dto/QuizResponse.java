@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -16,5 +16,5 @@ public class QuizResponse {
     private String id;
     private String topic;
     private List<QuizQuestion> questions;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

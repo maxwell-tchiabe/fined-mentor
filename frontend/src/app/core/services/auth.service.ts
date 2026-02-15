@@ -17,6 +17,9 @@ export class AuthService {
     private currentUserSubject = new BehaviorSubject<JwtResponse | null>(null);
     public currentUser$ = this.currentUserSubject.asObservable();
 
+    private isInitializedSubject = new BehaviorSubject<boolean>(false);
+    public isInitialized$ = this.isInitializedSubject.asObservable();
+
     constructor(
         private http: HttpClient,
         private router: Router,
@@ -57,9 +60,37 @@ export class AuthService {
         return this.http.post<ApiResponse<any>>(`${this.apiUrl}/reset-password`, { token, newPassword });
     }
 
-    logout(): void {
-        this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
+    checkAuth(): Observable<ApiResponse<JwtResponse>> {
+        return this.http.get<ApiResponse<JwtResponse>>(`${this.apiUrl}/me`, { withCredentials: true }).pipe(
+            tap({
+                next: (response) => {
+                    if (response.success && response.data) {
+                        this.handleLoginSuccess(response.data);
+                    } else {
+                        this.currentUserSubject.next(null);
+                        this.isInitializedSubject.next(true);
+                    }
+                },
+                error: (err) => {
+                    this.logger.error('Session check failed', err);
+                    this.currentUserSubject.next(null);
+                    this.isInitializedSubject.next(true);
+                }
+            })
+        );
+    }
 
+    logout(): void {
+        this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true }).subscribe({
+            next: () => {
+                this.currentUserSubject.next(null);
+                this.router.navigate(['/auth/login']);
+            },
+            error: (err) => {
+                this.logger.error('Logout failed', err);
+                this.currentUserSubject.next(null);
+                this.router.navigate(['/auth/login']);
+            }
         });
     }
 
@@ -76,6 +107,7 @@ export class AuthService {
             roles: data.roles
         };
         this.currentUserSubject.next(user);
+        this.isInitializedSubject.next(true);
     }
 
     getToken(): string | null {

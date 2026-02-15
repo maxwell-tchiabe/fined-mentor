@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Data
 @Builder
@@ -15,6 +15,6 @@ public class ChatMessageResponse {
     private String id;
     private ChatMessage.Role role;
     private String text;
-    private LocalDateTime timestamp;
+    private Instant timestamp;
     private String chatSessionId;
 }

@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -28,8 +29,8 @@ public class TokenService {
                 .token(tokenValue)
                 .user(user)
                 .type(Token.TokenType.ACTIVATION)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusHours(24)) // 24 hours expiry
+                .createdAt(Instant.now())
+                .expiresAt(Instant.now().plus(Duration.ofMinutes(15)))
                 .build();
 
         Token savedToken = tokenRepository.save(token);
@@ -48,8 +49,8 @@ public class TokenService {
                 .token(tokenValue)
                 .user(user)
                 .type(Token.TokenType.PASSWORD_RESET)
-                .createdAt(LocalDateTime.now())
-                .expiresAt(LocalDateTime.now().plusHours(1)) // 1 hour expiry
+                .createdAt(Instant.now())
+                .expiresAt(Instant.now().plus(Duration.ofMinutes(15)))
                 .build();
 
         Token savedToken = tokenRepository.save(token);
@@ -77,13 +78,15 @@ public class TokenService {
     }
 
     public void markTokenAsUsed(Token token) {
-        token.setUsedAt(LocalDateTime.now());
+        token.setUsedAt(Instant.now());
         tokenRepository.save(token);
         log.debug("Marked token as used: {}", token.getToken());
     }
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     private String generateOTP() {
-        // Generate a 6-digit OTP
-        return String.format("%06d", (int) (Math.random() * 1000000));
+        // Generate a 6-digit OTP using SecureRandom
+        return String.format("%06d", SECURE_RANDOM.nextInt(1000000));
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class QuizServiceImpl implements QuizService {
 
             Quiz quiz = quizGenerationService.generateQuiz(topic);
             quiz.setChatSessionId(chatSessionId);
-            quiz.setCreatedAt(LocalDateTime.now());
+            quiz.setCreatedAt(Instant.now());
 
             // Validate quiz structure
             validateQuiz(quiz);
@@ -82,7 +82,7 @@ public class QuizServiceImpl implements QuizService {
                     .topic(generatedQuiz.getTopic())
                     .questions(generatedQuiz.getQuestions())
                     .chatSessionId(chatSessionId)
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(Instant.now())
                     .build();
 
             // Validate quiz structure

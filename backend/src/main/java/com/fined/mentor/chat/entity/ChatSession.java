@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -22,7 +22,7 @@ public class ChatSession {
     @Id
     private String id;
     private String title;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private boolean active;
     private String userId;
 
