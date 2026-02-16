@@ -14,3 +14,15 @@ spec:
       allowedRoutes:
         namespaces:
           from: Same  #or All or Selector
+
+    - name: https
+      protocol: HTTPS
+      port: 443
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: letsencrypt-issuer
+            namespace: default
+      allowedRoutes:
+        namespaces:
+          from: Same

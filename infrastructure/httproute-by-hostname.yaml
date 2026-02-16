@@ -31,9 +31,12 @@ spec:
   - name: gateway-api
     sectionName: http
     kind: Gateway
+  - name: gateway-api
+    sectionName: https
+    kind: Gateway
 
   hostnames:
-  - fined-mentor-frontend.com
+  - test.maxwelltbtech.com
 
   rules:
   - backendRefs:
