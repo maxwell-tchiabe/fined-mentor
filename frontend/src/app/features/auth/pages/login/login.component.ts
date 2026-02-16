@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { finalize } from 'rxjs/operators';
@@ -25,12 +25,17 @@ export class LoginComponent {
     private authService: AuthService,
     private chatSessionService: ChatSessionService,
     private router: Router,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private location: Location
   ) {
     this.loginForm = this.formBuilder.group({
       usernameOrEmail: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 
   public onSubmit(): void {

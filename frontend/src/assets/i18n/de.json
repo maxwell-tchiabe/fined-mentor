@@ -253,7 +253,8 @@
         "de": "Deutsch"
     },
     "COMMON": {
-        "AI_DISCLAIMER": "KI-generierte Inhalte können ungenau sein. Bitte überprüfen Sie wichtige Informationen."
+        "AI_DISCLAIMER": "KI-generierte Inhalte können ungenau sein. Bitte überprüfen Sie wichtige Informationen.",
+        "BACK": "Zurück"
     },
     "LEGAL": {
         "LAST_UPDATED": "Zuletzt aktualisiert",

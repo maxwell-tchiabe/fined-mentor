@@ -1,7 +1,14 @@
 <app-header></app-header>
 
-<main class="min-h-screen py-20 px-4 md:px-8">
+<main class="min-h-screen py-20 px-4 md:px-8 relative">
     <div class="max-w-4xl mx-auto">
+        <!-- Back Button -->
+        <button (click)="goBack()"
+            class="mb-8 flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm group">
+            <i class="pi pi-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+            {{ 'COMMON.BACK' | translate }}
+        </button>
+
         <!-- Hero Section -->
         <div class="text-center mb-16 animate-fade-in">
             <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">

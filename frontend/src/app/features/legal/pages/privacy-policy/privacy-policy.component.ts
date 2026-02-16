@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { HeaderComponent } from '../../../../shared/components/header/header.component';
@@ -12,4 +12,9 @@ import { FooterComponent } from '../../../../shared/components/footer/footer.com
     templateUrl: './privacy-policy.component.html'
 })
 export class PrivacyPolicyComponent {
+    constructor(private location: Location) { }
+
+    public goBack(): void {
+        this.location.back();
+    }
 }

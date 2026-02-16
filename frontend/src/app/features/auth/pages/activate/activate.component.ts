@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InputOtpModule } from 'primeng/inputotp';
 import { Router, RouterModule } from '@angular/router';
@@ -32,7 +32,8 @@ export class ActivateComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.activateForm = this.formBuilder.group({
       token: ['', [Validators.required, Validators.minLength(6)]]
@@ -41,6 +42,10 @@ export class ActivateComponent {
     this.resendForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
     });
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 
   public onSubmit(): void {

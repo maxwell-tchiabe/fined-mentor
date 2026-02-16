@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { InputOtpModule } from 'primeng/inputotp';
@@ -29,7 +29,8 @@ export class ResetPasswordComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.resetForm = this.formBuilder.group({
       token: ['', [Validators.required, Validators.minLength(6)]],
@@ -38,6 +39,10 @@ export class ResetPasswordComponent implements OnInit {
     }, {
       validators: this.passwordMatchValidator
     });
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 
   public ngOnInit(): void {

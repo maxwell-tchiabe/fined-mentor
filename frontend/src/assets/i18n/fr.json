@@ -253,7 +253,8 @@
         "de": "Allemand"
     },
     "COMMON": {
-        "AI_DISCLAIMER": "Le contenu généré par l'IA peut être inexact. Veuillez vérifier les informations importantes."
+        "AI_DISCLAIMER": "Le contenu généré par l'IA peut être inexact. Veuillez vérifier les informations importantes.",
+        "BACK": "Retour"
     },
     "LEGAL": {
         "LAST_UPDATED": "Dernière mise à jour",

@@ -253,7 +253,8 @@
         "de": "German"
     },
     "COMMON": {
-        "AI_DISCLAIMER": "AI-generated content may be inaccurate. Please verify important information."
+        "AI_DISCLAIMER": "AI-generated content may be inaccurate. Please verify important information.",
+        "BACK": "Back"
     },
     "LEGAL": {
         "LAST_UPDATED": "Last updated",

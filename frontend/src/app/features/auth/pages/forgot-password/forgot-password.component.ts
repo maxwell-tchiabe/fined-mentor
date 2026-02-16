@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../core/services/auth.service';
@@ -26,11 +26,16 @@ export class ForgotPasswordComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     this.forgotForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]]
     });
+  }
+
+  public goBack(): void {
+    this.location.back();
   }
 
   public get formControls() {
