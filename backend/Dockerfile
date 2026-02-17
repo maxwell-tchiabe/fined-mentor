@@ -6,6 +6,8 @@ WORKDIR /app
 COPY pom.xml .
 COPY src ./src
 
+ARG SENTRY_AUTH_TOKEN
+
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application
