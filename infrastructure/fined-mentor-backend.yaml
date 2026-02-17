@@ -19,7 +19,6 @@ spec:
         image: loicmaxwell/fined-mentor-backend:latest
         ports:
         - containerPort: 8080
-        - containerPort: 8081
         env:
           - name: MONGO_URI
             valueFrom:
@@ -67,8 +66,5 @@ spec:
       port: 8080
       targetPort: 8080
       name: http
-    - protocol: TCP
-      port: 8081
-      targetPort: 8081
       name: metrics
   
