@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, map, tap } from 'rxjs';
+import { Observable, BehaviorSubject, map, tap, switchMap } from 'rxjs';
 import { ApiService } from './api.service';
 import { ChatSession, ChatMessage, ApiResponse } from '../models/chat.model';
 import { LoggerService } from './logger.service';
@@ -76,20 +76,10 @@ export class ChatSessionService extends ApiService {
       `${this.apiUrl}/chat/sessions/${sessionId}/title`,
       { title: newTitle }
     ).pipe(
-      map(response => response.data),
-      tap(updatedSession => {
-        const currentSessions = this.sessionsSubject.value;
-        const sessionIndex = currentSessions.findIndex(s => s.id === sessionId);
-
-        if (sessionIndex >= 0) {
-          const updatedSessions = [...currentSessions];
-          updatedSessions[sessionIndex] = updatedSession;
-          this.sessionsSubject.next(updatedSessions);
-        }
-
-        if (this.activeSessionSubject.value?.id === sessionId) {
-          this.activeSessionSubject.next(updatedSession);
-        }
+      switchMap(() => this.getSession(sessionId)),
+      tap(fullSession => {
+        this.logger.log('ChatSessionService: Refreshed full session after title update', fullSession);
+        this.setActiveSession(fullSession);
       })
     );
   }
