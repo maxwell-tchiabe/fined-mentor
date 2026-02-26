@@ -3,6 +3,10 @@
 pipeline {
     agent any
     
+    triggers {
+        githubPush()
+    }
+    
     environment {
         // Update the main app image name to match the deployment file
         DOCKER_BACKEND_IMAGE_NAME = 'loicmaxwell/fined-mentor-backend'
@@ -32,6 +36,12 @@ pipeline {
         stage('Build Docker Images') {
             parallel {
                 stage('Build backend Image') {
+                    when {
+                        anyOf {
+                            changeset "backend/**"
+                            changeset "Jenkinsfile"
+                        }
+                    }
                     steps {
                         script {
                             docker_build(
@@ -45,6 +55,12 @@ pipeline {
                 }
                 
                 stage('Build frontend Image') {
+                    when {
+                        anyOf {
+                            changeset "frontend/**"
+                            changeset "Jenkinsfile"
+                        }
+                    }
                     steps {
                         script {
                             docker_build(
@@ -81,6 +97,12 @@ pipeline {
         stage('Push Docker Images') {
             parallel {
                 stage('Push Backend Image') {
+                    when {
+                        anyOf {
+                            changeset "backend/**"
+                            changeset "Jenkinsfile"
+                        }
+                    }
                     steps {
                         script {
                             docker_push(
@@ -93,6 +115,12 @@ pipeline {
                 }
                 
                 stage('Push Frontend Image') {
+                    when {
+                        anyOf {
+                            changeset "frontend/**"
+                            changeset "Jenkinsfile"
+                        }
+                    }
                     steps {
                         script {
                             docker_push(
