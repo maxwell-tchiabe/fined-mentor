@@ -38,7 +38,7 @@ pipeline {
                                 imageName: env.DOCKER_BACKEND_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
                                 dockerfile: 'backend/Dockerfile',
-                                context: '.'
+                                context: 'backend'
                             )
                         }
                     }
@@ -51,7 +51,7 @@ pipeline {
                                 imageName: env.DOCKER_FRONTEND_IMAGE_NAME,
                                 imageTag: env.DOCKER_IMAGE_TAG,
                                 dockerfile: 'frontend/Dockerfile',
-                                context: '.'
+                                context: 'frontend'
                             )
                         }
                     }
