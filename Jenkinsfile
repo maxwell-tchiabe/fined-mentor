@@ -8,15 +8,11 @@ pipeline {
     }
     
     environment {
-        // Update the main app image name to match the deployment file
         DOCKER_BACKEND_IMAGE_NAME = 'loicmaxwell/fined-mentor-backend'
         DOCKER_FRONTEND_IMAGE_NAME = 'loicmaxwell/fined-mentor-frontend'
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
         GITHUB_CREDENTIALS = credentials('github-credentials')
         GIT_BRANCH = "main"
-        // Track which components were rebuilt this run
-        BACKEND_CHANGED = 'false'
-        FRONTEND_CHANGED = 'false'
     }
     
     stages {
@@ -39,6 +35,9 @@ pipeline {
         stage('Detect Changes') {
             steps {
                 script {
+                    // Initialize as mutable env vars (not in environment{} block which is immutable)
+                    env.BACKEND_CHANGED  = 'false'
+                    env.FRONTEND_CHANGED = 'false'
                     detect_changes()
                 }
             }
