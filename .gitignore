@@ -14,6 +14,9 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+infrastructure/cert-manager-default-values.yaml
+infrastructure/values.yaml
+
 # Package Files #
 *.jar
 *.war
