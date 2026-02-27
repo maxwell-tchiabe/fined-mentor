@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fined-mentor-backend
-        image: loicmaxwell/fined-mentor-backend:12
+        image: loicmaxwell/fined-mentor-backend:13
         ports:
         - containerPort: 8080
         env:
@@ -66,5 +66,8 @@ spec:
       port: 8080
       targetPort: 8080
       name: http
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
       name: metrics
   
