@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fined-mentor-backend
-        image: loicmaxwell/fined-mentor-backend:13
+        image: loicmaxwell/fined-mentor-backend:14
         ports:
         - containerPort: 8080
         env:
