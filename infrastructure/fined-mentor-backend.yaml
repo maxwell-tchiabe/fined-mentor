@@ -50,6 +50,16 @@ spec:
               secretKeyRef:
                 name: fined-mentor-backend-secret
                 key: TAVILY_API_KEY
+          - name: REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: fined-mentor-config
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: fined-mentor-config
+                key: REDIS_PORT
 ---
 apiVersion: v1
 kind: Service
