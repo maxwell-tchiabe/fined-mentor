@@ -14,6 +14,9 @@ pipeline {
         DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
         GITHUB_CREDENTIALS = credentials('github-credentials')
         GIT_BRANCH = "main"
+        // Track which components were rebuilt this run
+        BACKEND_CHANGED = 'false'
+        FRONTEND_CHANGED = 'false'
     }
     
     stages {
@@ -50,6 +53,7 @@ pipeline {
                                 dockerfile: 'backend/Dockerfile',
                                 context: 'backend'
                             )
+                            env.BACKEND_CHANGED = 'true'
                         }
                     }
                 }
@@ -69,6 +73,7 @@ pipeline {
                                 dockerfile: 'frontend/Dockerfile',
                                 context: 'frontend'
                             )
+                            env.FRONTEND_CHANGED = 'true'
                         }
                     }
                 }
@@ -134,7 +139,6 @@ pipeline {
             }
         }
         
-        // Add this new stage
         stage('Update Kubernetes Manifests') {
             steps {
                 script {
@@ -143,7 +147,9 @@ pipeline {
                         manifestsPath: 'infrastructure',
                         gitCredentials: 'github-credentials',
                         gitUserName: 'maxwell-tchiabe',
-                        gitUserEmail: 'maxwelltchiabe@gmail.com'
+                        gitUserEmail: 'maxwelltchiabe@gmail.com',
+                        updateBackend: env.BACKEND_CHANGED == 'true',
+                        updateFrontend: env.FRONTEND_CHANGED == 'true'
                     )
                 }
             }
