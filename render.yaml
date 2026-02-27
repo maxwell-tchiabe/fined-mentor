@@ -4,7 +4,7 @@ services:
     name: fined-mentor-redis
     region: frankfurt # You can change this to your preferred region
     plan: free
-    ipAllowList: [] # Only allow internal connections
+    ipAllowList: [] # Only allow internal connections 
 
   # Backend Web Service (Free)
   - type: web
