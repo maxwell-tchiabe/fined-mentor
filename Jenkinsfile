@@ -36,14 +36,19 @@ pipeline {
             }
         }
         
+        stage('Detect Changes') {
+            steps {
+                script {
+                    detect_changes()
+                }
+            }
+        }
+        
         stage('Build Docker Images') {
             parallel {
                 stage('Build backend Image') {
                     when {
-                        anyOf {
-                            changeset "backend/**"
-                            changeset "Jenkinsfile"
-                        }
+                        environment name: 'BACKEND_CHANGED', value: 'true'
                     }
                     steps {
                         script {
@@ -53,17 +58,13 @@ pipeline {
                                 dockerfile: 'backend/Dockerfile',
                                 context: 'backend'
                             )
-                            env.BACKEND_CHANGED = 'true'
                         }
                     }
                 }
                 
                 stage('Build frontend Image') {
                     when {
-                        anyOf {
-                            changeset "frontend/**"
-                            changeset "Jenkinsfile"
-                        }
+                        environment name: 'FRONTEND_CHANGED', value: 'true'
                     }
                     steps {
                         script {
@@ -73,7 +74,6 @@ pipeline {
                                 dockerfile: 'frontend/Dockerfile',
                                 context: 'frontend'
                             )
-                            env.FRONTEND_CHANGED = 'true'
                         }
                     }
                 }
@@ -91,10 +91,7 @@ pipeline {
         stage('Security Scan with Trivy') {
             steps {
                 script {
-                    // Create directory for results
-                  
                     trivy_scan()
-                    
                 }
             }
         }
@@ -103,10 +100,7 @@ pipeline {
             parallel {
                 stage('Push Backend Image') {
                     when {
-                        anyOf {
-                            changeset "backend/**"
-                            changeset "Jenkinsfile"
-                        }
+                        environment name: 'BACKEND_CHANGED', value: 'true'
                     }
                     steps {
                         script {
@@ -121,10 +115,7 @@ pipeline {
                 
                 stage('Push Frontend Image') {
                     when {
-                        anyOf {
-                            changeset "frontend/**"
-                            changeset "Jenkinsfile"
-                        }
+                        environment name: 'FRONTEND_CHANGED', value: 'true'
                     }
                     steps {
                         script {
