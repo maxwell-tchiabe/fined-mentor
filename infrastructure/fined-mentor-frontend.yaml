@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: fined-mentor-frontend
-        image: loicmaxwell/fined-mentor-frontend:20
+        image: loicmaxwell/fined-mentor-frontend:21
         ports:
         - containerPort: 80
 ---
