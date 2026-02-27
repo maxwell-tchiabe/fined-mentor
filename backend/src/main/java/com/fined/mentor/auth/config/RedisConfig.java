@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 @Configuration
 public class RedisConfig {
         private RedisClient redisClient() {
-                String host = System.getenv().getOrDefault("REDIS_HOST", "localhost");
+                String host = System.getenv().getOrDefault("REDIS_HOST", "kind-control-plane");
                 String portStr = System.getenv().getOrDefault("REDIS_PORT", "6379");
                 int port = Integer.parseInt(portStr);
                 boolean isSsl = Boolean.parseBoolean(System.getenv().getOrDefault("REDIS_SSL", "false"));
