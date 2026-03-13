@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Subscription, switchMap, tap, catchError, of, EMPTY } from 'rxjs';
 import { ChatPanelComponent } from '../../components/chat-panel/chat-panel.component';
 import { DashboardPanelComponent } from '../../../dashboard/components/dashboard-panel/dashboard-panel.component';
@@ -14,6 +14,7 @@ import { QuizService } from '../../../../core/services/quiz.service';
 import { StreamingService } from '../../../../core/services/streaming.service';
 import { QuizStreamingService } from '../../../../core/services/quiz-streaming.service';
 import { LoggerService } from '../../../../core/services/logger.service';
+import { AuthService } from '../../../../core/services/auth.service';
 import { ChatMessage, ChatSession, Quiz, QuizState, QuizStreamingProgress } from '../../../../core/models/chat.model';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -24,12 +25,13 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [CommonModule, ChatPanelComponent, QuizPanelComponent, NavPanelComponent, DashboardPanelComponent, TranslateModule],
+  imports: [CommonModule, RouterModule, ChatPanelComponent, QuizPanelComponent, NavPanelComponent, DashboardPanelComponent, TranslateModule],
   templateUrl: './chat-page.component.html',
   styleUrls: ['./chat-page.component.css']
 })
 export class ChatPageComponent implements OnInit, OnDestroy {
   public isNavOpen = signal(true);
+  public isGuest = signal(false);
   public currentView = signal<'chat' | 'dashboard'>('chat');
   public mobileTab = signal<'chat' | 'quiz'>('chat');
   public isChatLoading = signal(false);
@@ -59,10 +61,26 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     private router: Router,
     private messageService: MessageService,
     private translate: TranslateService,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private authService: AuthService
   ) { }
 
   public ngOnInit(): void {
+    if (!this.authService.isAuthenticated()) {
+      this.isGuest.set(true);
+      if (!this.activeSession()) {
+        this.chatSessionService.setActiveSession({
+          id: 'guest-session',
+          title: 'Guest Chat',
+          createdAt: new Date(),
+          messages: [],
+          quiz: null,
+          quizState: null,
+          active: true
+        });
+      }
+    }
+
     this.sessionSubscription = this.route.params.pipe(
       switchMap(params => {
         const sessionId = params['sessionId'];
@@ -140,7 +158,10 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
     let accumulatedText = '';
 
-    this.streamingService.getStream('/chat/stream', { message, chatSessionId: activeSession.id }).pipe(
+    const endpoint = this.isGuest() ? '/public/chat/stream' : '/chat/stream';
+    const payload = this.isGuest() ? { message, history: activeSession.messages || [] } : { message, chatSessionId: activeSession.id };
+
+    this.streamingService.getStream(endpoint, payload).pipe(
       tap(char => {
         accumulatedText += char;
         const current = this.activeSession();
@@ -166,17 +187,31 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       }),
       catchError(error => {
         this.logger.error('Streaming failed:', error);
-        this.setErrorMessage('TOAST.RESPONSE_FAILED');
         this.isChatLoading.set(false);
+
+        // Remove the empty optimistic MODEL message so the 3 dots don't stay on screen
+        const current = this.activeSession();
+        if (current) {
+          const cleanedMessages = (current.messages || []).filter(m => !(m.role === 'MODEL' && !m.text));
+          this.chatSessionService.setActiveSession({ ...current, messages: cleanedMessages });
+        }
+
+        if (error?.status === 429) {
+          this.showRateLimitToast();
+        } else {
+          this.setErrorMessage('TOAST.RESPONSE_FAILED');
+        }
         return EMPTY;
       })
     ).subscribe({
       complete: () => {
         this.isChatLoading.set(false);
-        // Refresh session to get actual IDs and persistence
-        this.chatSessionService.getSession(activeSession.id).subscribe(finalSession => {
-          this.chatSessionService.setActiveSession(finalSession);
-        });
+        if (!this.isGuest()) {
+          // Refresh session to get actual IDs and persistence
+          this.chatSessionService.getSession(activeSession.id).subscribe(finalSession => {
+            this.chatSessionService.setActiveSession(finalSession);
+          });
+        }
       }
     });
   }
@@ -205,8 +240,11 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       }));
     }, 1000);
 
+    const endpoint = this.isGuest() ? '/public/quiz/stream' : '/quiz/stream';
+    const payload = this.isGuest() ? { topic } : { topic, chatSessionId: activeSession.id };
+
     // Use the specialized QuizStreamingService for robust JSON accumulation
-    this.quizStreamingService.getJsonStream('/quiz/stream', { topic, chatSessionId: activeSession.id }).pipe(
+    this.quizStreamingService.getJsonStream(endpoint, payload).pipe(
       tap(chunk => {
         accumulatedJson += chunk;
 
@@ -223,8 +261,12 @@ export class ChatPageComponent implements OnInit, OnDestroy {
       catchError(error => {
         this.logger.error('Quiz streaming failed:', error);
         clearInterval(timerId);
-        this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
         this.isQuizLoading.set(false);
+        if (error?.status === 429) {
+          this.showRateLimitToast();
+        } else {
+          this.setErrorMessage('TOAST.RESPONSE_FAILED');
+        }
         return EMPTY;
       })
     ).subscribe({
@@ -232,32 +274,95 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         clearInterval(timerId);
         this.quizStreamingProgress.update(p => ({ ...p, status: 'SAVING' }));
 
-        // Now save the complete quiz
-        this.quizService.saveStreamedQuiz(topic, activeSession.id, accumulatedJson).pipe(
-          switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
-            tap(quizState => {
-              const current = this.activeSession();
-              if (!current) return;
-              const updatedSession = { ...current, quiz, quizState };
-              this.chatSessionService.setActiveSession(updatedSession);
-              this.mobileTab.set('quiz');
+        if (this.isGuest()) {
+          const quiz: Quiz = JSON.parse(accumulatedJson);
+          quiz.id = 'guest-quiz-' + Date.now();
+          const quizState: QuizState = {
+            id: 'guest-quiz-state-' + Date.now(),
+            quizId: quiz.id,
+            chatSessionId: activeSession.id,
+            currentQuestionIndex: 0,
+            userAnswers: {},
+            isSubmitted: {},
+            score: 0,
+            finished: false
+          };
+          const current = this.activeSession();
+          if (current) {
+            const updatedSession = { ...current, quiz, quizState };
+            this.chatSessionService.setActiveSession(updatedSession);
+          }
+          this.mobileTab.set('quiz');
+          this.isQuizLoading.set(false);
+        } else {
+          // Now save the complete quiz
+          this.quizService.saveStreamedQuiz(topic, activeSession.id, accumulatedJson).pipe(
+            switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
+              tap(quizState => {
+                const current = this.activeSession();
+                if (!current) return;
+                const updatedSession = { ...current, quiz, quizState };
+                this.chatSessionService.setActiveSession(updatedSession);
+                this.mobileTab.set('quiz');
+                this.isQuizLoading.set(false);
+              })
+            )),
+            catchError(err => {
+              this.logger.error('Failed to save or start streamed quiz:', err);
               this.isQuizLoading.set(false);
+              if (err?.status === 429) {
+                this.showRateLimitToast();
+              } else {
+                this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
+              }
+              return of(null);
             })
-          )),
-          catchError(err => {
-            this.logger.error('Failed to save or start streamed quiz:', err);
-            this.setErrorMessage('TOAST.QUIZ_GEN_FAILED');
-            this.isQuizLoading.set(false);
-            return of(null);
-          })
-        ).subscribe();
+          ).subscribe();
+        }
       }
     });
+  }
+
+  private checkAnswerLocally(userAnswer: string, question: any): boolean {
+    if (!userAnswer || !question || !question.correctAnswer) return false;
+    if (question.type === 'TRUE_FALSE') {
+      const normalizedUser = userAnswer.trim().toLowerCase();
+      const normalizedCorrect = question.correctAnswer.trim().toLowerCase();
+      const isTrue = ['true', 'vrai', 'wahr', 'yes', 'y', '1', 't', 'v', 'w'].includes(normalizedUser);
+      const isFalse = ['false', 'faux', 'falsch', 'no', 'n', '0', 'f'].includes(normalizedUser);
+
+      const correctIsTrue = ['true', 'vrai', 'wahr'].includes(normalizedCorrect);
+      const correctIsFalse = ['false', 'faux', 'falsch'].includes(normalizedCorrect);
+
+      if (correctIsTrue && isTrue) return true;
+      if (correctIsFalse && isFalse) return true;
+      return false;
+    }
+    return userAnswer.trim().toLowerCase() === question.correctAnswer.trim().toLowerCase();
   }
 
   public onAnswerSubmit(answer: string): void {
     const activeSession = this.activeSession();
     if (!activeSession?.quizState?.id) return;
+
+    if (this.isGuest()) {
+      const quiz = activeSession.quiz;
+      const quizState = activeSession.quizState;
+      if (!quiz || !quizState) return;
+
+      const isCorrect = this.checkAnswerLocally(answer, quiz.questions[quizState.currentQuestionIndex]);
+      const newScore = isCorrect ? quizState.score + 1 : quizState.score;
+
+      const newQuizState: QuizState = {
+        ...quizState,
+        userAnswers: { ...quizState.userAnswers, [quizState.currentQuestionIndex]: answer },
+        isSubmitted: { ...quizState.isSubmitted, [quizState.currentQuestionIndex]: true },
+        score: newScore
+      };
+      const updatedSession = { ...activeSession, quizState: newQuizState };
+      this.chatSessionService.setActiveSession(updatedSession);
+      return;
+    }
 
     this.logger.log(`Submitting answer for question index: ${activeSession.quizState.currentQuestionIndex}`);
 
@@ -304,7 +409,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     this.chatSessionService.setActiveSession(updatedSession);
 
     // Persist to backend
-    if (quizState.id) {
+    if (!this.isGuest() && quizState.id) {
       this.quizService.updateCurrentQuestionIndex(quizState.id, newIndex).subscribe({
         error: (err) => this.logger.error('Failed to update question index:', err)
       });
@@ -333,6 +438,13 @@ export class ChatPageComponent implements OnInit, OnDestroy {
     const activeSession = this.activeSession();
     const quizState = activeSession?.quizState;
     if (!quizState?.id) return;
+
+    if (this.isGuest()) {
+      const newQuizState = { ...quizState, finished: true };
+      const updatedSession = { ...activeSession, quizState: newQuizState as QuizState };
+      this.chatSessionService.setActiveSession(updatedSession as ChatSession);
+      return;
+    }
 
     this.logger.log('Finishing quiz...');
 
@@ -375,6 +487,19 @@ export class ChatPageComponent implements OnInit, OnDestroy {
   }
 
   public onNewChat(): void {
+    if (this.isGuest()) {
+      this.chatSessionService.setActiveSession({
+        id: 'guest-session',
+        title: 'Guest Chat',
+        createdAt: new Date(),
+        messages: [],
+        quiz: null,
+        quizState: null,
+        active: true
+      });
+      return;
+    }
+
     this.chatSessionService.createSession('New Chat').pipe(
       tap(session => {
         this.router.navigate(['/chat', session.id]);
@@ -431,5 +556,14 @@ export class ChatPageComponent implements OnInit, OnDestroy {
 
   public toggleNav(): void {
     this.isNavOpen.update(open => !open);
+  }
+
+  private showRateLimitToast(): void {
+    this.messageService.add({
+      severity: 'warn',
+      summary: this.translate.instant('TOAST.RATE_LIMIT_TITLE'),
+      detail: this.translate.instant('TOAST.RATE_LIMIT_DETAIL'),
+      life: 8000
+    });
   }
 }

@@ -245,7 +245,9 @@
         "WELCOME_DESC": "Create a new chat to get started.",
         "INPUT_PLACEHOLDER": "Ask me anything...",
         "QUIZ_PLACEHOLDER": "Enter a topic to generate a quiz...",
-        "QUIZ_BUTTON": "Quiz"
+        "QUIZ_BUTTON": "Quiz",
+        "GUEST_BANNER_TEXT": "You are using Guest Mode. Your progress will not be saved.",
+        "GUEST_BANNER_BUTTON": "Create Free Account"
     },
     "LANGUAGES": {
         "en": "English",
@@ -366,6 +368,8 @@
         "TITLE_UPDATED": "Title updated successfully",
         "TITLE_UPDATE_FAILED": "Failed to update title. Please try again.",
         "RESPONSE_FAILED": "Failed to get response. Please try again.",
-        "QUIZ_GEN_FAILED": "Failed to generate quiz. Please try again."
+        "QUIZ_GEN_FAILED": "Failed to generate quiz. Please try again.",
+        "RATE_LIMIT_TITLE": "Too Many Requests",
+        "RATE_LIMIT_DETAIL": "You have reached the guest limit. Please create a free account to continue."
     }
 }

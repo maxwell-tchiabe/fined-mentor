@@ -1,12 +1,12 @@
 <main class="min-h-screen text-content-100 p-2 md:p-4 h-screen">
   <div class="container mx-auto flex gap-4 h-full">
     <!-- Backdrop for mobile -->
-    <div *ngIf="isNavOpen()" (click)="toggleNav()"
+    <div *ngIf="isNavOpen() && !isGuest()" (click)="toggleNav()"
       class="fixed inset-0 bg-black/50 z-30 lg:hidden transition-opacity duration-300 backdrop-blur-sm">
     </div>
 
     <!-- Navigation Panel -->
-    <div [class]="'fixed lg:relative top-0 left-0 h-full z-40 transition-all duration-300 ease-in-out ' + 
+    <div *ngIf="!isGuest()" [class]="'fixed lg:relative top-0 left-0 h-full z-40 transition-all duration-300 ease-in-out ' + 
                (isNavOpen() ? 'w-[300px] translate-x-0' : 'w-0 -translate-x-full lg:translate-x-0 lg:w-0')">
       <div [class]="'h-full overflow-hidden ' + (isNavOpen() ? 'w-[300px]' : 'w-0')">
         <app-nav-panel [sessions]="sessions()" [activeSessionId]="activeSession()?.id || null"
@@ -27,7 +27,20 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 h-full min-w-0">
+    <div class="flex-1 flex flex-col h-full min-w-0">
+      
+      <!-- Guest Banner -->
+      <div *ngIf="isGuest()" class="bg-brand-50 mb-2 border border-brand-200 text-brand-800 rounded-lg p-3 mx-2 mt-2 lg:mx-0 lg:mt-0 flex flex-col sm:flex-row items-center justify-between shadow-sm shrink-0">
+        <span class="text-sm font-medium mb-2 sm:mb-0 flex items-center">
+            <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            {{ 'CHAT.GUEST_BANNER_TEXT' | translate }}
+        </span>
+        <button [routerLink]="['/auth/register']" class="bg-brand-500 text-white px-4 py-1.5 rounded-md text-sm font-medium hover:bg-brand-600 transition-colors whitespace-nowrap shadow-sm">
+            {{ 'CHAT.GUEST_BANNER_BUTTON' | translate }}
+        </button>
+      </div>
+
+      <div class="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-4 min-h-0">
       <!-- Chat View -->
       <ng-container *ngIf="currentView() === 'chat' && activeSession() as session">
         <!-- Desktop: Chat and Quiz side by side -->
@@ -85,10 +98,37 @@
       <!-- No Active Session -->
       <div *ngIf="currentView() === 'chat' && !activeSession()"
         class="col-span-1 lg:col-span-2 h-full flex items-center justify-center text-center bg-base-200 rounded-lg">
-        <div>
-          <h2 class="text-2xl font-bold">{{ 'CHAT.WELCOME_TITLE' | translate }}</h2>
-          <p class="text-content-200 mt-2">{{ 'CHAT.WELCOME_DESC' | translate }}</p>
+        <div class="flex flex-col items-center gap-5 px-6 max-w-md">
+
+          <!-- Logo with glow -->
+          <div class="relative">
+            <div class="absolute inset-0 rounded-2xl bg-brand-500 opacity-20 blur-xl scale-110 animate-pulse"></div>
+            <img src="assets/logo.svg" alt="Fined Mentor"
+              class="relative w-20 h-20 rounded-2xl shadow-xl shadow-brand-500/30 ring-2 ring-brand-400/40" />
+          </div>
+
+          <!-- Title -->
+          <div>
+            <h2 class="text-2xl font-bold bg-gradient-to-r from-brand-400 to-brand-600 bg-clip-text text-transparent leading-tight">
+              {{ 'CHAT.WELCOME_TITLE' | translate }}
+            </h2>
+            <p class="text-content-200 mt-2 text-sm leading-relaxed">{{ 'CHAT.WELCOME_DESC' | translate }}</p>
+          </div>
+
+          <!-- Suggestions -->
+          <div class="flex flex-col gap-2 w-full mt-1">
+            <div class="flex items-center gap-3 bg-base-100 rounded-lg px-4 py-2.5 text-left text-sm text-content-200 border border-base-300 hover:border-brand-400/50 transition-colors cursor-default">
+              <span class="text-brand-400 text-base">💬</span>
+              <span>{{ 'CHAT.INPUT_PLACEHOLDER' | translate }}</span>
+            </div>
+            <div class="flex items-center gap-3 bg-base-100 rounded-lg px-4 py-2.5 text-left text-sm text-content-200 border border-base-300 hover:border-brand-400/50 transition-colors cursor-default">
+              <span class="text-brand-400 text-base">📊</span>
+              <span>{{ 'CHAT.QUIZ_PLACEHOLDER' | translate }}</span>
+            </div>
+          </div>
+
         </div>
+      </div>
       </div>
     </div>
 

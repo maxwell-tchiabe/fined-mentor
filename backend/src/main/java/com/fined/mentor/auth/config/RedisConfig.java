@@ -20,7 +20,7 @@ import java.util.function.Supplier;
 @Configuration
 public class RedisConfig {
         private RedisClient redisClient() {
-                String host = System.getenv().getOrDefault("REDIS_HOST", "kind-control-plane");
+                String host = System.getenv().getOrDefault("REDIS_HOST", "localhost");
                 String portStr = System.getenv().getOrDefault("REDIS_PORT", "6379");
                 int port = Integer.parseInt(portStr);
                 boolean isSsl = Boolean.parseBoolean(System.getenv().getOrDefault("REDIS_SSL", "false"));
@@ -48,7 +48,30 @@ public class RedisConfig {
         @Bean
         public Supplier<BucketConfiguration> bucketConfiguration() {
                 return () -> BucketConfiguration.builder()
-                                .addLimit(Bandwidth.simple(100L, Duration.ofDays(1L)))
+                                .addLimit(Bandwidth.builder()
+                                                .capacity(60L)
+                                                .refillGreedy(60L, Duration.ofMinutes(1L))
+                                                .build())
+                                .build();
+        }
+
+        @Bean
+        public Supplier<BucketConfiguration> publicBucketConfiguration() {
+                return () -> BucketConfiguration.builder()
+                                .addLimit(Bandwidth.builder()
+                                                .capacity(10L)
+                                                .refillGreedy(10L, Duration.ofMinutes(1L))
+                                                .build())
+                                .build();
+        }
+
+        @Bean
+        public Supplier<BucketConfiguration> streamingBucketConfiguration() {
+                return () -> BucketConfiguration.builder()
+                                .addLimit(Bandwidth.builder()
+                                                .capacity(30L)
+                                                .refillGreedy(30L, Duration.ofDays(1L))
+                                                .build())
                                 .build();
         }
 }

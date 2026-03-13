@@ -254,6 +254,43 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public Flux<String> streamGuestChatResponse(List<ChatMessage> historyMessages, String userMessage) {
+        try {
+            log.debug("Streaming guest chat response");
+
+            List<Message> history = new java.util.ArrayList<>();
+            if (historyMessages != null) {
+                for (ChatMessage msg : historyMessages) {
+                    if (msg.getRole() == ChatMessage.Role.USER) {
+                        history.add(new UserMessage(msg.getText()));
+                    } else if (msg.getRole() == ChatMessage.Role.MODEL) {
+                        history.add(new org.springframework.ai.chat.messages.AssistantMessage(msg.getText()));
+                    }
+                }
+            }
+
+            // Add the current user message
+            history.add(new UserMessage(userMessage));
+
+            SystemPromptTemplate systemPromptTemplate = new SystemPromptTemplate(SYSTEM_PROMPT);
+            Message systemMessage = systemPromptTemplate.createMessage();
+            history.add(0, systemMessage);
+
+            Prompt prompt = new Prompt(history);
+
+            return chatClient.prompt(prompt)
+                    .tools(tavilySearchTool)
+                    .stream()
+                    .content()
+                    .doOnError(e -> log.error("Error during guest chat streaming", e));
+
+        } catch (Exception e) {
+            log.error("Failed to start guest chat streaming", e);
+            throw new ChatException("Failed to start guest chat streaming. Please try again.", e);
+        }
+    }
+
+    @Override
     public List<ChatMessage> getChatHistory(String chatSessionId) {
         return chatMessageService.getMessagesBySessionId(chatSessionId);
     }

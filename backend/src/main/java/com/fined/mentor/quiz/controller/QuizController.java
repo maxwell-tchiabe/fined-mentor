@@ -1,11 +1,7 @@
 package com.fined.mentor.quiz.controller;
 
 import com.fined.mentor.core.dto.ApiResponse;
-import com.fined.mentor.quiz.dto.QuizAnswerRequest;
-import com.fined.mentor.quiz.dto.QuizRequest;
-import com.fined.mentor.quiz.dto.QuizResponse;
-import com.fined.mentor.quiz.dto.QuizStateResponse;
-import com.fined.mentor.quiz.dto.SaveQuizRequest;
+import com.fined.mentor.quiz.dto.*;
 import com.fined.mentor.quiz.entity.Quiz;
 import com.fined.mentor.quiz.entity.QuizState;
 import com.fined.mentor.quiz.exception.QuizValidationException;
@@ -16,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -50,7 +48,7 @@ public class QuizController {
         }
     }
 
-    @PostMapping(value = "/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/stream", produces = TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamQuizGeneration(@Valid @RequestBody QuizRequest request) {
         try {
             log.info("Streaming quiz for topic: {}", request.getTopic());

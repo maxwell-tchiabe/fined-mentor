@@ -12,6 +12,8 @@ public interface ChatService {
 
     Flux<String> streamChatResponse(String chatSessionId, String userMessage);
 
+    Flux<String> streamGuestChatResponse(List<ChatMessage> history, String userMessage);
+
     List<ChatMessage> getChatHistory(String chatSessionId);
 
     ChatSession createChatSession(String title, String userId);

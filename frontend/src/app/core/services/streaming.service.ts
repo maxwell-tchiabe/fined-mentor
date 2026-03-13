@@ -66,7 +66,9 @@ export class StreamingService {
                 .then(async response => {
                     if (!response.ok) {
                         const errorMsg = await response.text().catch(() => response.statusText);
-                        observer.error(new Error(`HTTP ${response.status}: ${errorMsg}`));
+                        const err = new Error(`HTTP ${response.status}: ${errorMsg}`) as any;
+                        err.status = response.status;
+                        observer.error(err);
                         return;
                     }
 

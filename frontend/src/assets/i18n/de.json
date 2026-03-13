@@ -245,7 +245,9 @@
         "WELCOME_DESC": "Erstellen Sie einen neuen Chat, um zu beginnen.",
         "INPUT_PLACEHOLDER": "Frag mich alles...",
         "QUIZ_PLACEHOLDER": "Thema eingeben, um ein Quiz zu generieren...",
-        "QUIZ_BUTTON": "Quiz"
+        "QUIZ_BUTTON": "Quiz",
+        "GUEST_BANNER_TEXT": "Sie nutzen den Gastmodus. Ihr Fortschritt wird nicht gespeichert.",
+        "GUEST_BANNER_BUTTON": "Kostenloses Konto erstellen"
     },
     "LANGUAGES": {
         "en": "Englisch",
@@ -366,6 +368,8 @@
         "TITLE_UPDATED": "Titel erfolgreich aktualisiert",
         "TITLE_UPDATE_FAILED": "Titelaktualisierung fehlgeschlagen. Bitte versuchen Sie es erneut.",
         "RESPONSE_FAILED": "Antwort konnte nicht abgerufen werden. Bitte versuchen Sie es erneut.",
-        "QUIZ_GEN_FAILED": "Quiz konnte nicht generiert werden. Bitte versuchen Sie es erneut."
+        "QUIZ_GEN_FAILED": "Quiz konnte nicht generiert werden. Bitte versuchen Sie es erneut.",
+        "RATE_LIMIT_TITLE": "Zu viele Anfragen",
+        "RATE_LIMIT_DETAIL": "Sie haben das Gästelimit erreicht. Erstellen Sie ein kostenloses Konto, um fortzufahren."
     }
 }

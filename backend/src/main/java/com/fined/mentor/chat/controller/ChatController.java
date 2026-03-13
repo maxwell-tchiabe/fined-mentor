@@ -1,6 +1,6 @@
 package com.fined.mentor.chat.controller;
 
-import com.fined.mentor.core.dto.ApiResponse;
+import com.fined.mentor.auth.entity.User;
 import com.fined.mentor.chat.dto.ChatMessageRequest;
 import com.fined.mentor.chat.dto.ChatMessageResponse;
 import com.fined.mentor.chat.dto.UpdateSessionTitleRequest;
@@ -8,7 +8,7 @@ import com.fined.mentor.chat.entity.ChatMessage;
 import com.fined.mentor.chat.entity.ChatSession;
 import com.fined.mentor.chat.service.ChatService;
 import com.fined.mentor.chat.service.ChatSessionService;
-import com.fined.mentor.auth.entity.User;
+import com.fined.mentor.core.dto.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -85,7 +86,7 @@ public class ChatController {
         }
     }
 
-    @PostMapping(value = "/stream", produces = org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE)
+    @PostMapping(value = "/stream", produces = TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamMessage(@Valid @RequestBody ChatMessageRequest request) {
         try {
             log.debug("Streaming chat message for session: {}", request.getChatSessionId());
