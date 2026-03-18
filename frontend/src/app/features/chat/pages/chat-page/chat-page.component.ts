@@ -274,8 +274,10 @@ export class ChatPageComponent implements OnInit, OnDestroy {
         clearInterval(timerId);
         this.quizStreamingProgress.update(p => ({ ...p, status: 'SAVING' }));
 
+        const cleanJson = accumulatedJson.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '').trim();
+
         if (this.isGuest()) {
-          const quiz: Quiz = JSON.parse(accumulatedJson);
+          const quiz: Quiz = JSON.parse(cleanJson);
           quiz.id = 'guest-quiz-' + Date.now();
           const quizState: QuizState = {
             id: 'guest-quiz-state-' + Date.now(),
@@ -296,7 +298,7 @@ export class ChatPageComponent implements OnInit, OnDestroy {
           this.isQuizLoading.set(false);
         } else {
           // Now save the complete quiz
-          this.quizService.saveStreamedQuiz(topic, activeSession.id, accumulatedJson).pipe(
+          this.quizService.saveStreamedQuiz(topic, activeSession.id, cleanJson).pipe(
             switchMap(quiz => this.quizService.startQuiz(quiz.id, activeSession.id).pipe(
               tap(quizState => {
                 const current = this.activeSession();
