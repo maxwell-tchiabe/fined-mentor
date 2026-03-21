@@ -43,7 +43,7 @@ pipeline {
             }
         }
         
-        stage('Build Docker Images') {
+        stage('Build all Docker Images') {
             parallel {
                 stage('Build backend Image') {
                     when {
