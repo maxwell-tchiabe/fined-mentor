@@ -134,7 +134,7 @@ pipeline {
                 script {
                     update_k8s_manifests(
                         imageTag: env.DOCKER_IMAGE_TAG,
-                        manifestsPath: 'infrastructure',
+                        manifestsPath: 'infrastructure/ingress',
                         gitCredentials: 'github-credentials',
                         gitUserName: 'maxwell-tchiabe',
                         gitUserEmail: 'maxwelltchiabe@gmail.com',

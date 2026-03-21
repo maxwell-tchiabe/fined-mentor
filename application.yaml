@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: https://github.com/maxwell-tchiabe/fined-mentor.git
     targetRevision: HEAD
-    path: infrastructure
+    path: infrastructure/ingress
   destination: 
     server: https://kubernetes.default.svc
     namespace: fined-mentor

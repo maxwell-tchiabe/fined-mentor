@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fined-mentor-ingress
+  namespace: fined-mentor
+  annotations:
+    alb.ingress.kubernetes.io/group.name: fined-mentor-app-lb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:862126239772:certificate/1376eec8-d483-4871-b033-e9dd15c87900
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    kubernetes.io/ingress.class: alb
+spec:
+  rules:
+  - host: fined-mentor-app.maxwelltbtech.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fined-mentor-frontend
+            port:
+              number: 80
+  - host: api.fined-mentor-app.maxwelltbtech.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: fined-mentor-backend
+            port:
+              number: 8080

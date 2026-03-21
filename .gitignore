@@ -414,3 +414,5 @@ terraform/.terraform/*
 terraform/.terraform.lock.hcl
 infrastructure/cert-manager-default-values.yaml
 infrastructure/values.yaml
+infrastructure/ingress/configmap.yaml
+infrastructure/ingress/secret.yaml

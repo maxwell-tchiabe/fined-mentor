@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fined-mentor-backend
+  labels:
+    app: fined-mentor-backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fined-mentor-backend
+  template:
+    metadata:
+      labels:
+        app: fined-mentor-backend
+    spec:
+      containers:
+      - name: fined-mentor-backend
+        image: loicmaxwell/fined-mentor-backend:14
+        ports:
+        - containerPort: 8080
+        env:
+          - name: MONGO_URI
+            valueFrom:
+              configMapKeyRef:
+                name: fined-mentor-config
+                key: MONGO_URI
+          - name: JWT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: JWT_SECRET
+          - name: EMAIL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: EMAIL_USERNAME
+          - name: EMAIL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: EMAIL_PASSWORD
+          - name: GOOGLE_GENAI_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: GOOGLE_GENAI_API_KEY
+          - name: TAVILY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: fined-mentor-backend-secret
+                key: TAVILY_API_KEY
+          - name: REDIS_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: fined-mentor-config
+                key: REDIS_HOST
+          - name: REDIS_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: fined-mentor-config
+                key: REDIS_PORT
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fined-mentor-backend
+  labels:
+    app: fined-mentor-backend
+    job: fined-mentor-backend-job
+spec:
+  selector:
+    app: fined-mentor-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      name: http
+
+  
