@@ -29,7 +29,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 
 /**
- * Client to interact with the Tavily API using Spring's RestClient.
+ * the Client to interact with the Tavily API using Spring's RestClient.
  */
 @Component
 @Slf4j
