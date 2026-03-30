@@ -43,6 +43,38 @@ pipeline {
             }
         }
         
+        stage('Run Unit Tests') {
+            steps {
+                script {
+                    run_tests()
+                }
+            }
+        }
+        
+        stage('SonarQube Analysis') {
+            when {
+                environment name: 'BACKEND_CHANGED', value: 'true'
+            }
+            steps {
+                script {
+                    sonar_scan(
+                        projectKey:  'Fined-Mentor',
+                        projectName: 'Fined Mentor',
+                        sonarServer: 'sonarqube',
+                        sonarToken:  'sonarqube-token'
+                    )
+                }
+            }
+        }
+        
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+        
         stage('Build Docker Images') {
             parallel {
                 stage('Build backend Image') {
@@ -75,14 +107,6 @@ pipeline {
                             )
                         }
                     }
-                }
-            }
-        }
-        
-        stage('Run Unit Tests') {
-            steps {
-                script {
-                    run_tests()
                 }
             }
         }
