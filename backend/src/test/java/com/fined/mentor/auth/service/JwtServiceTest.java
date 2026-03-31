@@ -32,7 +32,7 @@ class JwtServiceTest {
     private Authentication authentication;
 
     private User sampleUser;
-    private final String jwtSecret = "1234567890123456789012345678901234567890"; // Must be at least 256 bits for HS256
+    private final String jwtSecret = "1234567890123456789012345678901234567890"; 
 
     @BeforeEach
     void setUp() {
