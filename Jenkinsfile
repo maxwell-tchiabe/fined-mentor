@@ -15,7 +15,7 @@ pipeline {
     environment {
         DOCKER_BACKEND_IMAGE_NAME = 'loicmaxwell/fined-mentor-backend'
         DOCKER_FRONTEND_IMAGE_NAME = 'loicmaxwell/fined-mentor-frontend'
-        DOCKER_IMAGE_TAG = "${BUILD_NUMBER}"
+        SEMVER = "1.0.0"
         GITHUB_CREDENTIALS = credentials('github-credentials')
         GIT_BRANCH = "main"
     }
@@ -33,6 +33,8 @@ pipeline {
             steps {
                 script {
                     clone("https://github.com/maxwell-tchiabe/fined-mentor.git","main")
+                    env.GIT_SHA = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    env.DOCKER_IMAGE_TAG = "${env.SEMVER}-${env.GIT_SHA}"
                 }
             }
         }
