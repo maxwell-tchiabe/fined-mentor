@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -55,7 +54,7 @@ public class AuthController {
         User user = (User) authentication.getPrincipal();
         List<String> roles = user.getAuthorities().stream()
                 .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .toList();
 
         JwtResponse jwtResponse = new JwtResponse(null, user.getId(), user.getUsername(), user.getEmail(), roles);
 
@@ -118,7 +117,7 @@ public class AuthController {
         User user = (User) authentication.getPrincipal();
         List<String> roles = user.getAuthorities().stream()
                 .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .toList();
 
         JwtResponse jwtResponse = new JwtResponse(null, user.getId(), user.getUsername(), user.getEmail(), roles);
 

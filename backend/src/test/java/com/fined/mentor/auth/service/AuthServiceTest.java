@@ -86,7 +86,7 @@ class AuthServiceTest {
         assertDoesNotThrow(() -> authService.registerUser(registerRequest));
 
         verify(userRepository).save(any(User.class));
-        verify(emailService).sendActivationEmail(eq("test@example.com"), eq("testuser"), eq("123456"));
+        verify(emailService).sendActivationEmail("test@example.com", "testuser", "123456");
     }
 
     @Test
@@ -135,7 +135,7 @@ class AuthServiceTest {
 
         assertDoesNotThrow(() -> authService.resendActivationToken("test@example.com"));
 
-        verify(emailService).sendActivationEmail(eq("test@example.com"), eq("testuser"), eq("123456"));
+        verify(emailService).sendActivationEmail("test@example.com", "testuser", "123456");
     }
 
     @Test
@@ -161,7 +161,7 @@ class AuthServiceTest {
 
         assertDoesNotThrow(() -> authService.initiatePasswordReset("test@example.com"));
 
-        verify(emailService).sendPasswordResetEmail(eq("test@example.com"), eq("testuser"), eq("123456"));
+        verify(emailService).sendPasswordResetEmail("test@example.com", "testuser", "123456");
     }
 
     @Test

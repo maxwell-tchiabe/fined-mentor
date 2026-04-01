@@ -27,15 +27,19 @@ public class EmailService {
     @Async
     public void sendActivationEmail(String toEmail, String username, String activationToken) {
         String subject = "Activate Your FinEd Mentor Account";
-        String content = String.format(
-                "Hello %s,\n\n" +
-                        "Welcome to FinEd Mentor! Please use the following OTP to activate your account:\n\n" +
-                        "OTP: %s\n\n" +
-                        "This OTP will expire in 15 minutes.\n\n" +
-                        "If you didn't create an account, please ignore this email.\n\n" +
-                        "Best regards,\n" +
-                        "FinEd Mentor Team",
-                username, activationToken);
+        String content = """
+                Hello %s,
+
+                Welcome to FinEd Mentor! Please use the following OTP to activate your account:
+
+                OTP: %s
+
+                This OTP will expire in 15 minutes.
+
+                If you didn't create an account, please ignore this email.
+
+                Best regards,
+                FinEd Mentor Team""".formatted(username, activationToken);
 
         sendEmail(toEmail, subject, content);
     }
@@ -43,15 +47,19 @@ public class EmailService {
     @Async
     public void sendPasswordResetEmail(String toEmail, String username, String resetToken) {
         String subject = "Reset Your FinEd Mentor Password";
-        String content = String.format(
-                "Hello %s,\n\n" +
-                        "We received a request to reset your password. Please use the following OTP to reset it:\n\n" +
-                        "OTP: %s\n\n" +
-                        "This OTP will expire in 15 minutes.\n\n" +
-                        "If you didn't request a password reset, please ignore this email.\n\n" +
-                        "Best regards,\n" +
-                        "FinEd Mentor Team",
-                username, resetToken);
+        String content = """
+                Hello %s,
+
+                We received a request to reset your password. Please use the following OTP to reset it:
+
+                OTP: %s
+
+                This OTP will expire in 15 minutes.
+
+                If you didn't request a password reset, please ignore this email.
+
+                Best regards,
+                FinEd Mentor Team""".formatted(username, resetToken);
 
         sendEmail(toEmail, subject, content);
     }

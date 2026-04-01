@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -27,20 +26,21 @@ import java.util.function.Supplier;
 @Order(1)
 public class RateLimitFilter extends OncePerRequestFilter {
 
-    @Autowired
-    @Qualifier("bucketConfiguration")
-    Supplier<BucketConfiguration> bucketConfiguration;
+    private final Supplier<BucketConfiguration> bucketConfiguration;
+    private final Supplier<BucketConfiguration> publicBucketConfiguration;
+    private final Supplier<BucketConfiguration> streamingBucketConfiguration;
+    private final ProxyManager<String> proxyManager;
 
-    @Autowired
-    @Qualifier("publicBucketConfiguration")
-    Supplier<BucketConfiguration> publicBucketConfiguration;
-
-    @Autowired
-    @Qualifier("streamingBucketConfiguration")
-    Supplier<BucketConfiguration> streamingBucketConfiguration;
-
-    @Autowired
-    ProxyManager<String> proxyManager;
+    public RateLimitFilter(
+            @Qualifier("bucketConfiguration") Supplier<BucketConfiguration> bucketConfiguration,
+            @Qualifier("publicBucketConfiguration") Supplier<BucketConfiguration> publicBucketConfiguration,
+            @Qualifier("streamingBucketConfiguration") Supplier<BucketConfiguration> streamingBucketConfiguration,
+            ProxyManager<String> proxyManager) {
+        this.bucketConfiguration = bucketConfiguration;
+        this.publicBucketConfiguration = publicBucketConfiguration;
+        this.streamingBucketConfiguration = streamingBucketConfiguration;
+        this.proxyManager = proxyManager;
+    }
 
     private static final String PUBLIC_PREFIX = "/api/public/";
     private static final ObjectMapper MAPPER = new ObjectMapper();
@@ -83,7 +83,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         }
 
         try {
-            Bucket bucket = proxyManager.builder().build(key, config.get());
+            Bucket bucket = proxyManager.builder().build(key, config);
             ConsumptionProbe probe = bucket.tryConsumeAndReturnRemaining(1);
 
             if (probe.isConsumed()) {
