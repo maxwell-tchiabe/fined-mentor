@@ -205,6 +205,9 @@
 						<exclude>com/fined/mentor/MentorApplication.class</exclude>
 						<exclude>com/fined/mentor/core/exception/**</exclude>
 						<exclude>com/fined/mentor/auth/config/**</exclude>
+						<exclude>**/dto/**</exclude>
+						<exclude>**/entity/**</exclude>
+						<exclude>**/exception/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -233,7 +236,7 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.1</minimum>
+											<minimum>0.8</minimum>
 										</limit>
 									</limits>
 								</rule>

@@ -18,12 +18,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -133,5 +134,176 @@ class QuizControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.finished").value(true));
+    }
+
+    @Test
+    void streamQuizGeneration_Error() throws Exception {
+        QuizRequest request = new QuizRequest();
+        request.setTopic("Investment");
+        request.setChatSessionId("session1");
+
+        when(quizService.streamQuizGeneration(anyString())).thenThrow(new RuntimeException("Startup error"));
+
+        mockMvc.perform(post("/api/quiz/stream")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void generateQuiz_ValidationError() throws Exception {
+        QuizRequest request = new QuizRequest();
+        request.setTopic("Forbidden");
+        request.setChatSessionId("session1");
+
+        when(quizService.generateQuiz(anyString(), anyString()))
+                .thenThrow(new com.fined.mentor.quiz.exception.QuizValidationException("Invalid topic"));
+
+        mockMvc.perform(post("/api/quiz/generate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Invalid topic"));
+    }
+
+    @Test
+    void generateQuiz_InternalError() throws Exception {
+        QuizRequest request = new QuizRequest();
+        request.setTopic("Investment");
+        request.setChatSessionId("session1");
+
+        when(quizService.generateQuiz(anyString(), anyString()))
+                .thenThrow(new RuntimeException("Unexpected error"));
+
+        mockMvc.perform(post("/api/quiz/generate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("Failed to generate quiz. Please try again later."));
+    }
+
+    @Test
+    void saveStreamedQuiz_Error() throws Exception {
+        com.fined.mentor.quiz.dto.SaveQuizRequest request = new com.fined.mentor.quiz.dto.SaveQuizRequest();
+        request.setTopic("Investment");
+        request.setChatSessionId("session1");
+        request.setQuizJson("{}");
+
+        when(quizService.saveStreamedQuiz(anyString(), anyString(), anyString()))
+                .thenThrow(new RuntimeException("Save failed"));
+
+        mockMvc.perform(post("/api/quiz/save")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.error").value("Failed to save quiz. Please try again later."));
+    }
+
+    @Test
+    void getQuizState_Error() throws Exception {
+        when(quizService.getQuizState("state1")).thenThrow(new RuntimeException("Not found"));
+
+        mockMvc.perform(get("/api/quiz/state/state1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Not found"));
+    }
+
+    @Test
+    void updateCurrentQuestionIndex_Success() throws Exception {
+        java.util.Map<String, Integer> request = java.util.Map.of("index", 1);
+        sampleQuizState.setCurrentQuestionIndex(1);
+        when(quizService.updateCurrentQuestionIndex("state1", 1)).thenReturn(sampleQuizState);
+
+        mockMvc.perform(put("/api/quiz/state/state1/index")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.currentQuestionIndex").value(1));
+    }
+
+    @Test
+    void updateCurrentQuestionIndex_Error() throws Exception {
+        java.util.Map<String, Integer> request = java.util.Map.of("index", 1);
+        when(quizService.updateCurrentQuestionIndex(anyString(), anyInt())).thenThrow(new RuntimeException("Update failed"));
+
+        mockMvc.perform(put("/api/quiz/state/state1/index")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Update failed"));
+    }
+
+    @Test
+    void saveStreamedQuiz_Success() throws Exception {
+        com.fined.mentor.quiz.dto.SaveQuizRequest request = new com.fined.mentor.quiz.dto.SaveQuizRequest();
+        request.setTopic("Investment");
+        request.setChatSessionId("session1");
+        request.setQuizJson("{}");
+
+        when(quizService.saveStreamedQuiz(anyString(), anyString(), anyString())).thenReturn(sampleQuiz);
+
+        mockMvc.perform(post("/api/quiz/save")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+    }
+
+    @Test
+    void getQuizState_Success() throws Exception {
+        when(quizService.getQuizState("state1")).thenReturn(sampleQuizState);
+
+        mockMvc.perform(get("/api/quiz/state/state1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.id").value("state1"));
+    }
+
+    @Test
+    void startQuiz_Error() throws Exception {
+        when(quizService.startQuiz(anyString(), anyString())).thenThrow(new RuntimeException("Start failed"));
+
+        mockMvc.perform(post("/api/quiz/quiz1/start")
+                        .param("chatSessionId", "session1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void submitAnswer_Error() throws Exception {
+        QuizAnswerRequest request = new QuizAnswerRequest();
+        request.setQuizStateId("state1");
+        request.setQuestionIndex(0);
+        request.setAnswer("Answer");
+
+        when(quizService.submitAnswer(anyString(), anyInt(), anyString())).thenThrow(new RuntimeException("Submit failed"));
+
+        mockMvc.perform(post("/api/quiz/answer")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getQuizBySession_Error() throws Exception {
+        when(quizService.getQuizBySessionId("session1")).thenThrow(new RuntimeException("Not found"));
+
+        mockMvc.perform(get("/api/quiz/sessions/session1"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void getQuizStateBySession_Error() throws Exception {
+        when(quizService.getQuizStateBySessionId("session1")).thenThrow(new RuntimeException("Not found"));
+
+        mockMvc.perform(get("/api/quiz/sessions/session1/state"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void finishQuiz_Error() throws Exception {
+        when(quizService.finishQuiz("state1")).thenThrow(new RuntimeException("Finish failed"));
+
+        mockMvc.perform(post("/api/quiz/state1/finish"))
+                .andExpect(status().isBadRequest());
     }
 }

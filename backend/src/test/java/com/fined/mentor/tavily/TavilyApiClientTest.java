@@ -1,64 +1,130 @@
 package com.fined.mentor.tavily;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestClient;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class TavilyApiClientTest {
 
+    @Mock
+    private RestClient.Builder restClientBuilder;
+
+    @Mock
+    private RestClient restClient;
+
+    @Mock
+    private RestClient.RequestBodyUriSpec requestBodyUriSpec;
+
+    @Mock
+    private RestClient.RequestBodySpec requestBodySpec;
+
+    @Mock
+    private RestClient.ResponseSpec responseSpec;
+
+    private TavilyApiClient tavilyApiClient;
+
+    @BeforeEach
+    void setUp() {
+        when(restClientBuilder.baseUrl(anyString())).thenReturn(restClientBuilder);
+        when(restClientBuilder.defaultHeader(anyString(), anyString())).thenReturn(restClientBuilder);
+        when(restClientBuilder.build()).thenReturn(restClient);
+
+        tavilyApiClient = new TavilyApiClient(restClientBuilder, "test-api-key");
+    }
+
     @Test
-    void testTavilyRequestDto() {
+    @SuppressWarnings("unchecked")
+    void search_Success() {
         TavilyApiClient.TavilyRequest request = TavilyApiClient.TavilyRequest.builder()
-                .query("query")
-                .apiKey("key")
+                .query("test query")
+                .build();
+
+        TavilyApiClient.TavilyResponse mockResponse = new TavilyApiClient.TavilyResponse();
+        mockResponse.setQuery("test query");
+
+        when(restClient.post()).thenReturn(requestBodyUriSpec);
+        when(requestBodyUriSpec.uri(any(Function.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.body(any(TavilyApiClient.TavilyRequest.class))).thenReturn(requestBodySpec);
+        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
+        when(responseSpec.body(TavilyApiClient.TavilyResponse.class)).thenReturn(mockResponse);
+
+        TavilyApiClient.TavilyResponse response = tavilyApiClient.search(request);
+
+        assertNotNull(response);
+        assertEquals("test query", response.getQuery());
+    }
+
+    @Test
+    void search_EmptyQuery_ThrowsException() {
+        TavilyApiClient.TavilyRequest request = TavilyApiClient.TavilyRequest.builder()
+                .query("")
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> tavilyApiClient.search(request));
+    }
+
+    @Test
+    void testImageDeserializer() throws Exception {
+        String json = "{\"query\": \"test\", \"images\": [{\"url\": \"http://image1.com\", \"description\": \"desc1\"}, \"http://image2.com\"]}";
+        ObjectMapper mapper = new ObjectMapper();
+        
+        TavilyApiClient.TavilyResponse response = mapper.readValue(json, TavilyApiClient.TavilyResponse.class);
+        List<TavilyApiClient.TavilyResponse.Image> images = response.getImages();
+
+        assertEquals(2, images.size());
+        assertEquals("http://image1.com", images.get(0).getUrl());
+        assertEquals("desc1", images.get(0).getDescription());
+        assertEquals("http://image2.com", images.get(1).getUrl());
+        assertNull(images.get(1).getDescription());
+    }
+
+    @Test
+    void testTavilyRequestLombok() {
+        TavilyApiClient.TavilyRequest r1 = TavilyApiClient.TavilyRequest.builder()
+                .query("q")
+                .apiKey("k")
                 .searchDepth("basic")
                 .topic("general")
-                .days(3)
-                .timeRange("day")
+                .days(1)
                 .maxResults(5)
                 .includeImages(true)
                 .includeImageDescriptions(true)
                 .includeAnswer(true)
                 .includeRawContent(true)
-                .includeDomains(List.of("dom1"))
-                .excludeDomains(List.of("dom2"))
+                .includeDomains(Arrays.asList("d1"))
+                .excludeDomains(Arrays.asList("d2"))
+                .build();
+        
+        TavilyApiClient.TavilyRequest r2 = TavilyApiClient.TavilyRequest.builder()
+                .query("q")
+                .apiKey("k")
+                .searchDepth("basic")
+                .topic("general")
+                .days(1)
+                .maxResults(5)
+                .includeImages(true)
+                .includeImageDescriptions(true)
+                .includeAnswer(true)
+                .includeRawContent(true)
+                .includeDomains(Arrays.asList("d1"))
+                .excludeDomains(Arrays.asList("d2"))
                 .build();
 
-        assertEquals("query", request.getQuery());
-        assertEquals("key", request.getApiKey());
-        assertEquals("basic", request.getSearchDepth());
-        assertEquals("general", request.getTopic());
-        assertEquals(3, request.getDays());
-        assertEquals("day", request.getTimeRange());
-        assertEquals(5, request.getMaxResults());
-        assertTrue(request.isIncludeImages());
-        assertTrue(request.isIncludeImageDescriptions());
-        assertTrue(request.isIncludeAnswer());
-        assertTrue(request.isIncludeRawContent());
-        assertEquals(1, request.getIncludeDomains().size());
-        assertEquals(1, request.getExcludeDomains().size());
-    }
-
-    @Test
-    void testTavilyResponseDto() {
-        TavilyApiClient.TavilyResponse response = new TavilyApiClient.TavilyResponse();
-        response.setQuery("query");
-        response.setFollowUpQuestions(List.of("q1"));
-        response.setAnswer("answer");
-        response.setResponseTime(0.5f);
-
-        TavilyApiClient.TavilyResponse.Image image = new TavilyApiClient.TavilyResponse.Image("url", "desc");
-        response.setImages(List.of(image));
-
-        TavilyApiClient.TavilyResponse.Result result = new TavilyApiClient.TavilyResponse.Result("title", "url", "content", "raw", 0.9f, "date");
-        response.setResults(List.of(result));
-
-        assertEquals("query", response.getQuery());
-        assertEquals("answer", response.getAnswer());
-        assertEquals(0.5f, response.getResponseTime());
-        assertEquals(1, response.getImages().size());
-        assertEquals(1, response.getResults().size());
+        assertEquals(r1, r2);
+        assertEquals(r1.hashCode(), r2.hashCode());
+        assertNotNull(r1.toString());
     }
 }

@@ -301,67 +301,74 @@ public class QuizServiceImpl implements QuizService {
     }
 
     private void validateQuestion(QuizQuestion question, int index) {
-        if (question.getQuestion() == null || question.getQuestion().trim().isEmpty()) {
-            throw new QuizValidationException("Question text is required for question " + (index + 1));
-        }
-
-        if (question.getCorrectAnswer() == null || question.getCorrectAnswer().trim().isEmpty()) {
-            throw new QuizValidationException("Correct answer is required for question " + (index + 1));
-        }
-
-        // Normalize correctAnswer for comparison (remove all whitespace and lowercase)
-        String normalizedCorrect = normalizeForComparison(question.getCorrectAnswer());
-
-        if (question.getType() == QuizQuestion.QuestionType.MULTIPLE_CHOICE) {
-            if (question.getOptions() == null || question.getOptions().length < 2) {
-                throw new QuizValidationException(
-                        "Multiple choice questions must have at least 2 options for question " + (index + 1));
+        try {
+            if (question.getQuestion() == null || question.getQuestion().trim().isEmpty()) {
+                throw new QuizValidationException("Question text is required for question " + (index + 1));
             }
 
-            // Verify correct answer is among options (whitespace-insensitive)
-            boolean correctAnswerFound = false;
-            for (int i = 0; i < question.getOptions().length; i++) {
-                String option = question.getOptions()[i];
-                if (option != null && normalizeForComparison(option).equals(normalizedCorrect)) {
-                    // Update correct answer to match the EXACT string in options for later
-                    // consistency
-                    question.setCorrectAnswer(option);
-                    correctAnswerFound = true;
-                    break;
+            if (question.getCorrectAnswer() == null || question.getCorrectAnswer().trim().isEmpty()) {
+                throw new QuizValidationException("Correct answer is required for question " + (index + 1));
+            }
+
+            // Normalize correctAnswer for comparison (remove all whitespace and lowercase)
+            String normalizedCorrect = normalizeForComparison(question.getCorrectAnswer());
+
+            if (question.getType() == QuizQuestion.QuestionType.MULTIPLE_CHOICE) {
+                if (question.getOptions() == null || question.getOptions().length < 2) {
+                    throw new QuizValidationException(
+                            "Multiple choice questions must have at least 2 options for question " + (index + 1));
+                }
+
+                // Verify correct answer is among options (whitespace-insensitive)
+                boolean correctAnswerFound = false;
+                for (int i = 0; i < question.getOptions().length; i++) {
+                    String option = question.getOptions()[i];
+                    if (option != null && normalizeForComparison(option).equals(normalizedCorrect)) {
+                        // Update correct answer to match the EXACT string in options for later
+                        // consistency
+                        question.setCorrectAnswer(option);
+                        correctAnswerFound = true;
+                        break;
+                    }
+                }
+
+                if (!correctAnswerFound) {
+                    log.warn("Validation failed for question {}. Normalized Correct: '{}', Options: {}",
+                            index + 1, normalizedCorrect, java.util.Arrays.toString(question.getOptions()));
+                    throw new QuizValidationException(
+                            "Correct answer must be one of the provided options for question " + (index + 1));
+                }
+            } else if (question.getType() == QuizQuestion.QuestionType.TRUE_FALSE) {
+                String lowercaseCorrect = question.getCorrectAnswer().trim().toLowerCase();
+                if (!"true".equals(lowercaseCorrect) && !"false".equals(lowercaseCorrect) &&
+                        !"vrai".equals(lowercaseCorrect) && !"faux".equals(lowercaseCorrect) &&
+                        !"wahr".equals(lowercaseCorrect) && !"falsch".equals(lowercaseCorrect)) {
+                    throw new QuizValidationException(
+                            "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question "
+                                    + (index + 1));
+                }
+
+                // Verify correct answer matches one of the options (whitespace-insensitive)
+                boolean correctAnswerFound = false;
+                for (int i = 0; i < question.getOptions().length; i++) {
+                    String option = question.getOptions()[i];
+                    if (option != null && normalizeForComparison(option).equals(normalizedCorrect)) {
+                        question.setCorrectAnswer(option);
+                        correctAnswerFound = true;
+                        break;
+                    }
+                }
+
+                if (!correctAnswerFound) {
+                    throw new QuizValidationException(
+                            "Correct answer must match one of the TRUE_FALSE options for question " + (index + 1));
                 }
             }
-
-            if (!correctAnswerFound) {
-                log.warn("Validation failed for question {}. Normalized Correct: '{}', Options: {}",
-                        index + 1, normalizedCorrect, java.util.Arrays.toString(question.getOptions()));
-                throw new QuizValidationException(
-                        "Correct answer must be one of the provided options for question " + (index + 1));
-            }
-        } else if (question.getType() == QuizQuestion.QuestionType.TRUE_FALSE) {
-            String lowercaseCorrect = question.getCorrectAnswer().trim().toLowerCase();
-            if (!"true".equals(lowercaseCorrect) && !"false".equals(lowercaseCorrect) &&
-                    !"vrai".equals(lowercaseCorrect) && !"faux".equals(lowercaseCorrect) &&
-                    !"wahr".equals(lowercaseCorrect) && !"falsch".equals(lowercaseCorrect)) {
-                throw new QuizValidationException(
-                        "Correct answer for TRUE_FALSE question must be either 'true' or 'false' for question "
-                                + (index + 1));
-            }
-
-            // Verify correct answer matches one of the options (whitespace-insensitive)
-            boolean correctAnswerFound = false;
-            for (int i = 0; i < question.getOptions().length; i++) {
-                String option = question.getOptions()[i];
-                if (option != null && normalizeForComparison(option).equals(normalizedCorrect)) {
-                    question.setCorrectAnswer(option);
-                    correctAnswerFound = true;
-                    break;
-                }
-            }
-
-            if (!correctAnswerFound) {
-                throw new QuizValidationException(
-                        "Correct answer must match one of the TRUE_FALSE options for question " + (index + 1));
-            }
+        } catch (QuizValidationException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Unexpected error validating question {}: {}", index + 1, e.getMessage());
+            throw new QuizException("Failed to validate quiz question. Please try again.");
         }
     }
 
@@ -425,8 +432,15 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public QuizState getQuizState(String quizStateId) {
-        return quizStateRepository.findById(quizStateId)
-                .orElseThrow(() -> new RuntimeException("Quiz state not found"));
+        try {
+            return quizStateRepository.findById(quizStateId)
+                    .orElseThrow(() -> new QuizStateNotFoundException("Quiz state not found with id: " + quizStateId));
+        } catch (QuizStateNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error retrieving quiz state for id: {}: {}", quizStateId, e.getMessage());
+            throw new QuizException("Failed to retrieve quiz state. Please try again.");
+        }
     }
 
     @Override
@@ -438,10 +452,17 @@ public class QuizServiceImpl implements QuizService {
     @Override
     @Transactional
     public QuizState updateCurrentQuestionIndex(String quizStateId, int index) {
-        QuizState quizState = quizStateRepository.findById(quizStateId)
-                .orElseThrow(() -> new QuizStateNotFoundException("Quiz state not found with id: " + quizStateId));
+        try {
+            QuizState quizState = quizStateRepository.findById(quizStateId)
+                    .orElseThrow(() -> new QuizStateNotFoundException("Quiz state not found with id: " + quizStateId));
 
-        quizState.setCurrentQuestionIndex(index);
-        return quizStateRepository.save(quizState);
+            quizState.setCurrentQuestionIndex(index);
+            return quizStateRepository.save(quizState);
+        } catch (QuizStateNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error updating question index to {} for quiz state: {}: {}", index, quizStateId, e.getMessage());
+            throw new QuizException("Failed to update question index. Please try again.");
+        }
     }
 }

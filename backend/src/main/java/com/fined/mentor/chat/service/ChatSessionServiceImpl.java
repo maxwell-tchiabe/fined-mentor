@@ -66,33 +66,40 @@ public class ChatSessionServiceImpl implements ChatSessionService {
     @Override
     @Transactional(readOnly = true)
     public ChatSession getSessionWithDetails(String sessionId) {
-        log.debug("Retrieving full chat session details for id: {}", sessionId);
-        ChatSession session = getSession(sessionId);
+        try {
+            log.debug("Retrieving full chat session details for id: {}", sessionId);
+            ChatSession session = getSession(sessionId);
 
-        // Fetch and set messages
-        List<ChatMessage> messages = chatMessageRepository.findByChatSessionIdOrderByTimestampAsc(sessionId);
-        session.setMessages(messages);
+            // Fetch and set messages
+            List<ChatMessage> messages = chatMessageRepository.findByChatSessionIdOrderByTimestampAsc(sessionId);
+            session.setMessages(messages);
 
-        // Fetch and set quiz and quiz state
-        Optional<Quiz> quizOpt = quizRepository.findFirstByChatSessionIdOrderByCreatedAtDesc(sessionId);
-        if (quizOpt.isPresent()) {
-            Quiz quiz = quizOpt.get();
-            session.setQuiz(quiz);
+            // Fetch and set quiz and quiz state
+            Optional<Quiz> quizOpt = quizRepository.findFirstByChatSessionIdOrderByCreatedAtDesc(sessionId);
+            if (quizOpt.isPresent()) {
+                Quiz quiz = quizOpt.get();
+                session.setQuiz(quiz);
 
-            Optional<QuizState> quizStateOpt = quizStateRepository.findByQuizId(quiz.getId());
-            if (quizStateOpt.isPresent()) {
-                QuizState qs = quizStateOpt.get();
-                log.info("Populating quiz details for session {}: quizId={}, stateId={}, index={}",
-                        sessionId, quiz.getId(), qs.getId(), qs.getCurrentQuestionIndex());
-                session.setQuizState(qs);
+                Optional<QuizState> quizStateOpt = quizStateRepository.findByQuizId(quiz.getId());
+                if (quizStateOpt.isPresent()) {
+                    QuizState qs = quizStateOpt.get();
+                    log.info("Populating quiz details for session {}: quizId={}, stateId={}, index={}",
+                            sessionId, quiz.getId(), qs.getId(), qs.getCurrentQuestionIndex());
+                    session.setQuizState(qs);
+                } else {
+                    log.warn("No quiz state found for quiz: {}", quiz.getId());
+                }
             } else {
-                log.warn("No quiz state found for quiz: {}", quiz.getId());
+                log.debug("No quiz found for session: {}", sessionId);
             }
-        } else {
-            log.debug("No quiz found for session: {}", sessionId);
-        }
 
-        return session;
+            return session;
+        } catch (ChatSessionNotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Failed to retrieve full chat session details for id: {}", sessionId, e);
+            throw new ChatSessionException("Failed to retrieve chat session details. Please try again.", e);
+        }
     }
 
     @Override

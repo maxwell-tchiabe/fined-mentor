@@ -176,4 +176,26 @@ class AuthServiceTest {
         verify(userRepository).save(sampleUser);
         verify(tokenService).markTokenAsUsed(sampleToken);
     }
+    @Test
+    void registerUser_RoleNotFound_ThrowsRuntimeException() {
+        lenient().when(userRepository.existsByUsername(anyString())).thenReturn(false);
+        lenient().when(userRepository.existsByEmail(anyString())).thenReturn(false);
+        when(roleRepository.findByName(Role.RoleName.ROLE_USER)).thenReturn(Optional.empty());
+
+        assertThrows(RuntimeException.class, () -> authService.registerUser(registerRequest));
+    }
+
+    @Test
+    void initiatePasswordReset_UserNotFound_ThrowsException() {
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> authService.initiatePasswordReset("unknown@example.com"));
+    }
+
+    @Test
+    void resetPassword_InvalidToken_ThrowsException() {
+        when(tokenService.validateToken(anyString(), any())).thenReturn(Optional.empty());
+
+        assertThrows(InvalidTokenException.class, () -> authService.resetPassword("invalid", "newPass"));
+    }
 }

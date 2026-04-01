@@ -172,4 +172,50 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value("Password reset successfully"));
     }
+
+    @Test
+    void getAuthenticatedUser_Success() throws Exception {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getPrincipal()).thenReturn(sampleUser);
+
+        mockMvc.perform(get("/api/auth/me")
+                        .principal(authentication))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.username").value("testuser"));
+    }
+
+    @Test
+    void getAuthenticatedUser_NotAuthenticated() throws Exception {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(false);
+
+        mockMvc.perform(get("/api/auth/me")
+                        .principal(authentication))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Not authenticated"));
+    }
+
+    @Test
+    void getAuthenticatedUser_Anonymous() throws Exception {
+        Authentication authentication = mock(Authentication.class);
+        when(authentication.isAuthenticated()).thenReturn(true);
+        when(authentication.getPrincipal()).thenReturn("anonymousUser");
+
+        mockMvc.perform(get("/api/auth/me")
+                        .principal(authentication))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Not authenticated"));
+    }
+
+    @Test
+    void getAuthenticatedUser_Null() throws Exception {
+        mockMvc.perform(get("/api/auth/me"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("Not authenticated"));
+    }
 }

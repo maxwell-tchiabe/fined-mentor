@@ -200,4 +200,38 @@ class ChatSessionServiceImplTest {
 
                 assertNotNull(session);
         }
+
+        @Test
+        void getSessionWithDetails_Exception() {
+                when(chatSessionRepository.findByIdAndActiveTrue("session1")).thenReturn(Optional.of(sampleSession));
+                when(chatMessageRepository.findByChatSessionIdOrderByTimestampAsc("session1"))
+                                .thenThrow(new RuntimeException("DB Error"));
+
+                assertThrows(ChatSessionException.class, () -> chatSessionService.getSessionWithDetails("session1"));
+        }
+
+        @Test
+        void updateSessionTitle_Exception() {
+                when(chatSessionRepository.findByIdAndActiveTrue("session1")).thenReturn(Optional.of(sampleSession));
+                when(chatSessionRepository.save(any(ChatSession.class))).thenThrow(new RuntimeException("DB Error"));
+
+                assertThrows(ChatSessionException.class, () -> chatSessionService.updateSessionTitle("session1", "New Title"));
+        }
+
+        @Test
+        void deactivateSession_Exception() {
+                when(chatSessionRepository.findByIdAndActiveTrue("session1")).thenReturn(Optional.of(sampleSession));
+                when(chatSessionRepository.save(any(ChatSession.class))).thenThrow(new RuntimeException("DB Error"));
+
+                assertThrows(ChatSessionException.class, () -> chatSessionService.deactivateSession("session1"));
+        }
+
+        @Test
+        void getSessionWithMessages_Exception() {
+                when(chatSessionRepository.findByIdAndActiveTrue("session1")).thenReturn(Optional.of(sampleSession));
+                when(chatMessageRepository.findByChatSessionIdOrderByTimestampAsc("session1"))
+                                .thenThrow(new RuntimeException("DB Error"));
+
+                assertThrows(ChatSessionException.class, () -> chatSessionService.getSessionWithMessages("session1"));
+        }
 }

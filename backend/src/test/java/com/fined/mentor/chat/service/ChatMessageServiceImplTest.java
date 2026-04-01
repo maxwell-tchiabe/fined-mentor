@@ -154,4 +154,35 @@ class ChatMessageServiceImplTest {
 
         assertThrows(ChatMessageException.class, () -> chatMessageService.updateMessage("message1", "  "));
     }
+    @Test
+    void saveMessage_DatabaseError_ThrowsException() {
+        when(chatSessionRepository.findByIdAndActiveTrue(anyString())).thenReturn(Optional.of(sampleSession));
+        when(chatMessageRepository.save(any(ChatMessage.class))).thenThrow(new RuntimeException("DB error"));
+
+        assertThrows(ChatMessageException.class, () -> chatMessageService.saveMessage(sampleMessage));
+    }
+
+    @Test
+    void getMessagesBySessionId_DatabaseError_ThrowsException() {
+        when(chatSessionRepository.findByIdAndActiveTrue(anyString())).thenReturn(Optional.of(sampleSession));
+        when(chatMessageRepository.findByChatSessionIdOrderByTimestampAsc(anyString())).thenThrow(new RuntimeException("DB error"));
+
+        assertThrows(ChatMessageException.class, () -> chatMessageService.getMessagesBySessionId("session1"));
+    }
+
+    @Test
+    void deleteMessage_DatabaseError_ThrowsException() {
+        when(chatMessageRepository.findById(anyString())).thenReturn(Optional.of(sampleMessage));
+        doThrow(new RuntimeException("DB error")).when(chatMessageRepository).delete(any(ChatMessage.class));
+
+        assertThrows(ChatMessageException.class, () -> chatMessageService.deleteMessage("message1"));
+    }
+
+    @Test
+    void deleteAllMessagesBySessionId_DatabaseError_ThrowsException() {
+        when(chatSessionRepository.findById(anyString())).thenReturn(Optional.of(sampleSession));
+        doThrow(new RuntimeException("DB error")).when(chatMessageRepository).deleteByChatSessionId(anyString());
+
+        assertThrows(ChatMessageException.class, () -> chatMessageService.deleteAllMessagesBySessionId("session1"));
+    }
 }
