@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
         // This occurs when a request matches a static resource path but no resource is
         // found.
         log.warn("Static resource not found: {}", ex.getMessage());
-        String message = "Resource not found. Did you mean to call an API endpoint (e.g. /api/chat/sessions)?";
+        String message = "Resource not found . Did you mean to call an API endpoint (e.g. /api/chat/sessions)?";
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(message));
     }
 
