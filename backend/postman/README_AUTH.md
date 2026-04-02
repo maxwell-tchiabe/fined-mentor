@@ -10,7 +10,7 @@ Endpoints included
 - `POST /api/auth/resend-activation?email=...` — resend activation OTP
 
 How to use
-1. Start the backend locally (default: `http://localhost:8080`).
+1. Start  backend locally (default: `http://localhost:8080`).
 2. Import `Auth.postman_collection.json` in Postman (File → Import).
 3. Set an environment variable `baseUrl` to your backend URL (default in collection: `http://localhost:8080`).
 4. Use the `Register` request to create a new user. Example body is pre-filled for `testuser`.
