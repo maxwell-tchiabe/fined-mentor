@@ -18,6 +18,7 @@ pipeline {
         SEMVER = "1.0.0"
         GITHUB_CREDENTIALS = credentials('github-credentials')
         GIT_BRANCH = "main"
+        TRIVY_CACHE_DIR = "${WORKSPACE}/.trivy-cache"
     }
     
     stages {
@@ -82,6 +83,14 @@ pipeline {
             }
         }
         
+        stage('Security Scan - Code & Dependencies') {
+            steps {
+                script {
+                    trivy_fs_scan()
+                }
+            }
+        }
+        
         stage('Build Docker Images') {
             parallel {
                 stage('Build backend Image') {
@@ -97,6 +106,8 @@ pipeline {
                                     dockerfile: 'backend/Dockerfile',
                                     context: 'backend'
                                 )
+                                
+                                env.BACKEND_IMAGE = "${env.DOCKER_BACKEND_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}"
                             }
                         }
                     }
@@ -115,6 +126,8 @@ pipeline {
                                     dockerfile: 'frontend/Dockerfile',
                                     context: 'frontend'
                                 )
+                                
+                                env.FRONTEND_IMAGE = "${env.DOCKER_FRONTEND_IMAGE_NAME}:${env.DOCKER_IMAGE_TAG}"
                             }
                         }
                     }
@@ -122,10 +135,34 @@ pipeline {
             }
         }
         
-        stage('Security Scan with Trivy') {
-            steps {
-                script {
-                    trivy_scan()
+        stage('Security Scan - Docker Images') {
+            parallel {
+                stage('Scan Backend Image') {
+                    when {
+                        environment name: 'BACKEND_CHANGED', value: 'true'
+                    }
+                    steps {
+                        script {
+                            trivy_image_scan(
+                                imageName: env.BACKEND_IMAGE,
+                                cacheDir: env.TRIVY_CACHE_DIR
+                            )
+                        }
+                    }
+                }
+                
+                stage('Scan Frontend Image') {
+                    when {
+                        environment name: 'FRONTEND_CHANGED', value: 'true'
+                    }
+                    steps {
+                        script {
+                            trivy_image_scan(
+                                imageName: env.FRONTEND_IMAGE,
+                                cacheDir: env.TRIVY_CACHE_DIR
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -177,6 +214,28 @@ pipeline {
                         updateFrontend: env.FRONTEND_CHANGED == 'true'
                     )
                 }
+            }
+        }
+    }
+    
+    post {
+        always {
+            script {
+                publishHTML([
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'reports',
+                    reportFiles: 'trivy-*.html',
+                    reportName: 'Trivy Security Reports'
+                ])
+                
+                archiveArtifacts artifacts: 'reports/*.json', allowEmptyArchive: true
+            }
+        }
+        failure {
+            script {
+                echo "Security scan failed! Check the reports for details."
             }
         }
     }
