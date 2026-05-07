@@ -230,10 +230,19 @@ pipeline {
             }
         }
         
+        // stage('DAST Scan (Staging)') {
+        //     steps {
+        //         script {
+        //             runZapBaselineScan(
+        //                 targetUrl: 'https://fined-mentor.maxwelltbtech.com'
+        //             )
+        //         }
+        //     }
+        // }
         stage('DAST Scan (Staging)') {
             steps {
                 script {
-                    runZapBaselineScan(
+                    runZapFullScan(
                         targetUrl: 'https://fined-mentor.maxwelltbtech.com'
                     )
                 }
