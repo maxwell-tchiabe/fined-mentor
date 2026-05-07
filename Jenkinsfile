@@ -216,6 +216,29 @@ pipeline {
                 }
             }
         }
+        
+        stage('Wait for ArgoCD Sync') {
+            steps {
+                script {
+                    waitForUrl(
+                        url: 'https://fined-mentor.maxwelltbtech.com',
+                        timeoutMinutes: 5,
+                        intervalSeconds: 15,
+                        bufferSeconds: 15
+                    )
+                }
+            }
+        }
+        
+        stage('DAST Scan (Staging)') {
+            steps {
+                script {
+                    runZapBaselineScan(
+                        targetUrl: 'https://fined-mentor.maxwelltbtech.com'
+                    )
+                }
+            }
+        }
     }
     
     post {
@@ -230,7 +253,16 @@ pipeline {
                     reportName: 'Trivy Security Reports'
                 ])
                 
-                archiveArtifacts artifacts: 'reports/*.json', allowEmptyArchive: true
+                publishHTML([
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'reports',
+                    reportFiles: 'zap-report.html',
+                    reportName: 'OWASP ZAP DAST Report'
+                ])
+                
+                archiveArtifacts artifacts: 'reports/*.json, reports/zap-report.html', allowEmptyArchive: true
             }
         }
         failure {
